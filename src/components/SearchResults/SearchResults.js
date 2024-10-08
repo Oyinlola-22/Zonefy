@@ -1,15 +1,26 @@
 import React from "react";
-import "./searchresults.css"; // Add CSS for styling
+import "./searchresults.css";
+import Property from "../../assets/Property.jpg";
+import Property1 from "../../assets/Property1.jpg";
+import Property2 from "../../assets/Property2.jpg";
 
 const SearchResults = () => {
   const results = [
-    { id: 1, name: "Sunny Hall", location: "Lagos", type: "Hall", guests: 200 },
+    {
+      id: 1,
+      name: "Sunny Hall",
+      location: "Lagos",
+      type: "Hall",
+      guests: 200,
+      imageUrl: Property,
+    },
     {
       id: 2,
       name: "Grand Meeting Room",
       location: "Abuja",
       type: "Meeting Room",
       guests: 50,
+      imageUrl: Property1,
     },
     {
       id: 3,
@@ -17,6 +28,7 @@ const SearchResults = () => {
       location: "Ibadan",
       type: "Storage Space",
       guests: 10,
+      imageUrl: Property2,
     },
   ];
 
@@ -26,6 +38,13 @@ const SearchResults = () => {
       <div className="results-grid">
         {results.map((property) => (
           <div key={property.id} className="property-card">
+            <div className="property-image-container">
+              <img
+                src={property.imageUrl}
+                alt={property.name}
+                className="property-image"
+              />
+            </div>
             <div className="property-card-header">
               <h4>{property.name}</h4>
               <p className="property-type">{property.type}</p>
