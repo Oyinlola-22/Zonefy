@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import "./propertyscreen.css";
 
 function PropertyScreen() {
@@ -8,6 +8,11 @@ function PropertyScreen() {
   const navigate = useNavigate();
 
   const propertyData = location.state || {};
+
+  // Navigate to the ChatScreen when the button is clicked
+  const handleChatClick = () => {
+    navigate("/chat", { state: { ownerName: "Double King Estate Limited" } });
+  };
 
   return (
     <div className="property-screen">
@@ -30,23 +35,29 @@ function PropertyScreen() {
               alt={propertyData.title}
               className="property-image"
             />
-            {/* Navigation Arrows (optional) */}
-            <div className="image-arrow1">&#10094;</div>
-            <div className="image-arrow">&#10095;</div>
           </div>
 
-          {/* "Owned By" and "Are You Interested" sections in one container */}
+          {/* Property Info: Owned By and Are You Interested */}
           <div className="property-info-container">
             <div className="owned-by">
               <h2>Owned By</h2>
-              <p>{propertyData.ownedBy}</p>
-              <p>{propertyData.ownedByAddress}</p>
+              <p>
+                <strong>Owner:</strong> Double King Estate Limited
+              </p>
+              <p>
+                <strong>Location:</strong> 17a Ayodele Fanoiki Street, Magodo
+                Phase 1, Ikeja, Lagos, Nigeria
+              </p>
             </div>
 
             <div className="contact-section">
               <h3>Are You Interested?</h3>
-              <p>{propertyData.contact}</p>
-              <p>{propertyData.contactPhone}</p>
+              <p>
+                <strong>Contact:</strong> 080100223393, 080100223393
+              </p>
+              <button className="chat-button" onClick={handleChatClick}>
+                Chat with Owner Now
+              </button>
             </div>
           </div>
         </div>

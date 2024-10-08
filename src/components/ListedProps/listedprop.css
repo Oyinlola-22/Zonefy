@@ -68,11 +68,16 @@
 }
 
 .description {
-  font-size: 0.9rem;
-  color: #777;
-  margin-bottom: 10px;
+  font-size: 1rem; /* Slightly larger for readability */
+  color: #555; /* Darker color for better contrast */
+  margin-bottom: 15px;
+  line-height: 1.6; /* Increased line height for better readability */
   display: block;
   text-align: justify;
+  word-wrap: break-word; /* Ensure long words or URLs break onto new lines */
+  max-height: 150px; /* Set a max height to avoid overflow */
+  overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
+  padding-right: 5px; /* Add padding to avoid content touching the scrollbar */
 }
 
 .property-info {
@@ -140,8 +145,16 @@
   }
 
   .description {
-    font-size: 0.85rem; /* Smaller description text */
+    font-size: 1rem; /* Slightly larger for readability */
+    color: #555; /* Darker color for better contrast */
     margin-bottom: 8px;
+    line-height: 1.6; /* Increased line height for better readability */
+    display: block;
+    text-align: justify;
+    word-wrap: break-word; /* Ensure long words or URLs break onto new lines */
+    max-height: 150px; /* Set a max height to avoid overflow */
+    overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
+    padding-right: 5px; /* Add padding to avoid content touching the scrollbar */
   }
 
   .price {
