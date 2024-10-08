@@ -1,0 +1,164 @@
+/* General styles */
+.listedProperties {
+  padding: 20px;
+  background-color: #fafafa;
+  font-family: "Roboto", sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Flex container for rectangles */
+.rectangle-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allows rectangles to wrap on smaller screens */
+}
+
+/* Styles for each rectangle */
+.rectangle {
+  width: 49%; /* Width of each rectangle relative to the parent container */
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: transform 0.2s ease-in-out;
+  border: 1px solid #e0e0e0;
+}
+
+.rectangle:hover {
+  transform: scale(1.02);
+}
+
+/* Image styles */
+.logo-image1 {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Header text styles */
+.header-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.header-text:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+  color: #7851a9;
+}
+
+/* Details container */
+.details-container {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 10px;
+  display: block;
+  text-align: justify;
+}
+
+.property-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.location {
+  font-size: 1rem;
+  color: #999;
+}
+
+.location-icon {
+  display: inline-block;
+  margin-right: 5px;
+  color: #333;
+  position: relative;
+  top: 2%;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Property features */
+.property-features {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #7851a9;
+}
+
+.property-features span {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .title {
+    font-size: 1.5rem; /* Adjust title size for smaller screens */
+  }
+
+  /* Stack rectangles vertically on mobile */
+  .rectangle-container {
+    flex-direction: column; /* Change to column layout */
+    gap: 10px;
+    margin-right: 7%;
+  }
+
+  .rectangle {
+    width: 357px;
+    padding: 15px; /* Reduce padding for mobile */
+  }
+
+  .header-text {
+    font-size: 1.1rem; /* Slightly smaller header text */
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 0.85rem; /* Smaller description text */
+    margin-bottom: 8px;
+  }
+
+  .price {
+    font-size: 1rem; /* Adjust price text size */
+  }
+
+  .property-info {
+    flex-direction: column; /* Stack property info vertically on mobile */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .property-features {
+    font-size: 0.8rem; /* Smaller font size for features */
+    flex-wrap: wrap; /* Wrap features if needed */
+  }
+
+  .property-features span {
+    margin-bottom: 5px; /* Adds space between rows of features */
+  }
+}

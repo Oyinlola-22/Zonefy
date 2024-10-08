@@ -1,0 +1,78 @@
+.fixed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #7851a9;
+  color: #f2f2f2;
+}
+
+.signin-form {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 5%;
+}
+
+.signin-form .form-group {
+  margin-bottom: 1rem;
+  margin-left: 5%;
+}
+
+.signin-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.signin-form .form-group input {
+  width: 90%;
+  padding: 0.8rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #f7f7f7;
+  transition: all 0.3s ease;
+}
+
+.signin-form .form-group input:focus {
+  border-color: #66a6ff;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(102, 166, 255, 0.3);
+}
+
+.signin-form .submit-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #66a6ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signin-form .submit-btn:hover {
+  background-color: #7851a9;
+}
+
+.forgotPass {
+  margin-left: 65%;
+  bottom: 50%;
+}
+
+.forgotPass:hover {
+  color: #7851a9;
+  cursor: pointer;
+}
+
+.dontHave {
+  margin-top: 5%;
+}

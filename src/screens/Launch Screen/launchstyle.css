@@ -1,0 +1,190 @@
+/* General body settings */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  width: 100%;
+}
+
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background-color: #2c3e50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 1000;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  margin-left: 2%;
+}
+
+.left-section h2 {
+  margin-left: 10px;
+}
+
+.right-section {
+  display: flex;
+  gap: 15px;
+  margin-right: 2%;
+  cursor: pointer;
+}
+
+.text1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.text1:hover {
+  transform: scale(1.02);
+  font-size: large;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.logo-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+  opacity: 0.8;
+}
+
+.image-text {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+/* Search container settings */
+.search-container {
+  position: relative;
+  max-width: 90%;
+  margin: 20px auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-direction: row; /* Set rows for larger screens */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.form-group {
+  flex: 1 1 auto; /* Adjust width to make it flexible in the row */
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.form-group.check-in,
+.form-group.check-out {
+  flex-basis: 12%; /* Make the check-in and check-out fields shorter */
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group input[type="date"] {
+  width: 100%; /* Ensure the date field fills its container */
+  font-family: Arial, sans-serif;
+}
+
+.search-button {
+  padding: 12px 20px;
+  background-color: #7851a9;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-transform: uppercase;
+  width: auto; /* Auto-width to prevent it from stretching too much */
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.search-button:hover {
+  background-color: #5a3c7d;
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 900px) {
+  .logo-image {
+    width: 100%;
+    max-height: 450px;
+    opacity: 0.9;
+  }
+
+  .search-container {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Adjust the container to take full width on mobile */
+    padding: 10px; /* Ensure padding doesn't overflow */
+  }
+
+  .form-group {
+    flex: 1 1 100%; /* Full width for mobile */
+    width: 100%; /* Make the form inputs/selects span the full width */
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%; /* Full width for inputs and selects */
+  }
+
+  .search-button {
+    width: 100%; /* Ensure the button is full width on mobile */
+  }
+
+  .image-text {
+    font-size: 1rem; /* Smaller font size for mobile */
+    top: 13%; /* Adjust the positioning */
+    left: 50%;
+    transform: translateX(-50%); /* Center it horizontally */
+    width: 90%; /* Ensure it doesn't overflow horizontally */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Keep the shadow, but soften it slightly */
+    padding: 10px;
+    line-height: 1.4; /* Improve line spacing for readability */
+    font-weight: bold;
+  }
+
+  /* Adjust the container and image for smaller screens */
+  .image-container {
+    height: auto; /* Allow the container to resize properly */
+  }
+
+  .logo-image {
+    max-height: 350px; /* Reduce the image height for mobile */
+    opacity: 1.7;
+  }
+}
