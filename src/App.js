@@ -7,6 +7,9 @@ import ForgotPassword from "./screens/AuthScreens/ForgotPassword/ForgotPass";
 import NewPassword from "./screens/AuthScreens/NewPassword/NewPass";
 import PropertyScreen from "./screens/OtherScreens/PropertyScreen/PropertyScreen";
 import ChatScreen from "./screens/OtherScreens/Chatscreen/ChatScreen";
+import LoggedIn from "./screens/OtherScreens/LoggedIn/LoggedIn";
+import PlaceProperty from "./components/PlaceProperty/PlaceProperty";
+import ListedProperties from "./components/ListedProps/ListedProperties";
 
 function App() {
   const routes = useRoutes([
@@ -17,6 +20,9 @@ function App() {
     { path: "/resetpassword", element: <NewPassword /> },
     { path: "/details", element: <PropertyScreen /> },
     { path: "/chat", element: <ChatScreen /> },
+    { path: "/home", element: <LoggedIn /> },
+    { path: "/place-property", element: <PlaceProperty /> },
+    { path: "/listed-properties", element: <ListedProperties /> },
   ]);
   return <div>{routes}</div>;
 }
