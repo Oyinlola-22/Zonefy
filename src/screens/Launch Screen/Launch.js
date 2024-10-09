@@ -7,7 +7,6 @@ import SearchResults from "../../components/SearchResults/SearchResults"; // Imp
 import { Link, useNavigate } from "react-router-dom";
 
 function Launch() {
-  const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");

@@ -3,7 +3,6 @@ import { House } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");

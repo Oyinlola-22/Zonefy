@@ -1,7 +1,6 @@
 import React from "react";
 import "./listedprop.css";
 import Property from "../../assets/Property1.jpg";
-import { Bed, MapPin } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 
 function ListedProperties() {

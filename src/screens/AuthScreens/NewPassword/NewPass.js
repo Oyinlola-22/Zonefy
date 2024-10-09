@@ -3,7 +3,6 @@ import { House } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 
 function NewPassword() {
-  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
 

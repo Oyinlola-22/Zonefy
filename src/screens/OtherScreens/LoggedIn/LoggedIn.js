@@ -4,7 +4,7 @@ import "./loggedin.css";
 import Property from "../../../assets/Property2.jpg";
 import ListedProperties from "../../../components/ListedProps/ListedProperties";
 import SearchResults from "../../../components/SearchResults/SearchResults"; // Import the SearchResults component
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function LoggedIn() {
   const [location, setLocation] = useState("");
