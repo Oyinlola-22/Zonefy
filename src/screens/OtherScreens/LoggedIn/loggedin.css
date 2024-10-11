@@ -136,6 +136,50 @@ body {
   background-color: #5a3c7d;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.confirm-button {
+  background-color: #d9534f;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #5bc0de;
+  color: white;
+}
+
 /* Mobile adjustments */
 @media screen and (max-width: 900px) {
   .logo-image {

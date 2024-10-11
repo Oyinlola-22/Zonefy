@@ -4,7 +4,7 @@ import "./launchstyle.css";
 import Property from "../../assets/Property2.jpg";
 import ListedProperties from "../../components/ListedProps/ListedProperties";
 import SearchResults from "../../components/SearchResults/SearchResults"; // Import the SearchResults component
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Launch() {
   const [location, setLocation] = useState("");
@@ -43,7 +43,7 @@ function Launch() {
       <div className="image-container">
         <img src={Property} alt="Property" className="logo-image" />
         <div className="image-text">
-          LOOKING FOR A PROPERTY AVAILABLE FOR RENT?
+          LOOKING FOR A SPACE AVAILABLE FOR RENT?
         </div>
 
         <form className="search-container" onSubmit={handleSearch}>

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import "./propertyscreen.css";
+import Property from "../../../assets/Property.jpg";
+import Property1 from "../../../assets/Property1.jpg";
+import Property2 from "../../../assets/Property2.jpg";
 
 function PropertyScreen() {
   const location = useLocation();
@@ -9,9 +12,29 @@ function PropertyScreen() {
 
   const propertyData = location.state || {};
 
+  // Dummy image array
+  const propertyImages = [Property, Property1, Property2];
+
+  // State to manage the current image index
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   // Navigate to the ChatScreen when the button is clicked
   const handleChatClick = () => {
     navigate("/chat", { state: { ownerName: "Double King Estate Limited" } });
+  };
+
+  // Function to go to the next image
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === propertyImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Function to go to the previous image
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? propertyImages.length - 1 : prevIndex - 1
+    );
   };
 
   return (
@@ -23,18 +46,30 @@ function PropertyScreen() {
           className="back-button"
           size={40}
         />
-        <p className="property-title">{propertyData.title}</p>
+        <p className="property-title">{propertyData?.title}</p>
       </div>
 
       <div className="body-container">
         <div className="property-row">
-          {/* Property Image */}
+          {/* Property Image with navigation buttons */}
           <div className="property-image-container">
-            <img
-              src={propertyData.image}
-              alt={propertyData.title}
-              className="property-image"
-            />
+            <div className="image-carousel">
+              <CaretLeft
+                className="nav-button"
+                size={40}
+                onClick={handlePrevImage}
+              />
+              <img
+                src={propertyImages[currentImageIndex]}
+                alt={propertyData.title}
+                className="property-image"
+              />
+              <CaretRight
+                className="nav-button"
+                size={40}
+                onClick={handleNextImage}
+              />
+            </div>
           </div>
 
           {/* Property Info: Owned By and Are You Interested */}
@@ -65,7 +100,7 @@ function PropertyScreen() {
         {/* Property Description */}
         <div className="property-description">
           <h2>About this property</h2>
-          <p>{propertyData.description}</p>
+          <p>{propertyData?.description}</p>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { House } from "@phosphor-icons/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function NewPassword() {
   const [password, setPassword] = useState("");

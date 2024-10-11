@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { House } from "@phosphor-icons/react";
+import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
 import Property from "../../../assets/Property2.jpg";
 import ListedProperties from "../../../components/ListedProps/ListedProperties";
-import SearchResults from "../../../components/SearchResults/SearchResults"; // Import the SearchResults component
-import { Link } from "react-router-dom";
+import SearchResults from "../../../components/SearchResults/SearchResults";
 
 function LoggedIn() {
+  const navigate = useNavigate();
+
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+
+  // State for form inputs (search functionality)
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -15,8 +21,23 @@ function LoggedIn() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // This function is no longer needed to trigger the display
     console.log("Search triggered");
+  };
+
+  // Function to show the logout confirmation modal
+  const handleLogoutClick = () => {
+    setShowModal(true);
+  };
+
+  // Function to confirm logout and navigate to home page
+  const confirmLogout = () => {
+    setShowModal(false);
+    navigate("/");
+  };
+
+  // Function to cancel the logout process
+  const cancelLogout = () => {
+    setShowModal(false);
   };
 
   return (
@@ -33,9 +54,12 @@ function LoggedIn() {
             </Link>
           </span>
           <span className="text1">
-            <Link to="/signin" style={{ color: "white" }}>
+            <span
+              onClick={handleLogoutClick}
+              style={{ color: "white", cursor: "pointer" }}
+            >
               Log Out
-            </Link>
+            </span>
           </span>
         </div>
       </div>
@@ -111,6 +135,24 @@ function LoggedIn() {
       <SearchResults />
 
       <ListedProperties />
+
+      {/* Modal for Logout Confirmation */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button className="confirm-button" onClick={confirmLogout}>
+                Yes, Log Out
+              </button>
+              <button className="cancel-button" onClick={cancelLogout}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,8 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import "./signin.css";
 
 function Signin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle sign-in logic here
+    navigate("/home");
+  };
 
   return (
     <div className="body">
@@ -23,7 +30,7 @@ function Signin() {
         </div>
       </div>
 
-      <form className="signin-form">
+      <form className="signin-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
