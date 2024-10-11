@@ -128,7 +128,9 @@ function PlaceProperty() {
         </div>
 
         <div className="form-group image-upload-section">
-          <label htmlFor="property-images">Upload Images:</label>
+          <label htmlFor="property-images">
+            Upload Images(at least 3 Images):
+          </label>
           <input
             type="file"
             id="property-images"
