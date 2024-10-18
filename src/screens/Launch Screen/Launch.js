@@ -23,7 +23,6 @@ function Launch() {
     <div className="body">
       <div className="fixed-header">
         <div className="left-section">
-          <House size={40} color="#f2f2f2" weight="fill" />
           <h2>Zonefy</h2>
         </div>
         <div className="right-section">
