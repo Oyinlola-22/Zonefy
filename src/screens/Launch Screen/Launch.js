@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { House } from "@phosphor-icons/react";
 import "./launchstyle.css";
-import Property from "../../assets/Property2.jpg";
+import Property from "../../assets/zonefy.jpg";
 import ListedProperties from "../../components/ListedProps/ListedProperties";
 import SearchResults from "../../components/SearchResults/SearchResults"; // Import the SearchResults component
 import { Link } from "react-router-dom";

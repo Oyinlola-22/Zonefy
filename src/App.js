@@ -10,6 +10,7 @@ import ChatScreen from "./screens/OtherScreens/Chatscreen/ChatScreen";
 import LoggedIn from "./screens/OtherScreens/LoggedIn/LoggedIn";
 import PlaceProperty from "./components/PlaceProperty/PlaceProperty";
 import ListedProperties from "./components/ListedProps/ListedProperties";
+import AdminDashboard from "./screens/Admin/AdminDashboard";
 
 function App() {
   const routes = useRoutes([
@@ -23,6 +24,7 @@ function App() {
     { path: "/home", element: <LoggedIn /> },
     { path: "/place-property", element: <PlaceProperty /> },
     { path: "/listed-properties", element: <ListedProperties /> },
+    { path: "/admin", element: <AdminDashboard /> },
   ]);
   return <div>{routes}</div>;
 }
