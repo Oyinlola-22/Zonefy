@@ -53,9 +53,6 @@ const SearchResults = () => {
               <p>
                 Location: <span>{property.location}</span>
               </p>
-              <p>
-                Guests: <span>{property.guests}</span>
-              </p>
             </div>
           </div>
         ))}

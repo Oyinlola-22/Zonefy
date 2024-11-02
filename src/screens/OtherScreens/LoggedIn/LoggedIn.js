@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { House } from "@phosphor-icons/react";
+import { List } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
 import Property from "../../../assets/Property2.jpg";
@@ -44,7 +44,7 @@ function LoggedIn() {
     <div className="body">
       <div className="fixed-header">
         <div className="left-section">
-          <House size={40} color="#f2f2f2" weight="fill" />
+          <List size={40} color="#f2f2f2" weight="fill" />
           <h2>Zonefy</h2>
         </div>
         <div className="right-section">
@@ -53,14 +53,14 @@ function LoggedIn() {
               Place a Property
             </Link>
           </span>
-          <span className="text1">
+          {/* <span className="text1">
             <span
               onClick={handleLogoutClick}
               style={{ color: "white", cursor: "pointer" }}
             >
               Log Out
             </span>
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -122,6 +122,7 @@ function LoggedIn() {
               <option value="hall">Hall</option>
               <option value="meeting-room">Meeting Room</option>
               <option value="storage-space">Storage Space</option>
+              <option value="storage-space">Shop</option>
             </select>
           </div>
 

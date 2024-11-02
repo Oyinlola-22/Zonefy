@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { House } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./signin.css";
 
@@ -18,7 +17,6 @@ function Signin() {
     <div className="body">
       <div className="fixed-header">
         <div className="left-section">
-          <House size={40} color="#f2f2f2" weight="fill" />
           <h2>Zonefy</h2>
         </div>
         <div className="right-section">

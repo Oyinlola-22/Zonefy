@@ -99,6 +99,7 @@ function Launch() {
               <option value="hall">Hall</option>
               <option value="meeting-room">Meeting Room</option>
               <option value="storage-space">Storage Space</option>
+              <option value="storage-space">Shop</option>
             </select>
           </div>
 

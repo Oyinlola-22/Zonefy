@@ -15,8 +15,6 @@ function ListedProperties() {
       location: "Ikeja, Lagos",
       price: "₦5,000,000",
       features: {
-        bedrooms: 4,
-        bathrooms: 2,
         toilets: 5,
         garage: 1,
       },
@@ -29,8 +27,6 @@ function ListedProperties() {
       location: "Ikeja, Lagos",
       price: "₦5,000,000",
       features: {
-        bedrooms: 4,
-        bathrooms: 2,
         toilets: 5,
         garage: 1,
       },
@@ -43,8 +39,6 @@ function ListedProperties() {
       location: "Ikeja, Lagos",
       price: "₦5,000,000",
       features: {
-        bedrooms: 4,
-        bathrooms: 2,
         toilets: 5,
         garage: 1,
       },
@@ -57,8 +51,6 @@ function ListedProperties() {
       location: "Ikeja, Lagos",
       price: "₦5,000,000",
       features: {
-        bedrooms: 4,
-        bathrooms: 2,
         toilets: 5,
         garage: 1,
       },
@@ -75,13 +67,7 @@ function ListedProperties() {
         {propertyData.map((property, index) => (
           <div className="rectangle" key={index}>
             {/* Navigate and pass individual property details */}
-            <p
-              className="header-text"
-              onClick={() => navigate("/details", { state: property })}
-              style={{ cursor: "pointer" }}
-            >
-              {property.title}
-            </p>
+            <p className="header-text">{property.title}</p>
             <img
               src={property.image}
               alt={property.title}
@@ -94,10 +80,14 @@ function ListedProperties() {
                 <span className="price">{property.price}</span>
               </div>
               <div className="property-features">
-                <span>🛏 {property.features.bedrooms} bedrooms</span>
-                <span>🚽 {property.features.bathrooms} bathrooms</span>
                 <span>🚻 {property.features.toilets} toilets</span>
-                <span>🚗 {property.features.garage} garage</span>
+                <span>🚗 {property.features.garage} parking lot</span>
+                <button
+                  className="rent-button"
+                  onClick={() => navigate("/details", { state: property })}
+                >
+                  Click to rent
+                </button>
               </div>
             </div>
           </div>
