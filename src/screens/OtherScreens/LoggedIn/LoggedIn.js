@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List } from "@phosphor-icons/react";
+import { ChatCircleDots, House, List, SignOut, X } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
 import Property from "../../../assets/Property2.jpg";
@@ -9,8 +9,16 @@ import SearchResults from "../../../components/SearchResults/SearchResults";
 function LoggedIn() {
   const navigate = useNavigate();
 
+  // State to track sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // Modal state
   const [showModal, setShowModal] = useState(false);
+
+  // Sidebar toggle function
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   // State for form inputs (search functionality)
   const [location, setLocation] = useState("");
@@ -41,10 +49,14 @@ function LoggedIn() {
   };
 
   return (
-    <div className="body">
+    <div className={`body ${isSidebarOpen ? "sidebar-open" : ""}`}>
       <div className="fixed-header">
         <div className="left-section">
-          <List size={40} color="#f2f2f2" weight="fill" />
+          {isSidebarOpen ? (
+            <X size={40} color="#f2f2f2" onClick={toggleSidebar} />
+          ) : (
+            <List size={40} color="#f2f2f2" onClick={toggleSidebar} />
+          )}
           <h2>Zonefy</h2>
         </div>
         <div className="right-section">
@@ -53,89 +65,103 @@ function LoggedIn() {
               Place a Property
             </Link>
           </span>
-          {/* <span className="text1">
-            <span
-              onClick={handleLogoutClick}
-              style={{ color: "white", cursor: "pointer" }}
-            >
-              Log Out
-            </span>
-          </span> */}
         </div>
       </div>
 
-      <div className="image-container">
-        <img src={Property} alt="Property" className="logo-image" />
-        <div className="image-text">SEARCH THROUGH FOR YOUR TASTE</div>
+      {isSidebarOpen && (
+        <div className="sidebar">
+          <nav>
+            <ul>
+              <li>
+                <ChatCircleDots weight="bold" size={30} />
+                <Link to="/chats">Messages</Link>
+              </li>
+              <li>
+                <House weight="bold" size={30} />
+                <Link to="/property">Properties</Link>
+              </li>
+              <li>
+                <SignOut weight="bold" size={30} />
+                <span onClick={handleLogoutClick}>Logout</span>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
 
-        <form className="search-container" onSubmit={handleSearch}>
-          <div className="form-group">
-            <label htmlFor="location">Where:</label>
-            <input
-              type="text"
-              id="location"
-              placeholder="Enter location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
+      <div className="main-content">
+        <div className="image-container">
+          <img src={Property} alt="Property" className="logo-image" />
+          <div className="image-text">SEARCH THROUGH FOR YOUR TASTE</div>
 
-          <div className="form-group">
-            <label htmlFor="check-in">Check In:</label>
-            <input
-              type="date"
-              id="check-in"
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-            />
-          </div>
+          <form className="search-container" onSubmit={handleSearch}>
+            <div className="form-group">
+              <label htmlFor="location">Where:</label>
+              <input
+                type="text"
+                id="location"
+                placeholder="Enter location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="check-out">Check Out:</label>
-            <input
-              type="date"
-              id="check-out"
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="check-in">Check In:</label>
+              <input
+                type="date"
+                id="check-in"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="guests">Guests:</label>
-            <input
-              type="number"
-              id="guests"
-              min="1"
-              value={guests}
-              onChange={(e) => setGuests(e.target.value)}
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="check-out">Check Out:</label>
+              <input
+                type="date"
+                id="check-out"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="property-type">Property Type:</label>
-            <select
-              id="property-type"
-              value={propertyType}
-              onChange={(e) => setPropertyType(e.target.value)}
-            >
-              <option value="">Pick Property Type</option>
-              <option value="hall">Hall</option>
-              <option value="meeting-room">Meeting Room</option>
-              <option value="storage-space">Storage Space</option>
-              <option value="storage-space">Shop</option>
-            </select>
-          </div>
+            <div className="form-group">
+              <label htmlFor="guests">Guests:</label>
+              <input
+                type="number"
+                id="guests"
+                min="1"
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+              />
+            </div>
 
-          <button className="search-button" type="submit">
-            Search
-          </button>
-        </form>
+            <div className="form-group">
+              <label htmlFor="property-type">Property Type:</label>
+              <select
+                id="property-type"
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+              >
+                <option value="">Pick Property Type</option>
+                <option value="hall">Hall</option>
+                <option value="meeting-room">Meeting Room</option>
+                <option value="storage-space">Storage Space</option>
+                <option value="storage-space">Shop</option>
+              </select>
+            </div>
+
+            <button className="search-button" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
+        {/* Always display the SearchResults */}
+        <SearchResults />
+
+        <ListedProperties />
       </div>
-
-      {/* Always display the SearchResults */}
-      <SearchResults />
-
-      <ListedProperties />
 
       {/* Modal for Logout Confirmation */}
       {showModal && (

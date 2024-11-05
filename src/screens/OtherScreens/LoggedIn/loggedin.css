@@ -180,42 +180,77 @@ body {
   color: white;
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -250px; /* Start off-screen */
-  width: 250px;
-  height: 100%;
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: start;
-  transition: left 0.3s ease; /* Smooth slide-in effect */
-}
-
-.sidebar.show {
-  left: 0; /* Slide in when "show" class is added */
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sidebar-nav a {
-  color: #f2f2f2;
-  text-decoration: none;
-  font-size: 1.1rem;
-}
-
 .close-icon {
   align-self: flex-end;
   cursor: pointer;
   margin-bottom: 20px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #7851a9;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  padding-top: 60px;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  display: flex; /* Align icon and text horizontally */
+  align-items: center; /* Center them vertically */
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-top: 10px;
+}
+
+.sidebar-open .main-content {
+  margin-left: 250px;
+}
+
+.sidebar nav ul li svg {
+  margin-right: 15px; /* Space between icon and text */
+  color: #ffc107;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.sidebar nav ul li:hover svg {
+  color: #ffd740;
+  transform: scale(1.1);
+}
+
+/* Link styling */
+.sidebar nav ul li a,
+.sidebar nav ul li span {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li span:hover {
+  color: #ffc107;
+}
+
+.main-content {
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.body.sidebar-open .main-content {
+  margin-left: 250px;
 }
 
 /* Mobile adjustments */

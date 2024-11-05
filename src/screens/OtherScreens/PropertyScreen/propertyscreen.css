@@ -62,10 +62,10 @@ body {
   height: 100%; /* Ensure container takes full height */
 }
 
-.property-image {
-  width: 100%; /* Set width to 100% to fill container */
-  height: 100%; /* Set height to 100% to fill container */
-  object-fit: cover; /* Ensure image covers the entire container without stretching */
+.property-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 10px;
 }
 

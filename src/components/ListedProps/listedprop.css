@@ -1,7 +1,6 @@
 /* General styles */
 .listedProperties {
   padding: 20px;
-  background-color: #fafafa;
   font-family: "Roboto", sans-serif;
 }
 
@@ -130,10 +129,6 @@
 }
 
 .rent-button {
-  margin-left: auto;
-}
-
-.rent-button {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -142,6 +137,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  margin-left: auto;
 }
 
 .rent-button:hover {
@@ -212,5 +208,16 @@
 
   .property-features span {
     margin-bottom: 5px; /* Adds space between rows of features */
+  }
+
+  .rent-button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #7851a9; /* Primary blue color */
+    color: #fff; /* White text */
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
   }
 }

@@ -16,6 +16,7 @@
   margin-left: 10px;
   font-size: 24px;
   color: #333;
+  margin-top: 20px;
 }
 
 .property-form {
@@ -71,7 +72,7 @@
 .submit-button {
   padding: 12px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #7851a9;
   color: white;
   border: none;
   border-radius: 5px;
@@ -79,5 +80,5 @@
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #7851a9;
 }

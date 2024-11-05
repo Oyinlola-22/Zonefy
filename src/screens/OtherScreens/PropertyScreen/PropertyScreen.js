@@ -62,7 +62,7 @@ function PropertyScreen() {
               <img
                 src={propertyImages[currentImageIndex]}
                 alt={propertyData.title}
-                className="property-image"
+                className="property-pic"
               />
               <CaretRight
                 className="nav-button"

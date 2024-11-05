@@ -1,0 +1,35 @@
+.backs-button {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.backs-button:hover {
+  background-color: #ddd;
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a;
+}
+
+.delete-button {
+  margin-left: 10px;
+}
+
+.no-properties-message {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  text-align: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 400px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
