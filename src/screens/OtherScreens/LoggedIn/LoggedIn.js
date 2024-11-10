@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChatCircleDots, House, List, SignOut, X } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
-import Property from "../../../assets/Property2.jpg";
+import Property from "../../../assets/zonefy.jpg";
 import ListedProperties from "../../../components/ListedProps/ListedProperties";
 import SearchResults from "../../../components/SearchResults/SearchResults";
 
@@ -74,7 +74,7 @@ function LoggedIn() {
             <ul>
               <li>
                 <ChatCircleDots weight="bold" size={30} />
-                <Link to="/chats">Messages</Link>
+                <Link to="/messages">Messages</Link>
               </li>
               <li>
                 <House weight="bold" size={30} />

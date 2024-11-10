@@ -12,6 +12,7 @@ import PlaceProperty from "./components/PlaceProperty/PlaceProperty";
 import ListedProperties from "./components/ListedProps/ListedProperties";
 import AdminDashboard from "./screens/Admin/AdminDashboard";
 import Myproperty from "./components/MyProperty/Myproperty";
+import Messages from "./components/Messagess/Messages";
 
 function App() {
   const routes = useRoutes([
@@ -27,6 +28,7 @@ function App() {
     { path: "/listed-properties", element: <ListedProperties /> },
     { path: "/admin", element: <AdminDashboard /> },
     { path: "/property", element: <Myproperty /> },
+    { path: "/messages", element: <Messages /> },
   ]);
   return <div>{routes}</div>;
 }
