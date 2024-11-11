@@ -5,9 +5,16 @@ import "./loggedin.css";
 import Property from "../../../assets/zonefy.jpg";
 import ListedProperties from "../../../components/ListedProps/ListedProperties";
 import SearchResults from "../../../components/SearchResults/SearchResults";
+import {
+  selectZonefy,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../Store/store";
+import { setLogout } from "../../../Features/zonefySlice";
 
 function LoggedIn() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // State to track sidebar visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -40,6 +47,7 @@ function LoggedIn() {
   // Function to confirm logout and navigate to home page
   const confirmLogout = () => {
     setShowModal(false);
+    dispatch(setLogout());
     navigate("/");
   };
 

@@ -1,10 +1,31 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  useAppDispatch,
+  useAppSelector,
+  selectZonefy,
+} from "../../../Store/store";
+import { SignUp } from "../../../Features/zonefySlice";
 
 function Signup() {
+  const dispatch = useAppDispatch();
+  const { userData } = useAppSelector(selectZonefy);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+
+  const payload = {
+    email: email,
+    phoneNumber: phoneNumber,
+    password: password,
+  };
+
+  useEffect(() => {
+    if (userData) {
+      navigate("/home");
+    }
+  }, [userData, navigate]);
 
   return (
     <div className="body">
@@ -58,7 +79,14 @@ function Signup() {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button
+          type="submit"
+          className="submit-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(SignUp(payload));
+          }}
+        >
           Sign Up
         </button>
 

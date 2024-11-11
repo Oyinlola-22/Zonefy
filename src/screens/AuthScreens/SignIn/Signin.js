@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./signin.css";
+import {
+  selectZonefy,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../Store/store";
+import { SignIn } from "../../../Features/zonefySlice";
 
 function Signin() {
+  const dispatch = useAppDispatch();
+  const { userData } = useAppSelector(selectZonefy);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle sign-in logic here
-    navigate("/home");
+  const payload = {
+    email: email,
+    password: password,
   };
+
+  useEffect(() => {
+    if (userData) {
+      navigate("/home");
+    }
+  }, [userData, navigate]);
 
   return (
     <div className="body">
@@ -28,7 +41,7 @@ function Signin() {
         </div>
       </div>
 
-      <form className="signin-form" onSubmit={handleSubmit}>
+      <form className="signin-form">
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
@@ -56,7 +69,14 @@ function Signin() {
           <Link to="/forgotpassword">Forgot Password?</Link>
         </p>
 
-        <button type="submit" className="submit-btn">
+        <button
+          type="submit"
+          className="submit-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(SignIn(payload));
+          }}
+        >
           Sign In
         </button>
 

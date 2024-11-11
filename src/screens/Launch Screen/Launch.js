@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { House } from "@phosphor-icons/react";
 import "./launchstyle.css";
 import Property from "../../assets/zonefy.jpg";
 import ListedProperties from "../../components/ListedProps/ListedProperties";
 import SearchResults from "../../components/SearchResults/SearchResults"; // Import the SearchResults component
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { selectZonefy, useAppSelector } from "../../Store/store";
 
 function Launch() {
+  const { userData } = useAppSelector(selectZonefy);
+  const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [propertyType, setPropertyType] = useState("");
+
+  useEffect(() => {
+    if (userData) {
+      navigate("/home");
+    }
+  }, [userData, navigate]);
 
   const handleSearch = (e) => {
     e.preventDefault();
