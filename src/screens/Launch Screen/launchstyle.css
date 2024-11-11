@@ -25,7 +25,6 @@ body {
 .left-section {
   display: flex;
   align-items: center;
-  margin-left: 2%;
 }
 
 .left-section h2 {
@@ -33,7 +32,6 @@ body {
   font-size: 30px;
   font-weight: 700;
   color: #f2f2f2;
-  margin-left: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

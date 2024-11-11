@@ -448,7 +448,7 @@ export const GetAllProperty =
         const data = response.data;
         console.log("GetAll responsedd: ", data.data);
         if (data.code === 200) {
-          dispatch(setPropertyData(data));
+          dispatch(setPropertyData(data.data));
         }
       }
     } catch (error) {
@@ -475,9 +475,9 @@ export const DeleteProperty = (data) => async (dispatch) => {
     const response = await axiosWithAuth.delete(path);
     if (response) {
       const data = response.data;
-      // console.log("Delete response: ", data);
+      console.log("Delete response: ", data);
       if (data.code === 200) {
-        // dispatch(GetKitchenMenus(kitchenId));
+        dispatch(setPropertyData(data));
         dispatch(
           setNotifyMessage({
             isSuccess: true,

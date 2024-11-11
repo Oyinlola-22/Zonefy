@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Modal } from "antd";
 import Property from "../../assets/Property2.jpg";
 import "./Myproperties.css";
 import { useNavigate } from "react-router-dom";
@@ -7,28 +8,53 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../Store/store";
-import { GetAllProperty, setPropertyData } from "../../Features/zonefySlice";
+import { GetAllProperty, DeleteProperty } from "../../Features/zonefySlice";
 
 function Myproperty() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [pageNumber, setPageNumber] = useState(1);
-  const { propertyData } = useAppSelector(selectZonefy); // updated to fetch propertyData
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+  const { propertyData } = useAppSelector(selectZonefy);
+
+  useEffect(() => {
+    setPageNumber(propertyData?.totalPages || 1);
+  }, [dispatch, propertyData]);
 
   useEffect(() => {
     dispatch(GetAllProperty(pageNumber));
   }, [dispatch, pageNumber]);
 
   const handleNextPage = () => {
-    setPageNumber((prevPage) => prevPage + 1);
+    if (pageNumber < propertyData?.totalPages) {
+      setPageNumber((prevPage) => prevPage + 1);
+    }
   };
 
   const handlePreviousPage = () => {
-    setPageNumber((prevPage) => Math.max(prevPage - 1, 1));
+    if (pageNumber > 1) {
+      setPageNumber((prevPage) => prevPage - 1);
+    }
   };
 
-  const handleDelete = (id) => {
-    // setPropertyData(propertyData.filter((property) => property.id !== id)); // Updated for deleting property from list
+  const handleDeleteConfirm = (id) => {
+    setSelectedPropertyId(id);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = async () => {
+    if (selectedPropertyId) {
+      await dispatch(DeleteProperty(selectedPropertyId));
+      setIsModalVisible(false);
+      setSelectedPropertyId(null);
+      dispatch(GetAllProperty(pageNumber));
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedPropertyId(null);
   };
 
   return (
@@ -41,13 +67,15 @@ function Myproperty() {
 
       {/* Display properties */}
       <div className="rectangle-container">
-        {propertyData && propertyData.length ? (
-          propertyData.map((property) => (
+        {propertyData?.data &&
+        Array.isArray(propertyData.data) &&
+        propertyData.data.length > 0 ? (
+          propertyData.data.map((property) => (
             <div className="rectangle" key={property.id}>
               <p className="header-text">{property.propertyName}</p>
               <img
                 src={
-                  property.propertyImageUrl.length
+                  property.propertyImageUrl && property.propertyImageUrl.length
                     ? property.propertyImageUrl[0]
                     : Property
                 }
@@ -69,13 +97,15 @@ function Myproperty() {
                   <span>🚗 {property.parkingLot} parking lots</span>
                   <button
                     className="rent-button"
-                    onClick={() => navigate("/details", { state: property })}
+                    onClick={() =>
+                      navigate("/details", { state: { property } })
+                    }
                   >
                     Click to view
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => handleDelete(property.id)}
+                    onClick={() => handleDeleteConfirm(property.id)}
                   >
                     Delete
                   </button>
@@ -93,9 +123,28 @@ function Myproperty() {
         <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
           Previous
         </button>
-        <span>Page {pageNumber}</span>
-        <button onClick={handleNextPage}>Next</button>
+        <span>
+          Page {pageNumber} of {propertyData?.totalPages || 1}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={pageNumber >= (propertyData?.totalPages || 1)}
+        >
+          Next
+        </button>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="Confirm Delete"
+        open={isModalVisible}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        okText="Yes"
+        cancelText="No"
+      >
+        <p>Are you sure you want to delete this property?</p>
+      </Modal>
     </div>
   );
 }
