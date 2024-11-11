@@ -9,6 +9,7 @@ const zonefySlice = createSlice({
     isLoading: false,
     userData: null,
     refreshToken: null,
+    houseData: null,
     notifyMessage: { isSuccess: false, message: "", description: "" },
     socketIOmessages: [],
   },
@@ -34,11 +35,15 @@ const zonefySlice = createSlice({
     setNotifyMessage: (state, actions) => {
       state.notifyMessage = actions.payload;
     },
+    setHouseData: (state, actions) => {
+      state.notifyMessage = actions.payload;
+    },
     setLogout: (state, actions) => {
       state.auth = null;
       state.isLoading = false;
       state.userData = null;
       state.refreshToken = null;
+      state.houseData = null;
       state.notifyMessage = null;
       localStorage.removeItem("accesstoken");
     },
@@ -46,7 +51,7 @@ const zonefySlice = createSlice({
 });
 
 const BASE_PATH = "/User";
-const ADMIN_PATH = "/Admin";
+const HOUSE_PATH = "/HouseProperty";
 
 export const SignIn = (data) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -64,18 +69,17 @@ export const SignIn = (data) => async (dispatch) => {
         dispatch(setUserData(data.data));
         dispatch(setAuth(data.extrainfo));
         dispatch(setRefreshToken(data?.extrainfo?.refreshtoken));
-        console.log("hey");
+
         dispatch(
           setNotifyMessage({
             isSuccess: true,
             message: data.message,
           })
         );
-        console.log("hey1");
       }
     }
   } catch (error) {
-    console.log("login error response: ", error);
+    // console.log("login error response: ", error);
     dispatch(setError(error?.response?.data?.message));
     dispatch(
       setNotifyMessage({
@@ -323,10 +327,7 @@ export const Forgotpassword = (data) => async (dispatch) => {
       }
     }
   } catch (error) {
-    console.log(
-      "Forgotpassword error response: ",
-      error?.response?.data?.message
-    );
+    console.log("Forgotpassword error response: ", error);
     const err = error?.response?.data?.message;
     dispatch(
       setNotifyMessage({
@@ -367,11 +368,138 @@ export const GetNewToken = () => async (dispatch, getState) => {
   dispatch(setLoading(false));
 };
 
+export const PlaceHouse = (data) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = HOUSE_PATH + "/Create";
+    const response = await axios.post(path, data);
+    if (response) {
+      const data = response.data;
+      console.log("Placement response: ", data);
+      if (data.code === 200) {
+        dispatch(setHouseData(data.data));
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: "Property Placement Successful",
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.log("SignUp error response: ", error);
+    dispatch(setError(error?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const EditHouseProperty = (payload) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = HOUSE_PATH + "/Update";
+    const response = await axios.put(path, payload);
+    if (response) {
+      const data = response.data;
+      // console.log("VerifyEmail response: ", data);
+      if (data.code === 200) {
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: "Property Updated Successfully",
+          })
+        );
+      }
+    }
+  } catch (error) {
+    // console.log("VerifyEmail error response: ", error);
+    const err = error?.response?.data;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.message,
+        description: err?.message,
+      })
+    );
+    dispatch(setError(error?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const GetAllProperty = (data) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = HOUSE_PATH + `/GetAll?pageNumber=${data}`;
+    const response = await axios.get(path, data);
+    if (response) {
+      const data = response.data;
+      console.log("GetAll response: ", data.message);
+      if (data.code === 204) {
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: data.message,
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.log("GetAll error response: ", error);
+    const err = error?.response?.data?.message;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.response?.data?.message,
+      })
+    );
+    dispatch(setError(err?.response?.data?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const DeleteProperty = (data) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = HOUSE_PATH + `/Delete?id=${data}`;
+    const response = await axiosWithAuth.delete(path);
+    if (response) {
+      const data = response.data;
+      // console.log("Delete response: ", data);
+      if (data.code === 200) {
+        // dispatch(GetKitchenMenus(kitchenId));
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: "Delete success",
+            description: data?.body,
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.log("Delete error response: ", error);
+    dispatch(setError(error?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
 export const {
   setLogout,
   setAuth,
   setLoading,
   setUserData,
+  setHouseData,
   setNotifyMessage,
   setRefreshToken,
   setSocketIOmessages,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChatCircleDots, House, List, SignOut, X } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
@@ -10,11 +10,13 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../Store/store";
-import { setLogout } from "../../../Features/zonefySlice";
+import { setLogout, setNotifyMessage } from "../../../Features/zonefySlice";
+import { notification } from "antd";
 
 function LoggedIn() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { notifyMessage } = useAppSelector(selectZonefy);
 
   // State to track sidebar visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -55,6 +57,18 @@ function LoggedIn() {
   const cancelLogout = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    if (window.location.pathname === "/home") {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+      }
+    }
+  }, [dispatch, notifyMessage]);
 
   return (
     <div className={`body ${isSidebarOpen ? "sidebar-open" : ""}`}>

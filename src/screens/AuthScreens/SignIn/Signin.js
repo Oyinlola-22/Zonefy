@@ -42,7 +42,7 @@ function Signin() {
           navigate("/home");
         }
       } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
-        response = { ...notifyMessage };
+        var response = { ...notifyMessage };
         delete response.isSuccess;
         response = { ...response };
         notification.error(response);
@@ -52,7 +52,7 @@ function Signin() {
         // }
       }
     }
-  }, [navigate, dispatch, notifyMessage, payload]);
+  }, [dispatch, notifyMessage]);
 
   return (
     <div className="body">

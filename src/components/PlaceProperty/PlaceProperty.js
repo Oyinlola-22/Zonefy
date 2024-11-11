@@ -2,17 +2,24 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
 import "./placeproperty.css";
+import {
+  selectZonefy,
+  useAppDispatch,
+  useAppSelector,
+} from "../../Store/store";
+import { PlaceHouse } from "../../Features/zonefySlice";
 
 function PlaceProperty() {
   const navigate = useNavigate();
-  const [ownerName, setOwnerName] = useState("");
+  const dispatch = useAppDispatch();
+  const { userData, notifyMessage } = useAppSelector(selectZonefy);
+  const [ownersName, setOwnersName] = useState("");
   const [ownerPhone, setOwnerPhone] = useState("");
-  const [propertyName, setPropertyName] = useState("");
-  const [propertyLocation, setPropertyLocation] = useState("");
-  const [propertyShortLocation, setPropertyShortLocation] = useState("");
-  const [propertyPrice, setPropertyPrice] = useState("");
-  const [propertyDescription, setPropertyDescription] = useState("");
-  const [propertyType, setPropertyType] = useState("");
+  const [propertysName, setPropertysName] = useState("");
+  const [propertysLocation, setPropertysLocation] = useState("");
+  const [propertysPrice, setPropertysPrice] = useState("");
+  const [propertysDescription, setPropertysDescription] = useState("");
+  const [propertysType, setPropertysType] = useState("");
   const [toilets, setToilets] = useState("");
   const [parkingLots, setParkingLots] = useState("");
   const [images, setImages] = useState([]);
@@ -23,27 +30,27 @@ function PlaceProperty() {
     setImages((prevImages) => [...prevImages, ...selectedFiles]);
   };
 
+  const payload = {
+    creatorEmail: userData.email,
+    ownerName: ownersName,
+    ownerPhoneNumber: ownerPhone,
+    propertyName: propertysName,
+    propertyprice: propertysPrice,
+    propertyDescription: propertysDescription,
+    propertyType: propertysType,
+    propertyLocation: propertysLocation,
+    toiletNumber: toilets,
+    parkingLot: parkingLots,
+  };
+
   const handleNextStep = (e) => {
     e.preventDefault();
-    setStep(2);
+    dispatch(PlaceHouse(payload));
+    // setStep(2);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Property placed with details: ", {
-      ownerName,
-      ownerPhone,
-      propertyName,
-      propertyLocation,
-      propertyShortLocation,
-      propertyPrice,
-      propertyDescription,
-      propertyType,
-      toilets,
-      parkingLots,
-      images,
-    });
-    navigate("/property");
   };
 
   return (
@@ -64,8 +71,8 @@ function PlaceProperty() {
               <input
                 type="text"
                 id="property-owner-name"
-                value={ownerName}
-                onChange={(e) => setOwnerName(e.target.value)}
+                value={ownersName}
+                onChange={(e) => setOwnersName(e.target.value)}
                 placeholder="Enter your name"
                 required
               />
@@ -90,8 +97,8 @@ function PlaceProperty() {
               <input
                 type="text"
                 id="property-name"
-                value={propertyName}
-                onChange={(e) => setPropertyName(e.target.value)}
+                value={propertysName}
+                onChange={(e) => setPropertysName(e.target.value)}
                 placeholder="Enter property name"
                 required
               />
@@ -102,21 +109,9 @@ function PlaceProperty() {
               <input
                 type="text"
                 id="property-location"
-                value={propertyLocation}
-                onChange={(e) => setPropertyLocation(e.target.value)}
+                value={propertysLocation}
+                onChange={(e) => setPropertysLocation(e.target.value)}
                 placeholder="Enter location"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="property-short-location">Short Location:</label>
-              <input
-                type="text"
-                id="property-short-location"
-                value={propertyShortLocation}
-                onChange={(e) => setPropertyShortLocation(e.target.value)}
-                placeholder="e.g Texas, US"
                 required
               />
             </div>
@@ -126,8 +121,8 @@ function PlaceProperty() {
               <input
                 type="number"
                 id="property-price"
-                value={propertyPrice}
-                onChange={(e) => setPropertyPrice(e.target.value)}
+                value={propertysPrice}
+                onChange={(e) => setPropertysPrice(e.target.value)}
                 placeholder="Enter price"
                 required
               />
@@ -137,8 +132,8 @@ function PlaceProperty() {
               <label htmlFor="property-description">Description:</label>
               <textarea
                 id="property-description"
-                value={propertyDescription}
-                onChange={(e) => setPropertyDescription(e.target.value)}
+                value={propertysDescription}
+                onChange={(e) => setPropertysDescription(e.target.value)}
                 placeholder="Describe the property"
                 required
               ></textarea>
@@ -148,8 +143,8 @@ function PlaceProperty() {
               <label htmlFor="property-type">Property Type:</label>
               <select
                 id="property-type"
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
+                value={propertysType}
+                onChange={(e) => setPropertysType(e.target.value)}
                 required
               >
                 <option value="">Select property type</option>
