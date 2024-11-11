@@ -1,101 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Property from "../../assets/Property2.jpg";
 import "./Myproperties.css";
 import { useNavigate } from "react-router-dom";
+import {
+  selectZonefy,
+  useAppDispatch,
+  useAppSelector,
+} from "../../Store/store";
+import { GetAllProperty, setPropertyData } from "../../Features/zonefySlice";
 
 function Myproperty() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [pageNumber, setPageNumber] = useState(1);
+  const { propertyData } = useAppSelector(selectZonefy); // updated to fetch propertyData
 
-  // Example property data
-  const [propertyData, setPropertyData] = useState([
-    {
-      id: 1,
-      title: "Brand New 4 Bedroom Terrace Duplex With Swimming Pool",
-      description:
-        "Exquisitely finished 4-bedroom terrace duplex with a swimming pool in Ikeja GRA, available for a minimum rent of 2 years.",
-      location: "Ikeja, Lagos",
-      price: "₦5,000,000",
-      features: {
-        toilets: 5,
-        garage: 1,
-      },
-      image: Property,
-    },
-    {
-      id: 2,
-      title: "Brand New 4 Bedroom Terrace Duplex With Swimming Pool",
-      description:
-        "Exquisitely finished 4-bedroom terrace duplex with a swimming pool in Ikeja GRA, available for a minimum rent of 2 years.",
-      location: "Ikeja, Lagos",
-      price: "₦5,000,000",
-      features: {
-        toilets: 5,
-        garage: 1,
-      },
-      image: Property,
-    },
-    {
-      id: 3,
-      title: "Brand New 4 Bedroom Terrace Duplex With Swimming Pool",
-      description:
-        "Exquisitely finished 4-bedroom terrace duplex with a swimming pool in Ikeja GRA, available for a minimum rent of 2 years.",
-      location: "Ikeja, Lagos",
-      price: "₦5,000,000",
-      features: {
-        toilets: 5,
-        garage: 1,
-      },
-      image: Property,
-    },
-    {
-      id: 4,
-      title: "Brand New 4 Bedroom Terrace Duplex With Swimming Pool",
-      description:
-        "Exquisitely finished 4-bedroom terrace duplex with a swimming pool in Ikeja GRA, available for a minimum rent of 2 years.",
-      location: "Ikeja, Lagos",
-      price: "₦5,000,000",
-      features: {
-        toilets: 5,
-        garage: 1,
-      },
-      image: Property,
-    },
-  ]);
+  useEffect(() => {
+    dispatch(GetAllProperty(pageNumber));
+  }, [dispatch, pageNumber]);
 
-  // Handle property deletion
+  const handleNextPage = () => {
+    setPageNumber((prevPage) => prevPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setPageNumber((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
   const handleDelete = (id) => {
-    setPropertyData(propertyData.filter((property) => property.id !== id));
+    // setPropertyData(propertyData.filter((property) => property.id !== id)); // Updated for deleting property from list
   };
 
   return (
     <div className="listedProperties">
-      {/* Back Button */}
       <button onClick={() => navigate(-1)} className="backs-button">
         Go Back
       </button>
 
       <p className="title">My Properties</p>
 
-      {/* Loop through property data */}
+      {/* Display properties */}
       <div className="rectangle-container">
-        {propertyData.length > 0 ? (
+        {propertyData && propertyData.length ? (
           propertyData.map((property) => (
             <div className="rectangle" key={property.id}>
-              <p className="header-text">{property.title}</p>
+              <p className="header-text">{property.propertyName}</p>
               <img
-                src={property.image}
-                alt={property.title}
+                src={
+                  property.propertyImageUrl.length
+                    ? property.propertyImageUrl[0]
+                    : Property
+                }
+                alt={property.propertyName}
                 className="logo-image1"
               />
               <div className="details-container">
-                <span className="description">{property.description}</span>
+                <span className="description">
+                  {property.propertyDescription}
+                </span>
                 <div className="property-info">
-                  <span className="location">{property.location}</span>
-                  <span className="price">{property.price}</span>
+                  <span className="location">{property.propertyLocation}</span>
+                  <span className="price">
+                    ₦{property.propertyPrice.toLocaleString()}
+                  </span>
                 </div>
                 <div className="property-features">
-                  <span>🚻 {property.features.toilets} toilets</span>
-                  <span>🚗 {property.features.garage} parking lot</span>
+                  <span>🚻 {property.toiletNumber} toilets</span>
+                  <span>🚗 {property.parkingLot} parking lots</span>
                   <button
                     className="rent-button"
                     onClick={() => navigate("/details", { state: property })}
@@ -115,6 +86,15 @@ function Myproperty() {
         ) : (
           <p className="no-properties-message">No properties available.</p>
         )}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination-controls">
+        <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
+          Previous
+        </button>
+        <span>Page {pageNumber}</span>
+        <button onClick={handleNextPage}>Next</button>
       </div>
     </div>
   );

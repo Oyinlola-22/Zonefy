@@ -42,6 +42,7 @@ function PlaceProperty() {
     toiletNumber: toilets,
     parkingLot: parkingLots,
   };
+  // console.log("All", payload);
 
   const handleNextStep = (e) => {
     e.preventDefault();

@@ -1,4 +1,6 @@
+import React, { useState, useEffect } from "react";
 import { useRoutes } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import "./App.css";
 import Launch from "./screens/Launch Screen/Launch";
 import Signin from "./screens/AuthScreens/SignIn/Signin";
@@ -14,8 +16,19 @@ import AdminDashboard from "./screens/Admin/AdminDashboard";
 import Myproperty from "./components/MyProperty/Myproperty";
 import Messages from "./components/Messagess/Messages";
 import ResendEmail from "./screens/AuthScreens/ResendVerifyEmail/ResendEmail";
+import { setupAxiosInterceptors } from "./Features/utils";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setupAxiosInterceptors(dispatch);
+
+    // Cleanup function
+    return () => {
+      // Remove interceptors or perform any cleanup if needed
+    };
+  }, [dispatch]);
+
   const routes = useRoutes([
     { path: "/", element: <Launch /> },
     { path: "/signin", element: <Signin /> },
