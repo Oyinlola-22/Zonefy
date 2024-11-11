@@ -6,11 +6,12 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../Store/store";
-import { SignIn } from "../../../Features/zonefySlice";
+import { SignIn, setNotifyMessage } from "../../../Features/zonefySlice";
+import { notification } from "antd";
 
 function Signin() {
   const dispatch = useAppDispatch();
-  const { userData } = useAppSelector(selectZonefy);
+  const { userData, notifyMessage } = useAppSelector(selectZonefy);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +26,33 @@ function Signin() {
       navigate("/home");
     }
   }, [userData, navigate]);
+
+  useEffect(() => {
+    if (window.location.pathname === "/signin") {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+        if (
+          response?.message !== "Email Verified Success" ||
+          response?.message !== "Password Updated"
+        ) {
+          navigate("/home");
+        }
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+        // if (response?.message === "Unverified email") {
+        //   navigate(`/verifyEmail?showResend=true&email=${formData.Email}`);
+        // }
+      }
+    }
+  }, [navigate, dispatch, notifyMessage, payload]);
 
   return (
     <div className="body">

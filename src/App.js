@@ -13,12 +13,14 @@ import ListedProperties from "./components/ListedProps/ListedProperties";
 import AdminDashboard from "./screens/Admin/AdminDashboard";
 import Myproperty from "./components/MyProperty/Myproperty";
 import Messages from "./components/Messagess/Messages";
+import ResendEmail from "./screens/AuthScreens/ResendVerifyEmail/ResendEmail";
 
 function App() {
   const routes = useRoutes([
     { path: "/", element: <Launch /> },
     { path: "/signin", element: <Signin /> },
     { path: "/signup", element: <Signup /> },
+    { path: "/resend", element: <ResendEmail /> },
     { path: "/forgotpassword", element: <ForgotPassword /> },
     { path: "/resetpassword", element: <NewPassword /> },
     { path: "/details", element: <PropertyScreen /> },

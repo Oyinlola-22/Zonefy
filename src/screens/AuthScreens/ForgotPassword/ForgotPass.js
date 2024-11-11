@@ -1,15 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  useAppDispatch,
+  useAppSelector,
+  selectZonefy,
+} from "../../../Store/store";
+import {
+  Forgotpassword,
+  setNotifyMessage,
+} from "../../../Features/zonefySlice";
+import { notification } from "antd";
 
-function Signin() {
+function ForgotPassword() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { notifyMessage } = useAppSelector(selectZonefy);
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    navigate("/resetpassword");
+    dispatch(Forgotpassword(email));
   };
+
+  useEffect(() => {
+    if (window.location.pathname.includes("/forgotpassword")) {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+        // navigate(`/resetPassword/${formData.Email}`);
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+      }
+    }
+  }, [navigate, dispatch, notifyMessage]);
 
   return (
     <div className="body">
@@ -47,4 +77,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default ForgotPassword;

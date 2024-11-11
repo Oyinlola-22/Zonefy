@@ -55,7 +55,7 @@ export const SignIn = (data) => async (dispatch) => {
   try {
     const path = BASE_PATH + "/Login";
     const response = await axios.post(path, data);
-    console.log(data);
+    // console.log(data);
     if (response) {
       const data = response.data;
       console.log("login response: ", data);
@@ -64,45 +64,25 @@ export const SignIn = (data) => async (dispatch) => {
         dispatch(setUserData(data.data));
         dispatch(setAuth(data.extrainfo));
         dispatch(setRefreshToken(data?.extrainfo?.refreshtoken));
+        console.log("hey");
         dispatch(
           setNotifyMessage({
             isSuccess: true,
-            message: "Login Successful",
-            description: "Welcome back to Zonefy",
+            message: data.message,
           })
         );
-      } else {
-        if (data.message === "Incorrect Password") {
-          dispatch(
-            setNotifyMessage({
-              isSuccess: false,
-              message: "Incorrect Credential",
-              description:
-                "Incorrect Email or password. Check your login details again",
-            })
-          );
-        } else if (data.message === "User not found") {
-          dispatch(
-            setNotifyMessage({
-              isSuccess: false,
-              message: "Invalid Credentials",
-              description: "Check your login credentials again",
-            })
-          );
-        } else if (data.message === "Unverified email") {
-          dispatch(
-            setNotifyMessage({
-              isSuccess: false,
-              message: "Unverified email",
-              description: "This User is not yet verified",
-            })
-          );
-        }
+        console.log("hey1");
       }
     }
   } catch (error) {
     console.log("login error response: ", error);
-    dispatch(setError(error?.message));
+    dispatch(setError(error?.response?.data?.message));
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: error?.response?.data?.message,
+      })
+    );
   }
   dispatch(setLoading(false));
 };
@@ -117,7 +97,7 @@ export const SignUp = (data) => async (dispatch) => {
     if (response) {
       const data = response.data;
       console.log("SignUp response: ", data);
-      if (data.code === 200) {
+      if (data.code === 201) {
         dispatch(
           setNotifyMessage({
             isSuccess: true,
@@ -128,7 +108,7 @@ export const SignUp = (data) => async (dispatch) => {
       }
     }
   } catch (error) {
-    console.log("SignUp error response: ", error);
+    // console.log("SignUp error response: ", error);
     dispatch(setError(error?.message));
   }
 
@@ -171,11 +151,11 @@ export const ResendVerifyEmail = (email) => async (dispatch) => {
   dispatch(clearErrors());
 
   try {
-    const path = BASE_PATH + `/ResendVerifyEmail?Email=${email}`;
+    const path = BASE_PATH + `/ResendVerifyEmail?email=${email}`;
     const response = await axios.get(path);
     if (response) {
       const data = response.data;
-      // console.log("ResendVerifyEmail response: ", data);
+      console.log("ResendVerifyEmail response: ", data);
       if (data.code === 200) {
         dispatch(
           setNotifyMessage({
@@ -183,6 +163,14 @@ export const ResendVerifyEmail = (email) => async (dispatch) => {
             message: "Email Resent",
             description:
               "Email verification link has been resent. Check your email.",
+          })
+        );
+      } else if (data.message === "Your email is now verified") {
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: "Email Verified",
+            description: "This email has been verified",
           })
         );
       }
@@ -320,32 +308,33 @@ export const Forgotpassword = (data) => async (dispatch) => {
   dispatch(clearErrors());
 
   try {
-    const path = BASE_PATH + `/ForgotPassword?Email=${data.Email}`;
-    const response = await axios.post(path, data);
+    const path = BASE_PATH + `/ForgotPassword?email=${data}`;
+    const response = await axios.get(path, data);
     if (response) {
       const data = response.data;
-      // console.log("Forgotpassword response: ", data);
-      if (data.code === 200) {
+      console.log("Forgotpassword response: ", data.message);
+      if (data.code === 204) {
         dispatch(
           setNotifyMessage({
             isSuccess: true,
-            message: "Email Sent",
-            description: "Email OTP has been resent. Check your email.",
+            message: data.message,
           })
         );
       }
     }
   } catch (error) {
-    // console.log("Forgotpassword error response: ", error);
-    const err = error?.response?.data;
+    console.log(
+      "Forgotpassword error response: ",
+      error?.response?.data?.message
+    );
+    const err = error?.response?.data?.message;
     dispatch(
       setNotifyMessage({
         isSuccess: false,
-        message: err?.message,
-        description: err?.message,
+        message: err?.response?.data?.message,
       })
     );
-    dispatch(setError(error?.message));
+    dispatch(setError(err?.response?.data?.message));
   }
 
   dispatch(setLoading(false));
