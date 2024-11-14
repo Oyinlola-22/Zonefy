@@ -13,14 +13,13 @@ function ListedProperties() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [pageNumber, setPageNumber] = useState(1);
-  const { propertyData } = useAppSelector(selectZonefy);
+  const { propertyData, userData } = useAppSelector(selectZonefy);
 
   useEffect(() => {
-    setPageNumber(propertyData?.totalPages || 1);
-  }, [dispatch, propertyData]);
-
-  useEffect(() => {
+    // Fetch properties based on page number
     dispatch(GetAllProperty(pageNumber));
+    // Set page number based on total pages
+    setPageNumber(propertyData?.totalPages || 1);
   }, [dispatch, pageNumber]);
 
   const handleNextPage = () => {
@@ -38,9 +37,6 @@ function ListedProperties() {
   return (
     <div className="listedProperties">
       <p className="title">Latest Listed Properties</p>
-
-      {/* Loop through property data */}
-      {/* Display properties */}
       <div className="rectangle-container">
         {propertyData?.data &&
         Array.isArray(propertyData.data) &&
@@ -87,7 +83,6 @@ function ListedProperties() {
         )}
       </div>
 
-      {/* Pagination Controls */}
       <div className="pagination-controls">
         <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
           Previous

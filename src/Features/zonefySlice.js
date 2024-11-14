@@ -11,6 +11,9 @@ const zonefySlice = createSlice({
     refreshToken: null,
     houseData: null,
     propertyData: null,
+    myPropertyData: null,
+    messages: [],
+    image: null,
     notifyMessage: { isSuccess: false, message: "", description: "" },
     socketIOmessages: [],
   },
@@ -42,6 +45,15 @@ const zonefySlice = createSlice({
     setPropertyData: (state, actions) => {
       state.propertyData = actions.payload;
     },
+    setMyPropertyData: (state, actions) => {
+      state.myPropertyData = actions.payload;
+    },
+    setImage: (state, actions) => {
+      state.image = actions.payload;
+    },
+    setMessages: (state, actions) => {
+      state.messages = actions.payload;
+    },
     setLogout: (state, actions) => {
       state.auth = null;
       state.isLoading = false;
@@ -49,6 +61,9 @@ const zonefySlice = createSlice({
       state.refreshToken = null;
       state.houseData = null;
       state.propertyData = null;
+      state.myPropertyData = null;
+      state.image = null;
+      state.messages = null;
       state.notifyMessage = null;
       localStorage.removeItem("accesstoken");
     },
@@ -57,6 +72,7 @@ const zonefySlice = createSlice({
 
 const BASE_PATH = "/User";
 const HOUSE_PATH = "/HouseProperty";
+const CHAT_PATH = "/ChatMessage";
 
 export const SignIn = (data) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -70,10 +86,10 @@ export const SignIn = (data) => async (dispatch) => {
       const data = response.data;
       console.log("login response: ", data);
       if (data.code === 200) {
-        localStorage.setItem("accesstoken", data?.extraInfo?.accessToken);
+        localStorage.setItem("accessToken", data?.extraInfo?.accessToken);
         localStorage.setItem("refreshToken", data?.extraInfo?.refreshToken);
         dispatch(setUserData(data.data));
-        dispatch(setAuth(data.extraInfo));
+        dispatch(setAuth(data?.extraInfo?.accessToken));
         dispatch(setRefreshToken(data?.extraInfo?.refreshToken));
 
         dispatch(
@@ -237,22 +253,32 @@ export const VerifyEmail = (payload) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const UploadImage = (payload) => async (dispatch, getState) => {
+export const UploadImage = (data, image) => async (dispatch, getState) => {
   dispatch(setLoading(true));
   dispatch(clearErrors());
 
   try {
-    const path = BASE_PATH + `/Upload?KitchenId=${payload.get("KitchenId")}`;
-    const response = await axios.post(path, payload);
+    const token = localStorage.getItem("accessToken");
+    const path = HOUSE_PATH + `/UploadImage?propertyId=${image}`;
+    const response = await axiosWithAuth.post(path, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        // Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Meeee", response);
     if (response) {
       const data = response.data;
-      // console.log("UploadImage response: ", data);
+      console.log("UploadImage response: ", data);
       if (data.code === 200) {
-        const user = getState()?.kitchen?.userData;
+        const user = getState()?.zonefy?.mypropertyData;
         dispatch(
-          setUserData({ ...user, KitchenImage: data?.extrainfo?.ImageUrl })
+          setPropertyData({
+            ...user,
+            propertyImageUrl: data?.data?.propertyImageUrl,
+          })
         );
-        // dispatch(setImage(data?.extrainfo?.ImageUrl));
+        dispatch(setImage(data?.data?.propertyImageUrl));
         dispatch(
           setNotifyMessage({
             isSuccess: true,
@@ -263,7 +289,7 @@ export const UploadImage = (payload) => async (dispatch, getState) => {
       }
     }
   } catch (error) {
-    // console.log("UploadImage error response: ", error);
+    console.log("UploadImage error response: ", error);
     dispatch(
       setNotifyMessage({
         isSuccess: false,
@@ -352,16 +378,16 @@ export const GetNewToken = (data) => async (dispatch, getState) => {
   dispatch(clearErrors());
 
   try {
-    const refresh = getState().zonefy.refreshToken;
+    const refresh = getState().zonefy.data.refreshToken;
     // const user = getState().kitchen.userData;
     const path = BASE_PATH + "/RenewTokens";
     const response = await axiosAuth(refresh).post(path, data);
     if (response) {
       const data = response.data;
       console.log("GetNewToken response: ", data);
-      localStorage.setItem("accesstoken", data?.body?.AccessToken);
+      localStorage.setItem("accessToken", data?.data?.accessToken);
       dispatch(
-        setAuth({ accesstoken: data?.body?.AccessToken, refreshtoken: refresh })
+        setAuth({ accesstoken: data?.data?.accessToken, refreshtoken: refresh })
       );
     }
   } catch (error) {
@@ -382,8 +408,9 @@ export const PlaceHouse = (data) => async (dispatch) => {
     if (response) {
       const data = response.data;
       console.log("Placement response: ", data);
-      if (data.code === 200) {
+      if (data.code === 201) {
         dispatch(setHouseData(data));
+        localStorage.setItem("propertyId", data?.data.id);
         dispatch(
           setNotifyMessage({
             isSuccess: true,
@@ -400,23 +427,22 @@ export const PlaceHouse = (data) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const EditHouseProperty = (payload) => async (dispatch) => {
+export const EditHouseProperty = (data) => async (dispatch, getState) => {
   dispatch(setLoading(true));
   dispatch(clearErrors());
 
   try {
+    const payload = {
+      email: getState().zonefy.userData.email,
+      pageNumber: 1,
+    };
     const path = HOUSE_PATH + "/Update";
-    const response = await axios.put(path, payload);
+    const response = await axiosWithAuth.put(path, data);
     if (response) {
       const data = response.data;
-      // console.log("VerifyEmail response: ", data);
+      console.log("VerifyEmail response: ", data);
       if (data.code === 200) {
-        dispatch(
-          setNotifyMessage({
-            isSuccess: true,
-            message: "Property Updated Successfully",
-          })
-        );
+        dispatch(GetPersonalProperty(payload));
       }
     }
   } catch (error) {
@@ -435,49 +461,82 @@ export const EditHouseProperty = (payload) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const GetAllProperty =
-  (pageNumber = 1) =>
-  async (dispatch) => {
-    dispatch(setLoading(true));
-    dispatch(clearErrors());
-
-    try {
-      const path = HOUSE_PATH + `/GetAll?pageNumber=${pageNumber}`;
-      const response = await axiosWithAuth.get(path);
-      if (response) {
-        const data = response.data;
-        console.log("GetAll responsedd: ", data.data);
-        if (data.code === 200) {
-          dispatch(setPropertyData(data.data));
-        }
-      }
-    } catch (error) {
-      console.log("GetAll error response: ", error);
-      const err = error?.response?.data?.message;
-      dispatch(
-        setNotifyMessage({
-          isSuccess: false,
-          message: err?.response?.data?.message,
-        })
-      );
-      dispatch(setError(err?.response?.data?.message));
-    }
-
-    dispatch(setLoading(false));
-  };
-
-export const DeleteProperty = (data) => async (dispatch) => {
+export const GetAllProperty = (pageNumber) => async (dispatch) => {
   dispatch(setLoading(true));
   dispatch(clearErrors());
 
   try {
+    const path = HOUSE_PATH + `/GetAll?pageNumber=${pageNumber}`;
+    const response = await axios.get(path);
+    if (response) {
+      const data = response.data;
+      console.log("GetAll responsedd: ", data.data);
+      if (data.code === 200) {
+        dispatch(setPropertyData(data.data));
+      }
+    }
+  } catch (error) {
+    console.log("GetAll error response: ", error);
+    const err = error?.response?.data?.message;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.response?.data?.message,
+      })
+    );
+    dispatch(setError(err?.response?.data?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const GetPersonalProperty = (data) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path =
+      HOUSE_PATH +
+      `/GetAllByEmail?email=${data.email}&&pageNumber=${data.pageNumber}`;
+    const response = await axiosWithAuth.get(path);
+    if (response) {
+      const data = response.data;
+      console.log("GetAll responsed: ", data.data);
+      if (data.code === 200) {
+        dispatch(setMyPropertyData(data.data));
+      }
+    }
+  } catch (error) {
+    console.log("GetAll error response: ", error);
+    const err = error?.response?.data?.message;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.response?.data?.message,
+      })
+    );
+    dispatch(setError(err?.response?.data?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const DeleteProperty = (data) => async (dispatch, getState) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const payload = {
+      email: getState().zonefy.userData.email,
+      pageNumber: 1,
+    };
     const path = HOUSE_PATH + `/Delete?id=${data}`;
     const response = await axiosWithAuth.delete(path);
     if (response) {
       const data = response.data;
       console.log("Delete response: ", data);
       if (data.code === 200) {
-        dispatch(setPropertyData(data));
+        dispatch(GetPersonalProperty(payload));
         dispatch(
           setNotifyMessage({
             isSuccess: true,
@@ -495,6 +554,71 @@ export const DeleteProperty = (data) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
+export const SendMessage = (data) => async (dispatch, getState) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    console.log(data);
+    const path = CHAT_PATH + "/Send";
+    const response = await axiosWithAuth.post(path, data);
+    if (response) {
+      const responseData = response.data; // renamed from 'data' to 'responseData'
+      console.log("Chat response: ", responseData);
+
+      if (responseData.code === 201) {
+        // Use the original 'data' parameter to retrieve sender and receiver info
+        dispatch(
+          GetAllMessagesByIdentifier({
+            sender: encodeURIComponent(data.senderEmail),
+            receiver: encodeURIComponent(data.receiverEmail),
+            pageNumber: 1,
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.log("SignUp error response: ", error);
+    dispatch(setError(error?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const GetAllMessagesByIdentifier =
+  ({ sender, receiver, pageNumber }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const path =
+        CHAT_PATH +
+        `/GetByChatIdentifier?sender=${sender}&receiver=${receiver}&pageNumber=${pageNumber}`;
+      const response = await axiosWithAuth.get(path);
+      if (response) {
+        const data = response.data;
+        // console.log("GetAllChatByIdentifier: ", data);
+        if (data.code === 200) {
+          console.log("Fetched messages: ", data.data);
+          dispatch(setMessages(data.data));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
 export const {
   setLogout,
   setAuth,
@@ -502,6 +626,9 @@ export const {
   setUserData,
   setHouseData,
   setPropertyData,
+  setMyPropertyData,
+  setImage,
+  setMessages,
   setNotifyMessage,
   setRefreshToken,
   setSocketIOmessages,

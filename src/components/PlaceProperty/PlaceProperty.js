@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
+import { notification, message } from "antd";
 import "./placeproperty.css";
 import {
   selectZonefy,
   useAppDispatch,
   useAppSelector,
 } from "../../Store/store";
-import { PlaceHouse } from "../../Features/zonefySlice";
+import {
+  PlaceHouse,
+  setNotifyMessage,
+  UploadImage,
+} from "../../Features/zonefySlice";
 
 function PlaceProperty() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { userData, notifyMessage } = useAppSelector(selectZonefy);
+  const { userData, notifyMessage, propertyData } =
+    useAppSelector(selectZonefy);
+
   const [ownersName, setOwnersName] = useState("");
   const [ownerPhone, setOwnerPhone] = useState("");
   const [propertysName, setPropertysName] = useState("");
@@ -24,6 +31,8 @@ function PlaceProperty() {
   const [parkingLots, setParkingLots] = useState("");
   const [images, setImages] = useState([]);
   const [step, setStep] = useState(1);
+
+  console.log("Property Data:", propertyData);
 
   const handleImageUpload = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -42,17 +51,57 @@ function PlaceProperty() {
     toiletNumber: toilets,
     parkingLot: parkingLots,
   };
-  // console.log("All", payload);
 
   const handleNextStep = (e) => {
     e.preventDefault();
     dispatch(PlaceHouse(payload));
-    // setStep(2);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (images.length > 0) {
+      const formData = new FormData();
+
+      images.forEach((file) => {
+        formData.append("image", file);
+      });
+
+      const propertyId = localStorage.getItem("propertyId");
+      if (propertyId) {
+        formData.append("propertyId", propertyId);
+      }
+
+      dispatch(UploadImage(propertyId));
+      // .then(() => {
+      //   message.success("Images uploaded successfully!");
+      // })
+      // .catch((error) => {
+      //   message.error("Failed to upload images. Please try again.");
+      //   console.error("Upload error:", error);
+      // });
+    } else {
+      message.error("Please select at least one image to upload.");
+    }
   };
+
+  useEffect(() => {
+    if (window.location.pathname === "/place-property") {
+      if (notifyMessage?.isSuccess === true) {
+        setStep(2);
+
+        const response = { ...notifyMessage };
+        delete response.isSuccess;
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        const response = { ...notifyMessage };
+        delete response.isSuccess;
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+      }
+    }
+  }, [dispatch, notifyMessage]);
 
   return (
     <div className="place-property-container">
@@ -156,7 +205,6 @@ function PlaceProperty() {
               </select>
             </div>
 
-            {/* New Feature: Number of Toilets */}
             <div className="form-group">
               <label htmlFor="toilets">Number of Toilets:</label>
               <input
@@ -169,7 +217,6 @@ function PlaceProperty() {
               />
             </div>
 
-            {/* New Feature: Number of Parking Lots */}
             <div className="form-group">
               <label htmlFor="parking-lots">Number of Parking Lots:</label>
               <input
@@ -182,11 +229,7 @@ function PlaceProperty() {
               />
             </div>
 
-            <button
-              type="submit"
-              onClick={handleNextStep}
-              className="submit-button"
-            >
+            <button type="submit" className="submit-button">
               Next
             </button>
           </>
@@ -202,25 +245,14 @@ function PlaceProperty() {
                 type="file"
                 id="property-images"
                 multiple
-                onChange={handleImageUpload}
                 accept="image/*"
+                onChange={handleImageUpload}
                 required
               />
-              <div className="image-preview">
-                {images.length > 0 &&
-                  images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={URL.createObjectURL(image)}
-                      alt={`property-img-${index}`}
-                      className="preview-image"
-                    />
-                  ))}
-              </div>
             </div>
 
             <button type="submit" className="submit-button">
-              Place Property
+              Place Property & Image
             </button>
           </>
         )}

@@ -19,7 +19,7 @@ const axiosWithAuth = Axios.create();
 
 export const setupAxiosInterceptors = (dispatch) => {
   axiosWithAuth.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accesstoken");
+    const token = localStorage.getItem("accessToken");
     config.baseURL = baseURL;
     config.timeout = 10000;
     config.headers.Authorization = `Bearer ${token}`;
@@ -35,7 +35,7 @@ export const setupAxiosInterceptors = (dispatch) => {
       if (error?.response && error.response.status === 401) {
         const refreshToken = localStorage.getItem("refreshToken");
         dispatch(GetNewToken({ token: refreshToken }));
-        const newToken = localStorage.getItem("accesstoken");
+        const newToken = localStorage.getItem("accessToken");
         const config = error.config;
         config.timeout = 10000;
         config.headers.Authorization = `Bearer ${newToken}`;

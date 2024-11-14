@@ -2,67 +2,67 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
 import "./chatscreen.css";
+import {
+  useAppDispatch,
+  useAppSelector,
+  selectZonefy,
+} from "../../../Store/store";
+import {
+  SendMessage,
+  GetAllMessagesByIdentifier,
+  setMessages,
+} from "../../../Features/zonefySlice";
 
 function ChatScreen() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const { userData, messages } = useAppSelector(selectZonefy);
 
-  const ownerName = location.state?.ownerName || "Owner";
+  const ownerName = location.state?.ownerName;
+  const receiverEmails = location.state?.receiverEmail;
+  const userEmail = userData.email;
+  const userId = userData?.id;
 
-  // Preload some messages to simulate chat between user and owner
   useEffect(() => {
-    const initialMessages = [
-      {
-        sender: "owner",
-        text: "Hello! How can I assist you today?",
-        time: "10:00 AM",
-      },
-      {
-        sender: "user",
-        text: "Hi, I'm interested in the property listed.",
-        time: "10:05 AM",
-      },
-      {
-        sender: "owner",
-        text: "Great! Do you have any specific questions?",
-        time: "10:06 AM",
-      },
-    ];
-    setMessages(initialMessages);
-  }, []);
+    // Fetch all messages when component loads or when pagination changes
+    dispatch(
+      GetAllMessagesByIdentifier({
+        sender: encodeURIComponent(userEmail),
+        receiver: encodeURIComponent(receiverEmails),
+        pageNumber,
+      })
+    );
+  }, [dispatch, userEmail, receiverEmails, pageNumber]);
 
-  // Handle sending messages
   const handleSendMessage = () => {
     if (message.trim()) {
       const timeStamp = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
+
+      // Add user's message
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: "user", text: message, time: timeStamp },
+        { sender: userEmail, content: message, time: timeStamp },
       ]);
-      setMessage("");
 
-      // Simulate owner's response after a short delay
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            sender: "owner",
-            text: "Thank you for reaching out!",
-            time: timeStamp,
-          },
-        ]);
-      }, 1000);
+      const messageData = {
+        senderEmail: userEmail,
+        receiverEmail: receiverEmails,
+        content: message,
+      };
+
+      dispatch(SendMessage(messageData));
+      setMessage("");
     }
   };
 
   return (
     <div className="chat-screen">
-      {/* Header */}
       <div className="chat-header">
         <ArrowLeft
           onClick={() => navigate(-1)}
@@ -72,22 +72,26 @@ function ChatScreen() {
         <p className="chat-title">{`Chat with ${ownerName}`}</p>
       </div>
 
-      {/* Chat messages */}
       <div className="chat-messages">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${
-              msg.sender === "user" ? "user-message" : "owner-message"
-            }`}
-          >
-            <p>{msg.text}</p>
-            <span className="message-time">{msg.time}</span>
-          </div>
-        ))}
+        {Array.isArray(messages) &&
+          messages.map((msg) => (
+            <div
+              key={msg.chatIdentifier}
+              className={`message ${
+                msg.senderId === userId ? "user-message" : "owner-message"
+              }`}
+            >
+              <p>{msg.content}</p>
+              <span className="message-time">
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
+          ))}
       </div>
 
-      {/* Message input */}
       <div className="chat-input-container">
         <input
           type="text"

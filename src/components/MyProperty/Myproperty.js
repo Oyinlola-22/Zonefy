@@ -8,7 +8,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../Store/store";
-import { GetAllProperty, DeleteProperty } from "../../Features/zonefySlice";
+import {
+  GetPersonalProperty,
+  DeleteProperty,
+} from "../../Features/zonefySlice";
 
 function Myproperty() {
   const navigate = useNavigate();
@@ -16,18 +19,30 @@ function Myproperty() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
-  const { propertyData } = useAppSelector(selectZonefy);
+  const { myPropertyData, userData } = useAppSelector(selectZonefy);
+  const [localPropertyData, setLocalPropertyData] = useState(
+    myPropertyData?.data || []
+  );
+
+  const payload = {
+    email: userData.email,
+    pageNumber: pageNumber,
+  };
 
   useEffect(() => {
-    setPageNumber(propertyData?.totalPages || 1);
-  }, [dispatch, propertyData]);
+    setPageNumber(myPropertyData?.totalPages || 1);
+  }, [dispatch, myPropertyData]);
 
   useEffect(() => {
-    dispatch(GetAllProperty(pageNumber));
+    dispatch(GetPersonalProperty(payload));
   }, [dispatch, pageNumber]);
 
+  useEffect(() => {
+    setLocalPropertyData(myPropertyData?.data || []);
+  }, [myPropertyData]);
+
   const handleNextPage = () => {
-    if (pageNumber < propertyData?.totalPages) {
+    if (pageNumber < myPropertyData?.totalPages) {
       setPageNumber((prevPage) => prevPage + 1);
     }
   };
@@ -35,20 +50,6 @@ function Myproperty() {
   const handlePreviousPage = () => {
     if (pageNumber > 1) {
       setPageNumber((prevPage) => prevPage - 1);
-    }
-  };
-
-  const handleDeleteConfirm = (id) => {
-    setSelectedPropertyId(id);
-    setIsModalVisible(true);
-  };
-
-  const handleDelete = async () => {
-    if (selectedPropertyId) {
-      await dispatch(DeleteProperty(selectedPropertyId));
-      setIsModalVisible(false);
-      setSelectedPropertyId(null);
-      dispatch(GetAllProperty(pageNumber));
     }
   };
 
@@ -65,12 +66,9 @@ function Myproperty() {
 
       <p className="title">My Properties</p>
 
-      {/* Display properties */}
       <div className="rectangle-container">
-        {propertyData?.data &&
-        Array.isArray(propertyData.data) &&
-        propertyData.data.length > 0 ? (
-          propertyData.data.map((property) => (
+        {localPropertyData.length > 0 ? (
+          localPropertyData.map((property) => (
             <div className="rectangle" key={property.id}>
               <p className="header-text">{property.propertyName}</p>
               <img
@@ -105,7 +103,10 @@ function Myproperty() {
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteConfirm(property.id)}
+                    onClick={() => {
+                      setIsModalVisible(true);
+                      setSelectedPropertyId(property.id);
+                    }}
                   >
                     Delete
                   </button>
@@ -124,11 +125,11 @@ function Myproperty() {
           Previous
         </button>
         <span>
-          Page {pageNumber} of {propertyData?.totalPages || 1}
+          Page {pageNumber} of {myPropertyData?.totalPages || 1}
         </span>
         <button
           onClick={handleNextPage}
-          disabled={pageNumber >= (propertyData?.totalPages || 1)}
+          disabled={pageNumber >= (myPropertyData?.totalPages || 1)}
         >
           Next
         </button>
@@ -138,7 +139,10 @@ function Myproperty() {
       <Modal
         title="Confirm Delete"
         open={isModalVisible}
-        onOk={handleDelete}
+        onOk={() => {
+          dispatch(DeleteProperty(selectedPropertyId));
+          handleCancel();
+        }}
         onCancel={handleCancel}
         okText="Yes"
         cancelText="No"

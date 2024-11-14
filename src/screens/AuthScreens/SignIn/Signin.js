@@ -35,12 +35,6 @@ function Signin() {
         response = { ...response };
         notification.success(response);
         dispatch(setNotifyMessage(null));
-        if (
-          response?.message !== "Email Verified Success" ||
-          response?.message !== "Password Updated"
-        ) {
-          navigate("/home");
-        }
       } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
         var response = { ...notifyMessage };
         delete response.isSuccess;
