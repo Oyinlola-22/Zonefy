@@ -61,6 +61,8 @@ function ChatScreen() {
     }
   };
 
+  console.log("messages: ", messages?.data);
+
   return (
     <div className="chat-screen">
       <div className="chat-header">
@@ -73,8 +75,8 @@ function ChatScreen() {
       </div>
 
       <div className="chat-messages">
-        {Array.isArray(messages) &&
-          messages.map((msg) => (
+        {Array.isArray(messages?.data) &&
+          messages?.data.map((msg) => (
             <div
               key={msg.chatIdentifier}
               className={`message ${

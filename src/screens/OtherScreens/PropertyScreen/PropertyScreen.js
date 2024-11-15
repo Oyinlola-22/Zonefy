@@ -124,7 +124,7 @@ function PropertyScreen() {
     }
 
     const formData = new FormData();
-    selectedFiles.forEach((file) => formData.append("images", file)); // Append each file
+    selectedFiles.forEach((file) => formData.append("files", file)); // Append each file
     // formData.append("propertyId", myPropertyData.id);
 
     try {
