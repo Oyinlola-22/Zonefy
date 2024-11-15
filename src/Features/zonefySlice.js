@@ -440,7 +440,7 @@ export const EditHouseProperty = (data) => async (dispatch, getState) => {
     const response = await axiosWithAuth.put(path, data);
     if (response) {
       const data = response.data;
-      console.log("VerifyEmail response: ", data);
+      console.log("VerifyEmail re  sponse: ", data);
       if (data.code === 200) {
         dispatch(GetPersonalProperty(payload));
       }
@@ -563,8 +563,8 @@ export const SendMessage = (data) => async (dispatch, getState) => {
     const path = CHAT_PATH + "/Send";
     const response = await axiosWithAuth.post(path, data);
     if (response) {
-      const responseData = response.data; // renamed from 'data' to 'responseData'
-      console.log("Chat response: ", responseData);
+      const responseData = response.data;
+      // console.log("Chat response: ", responseData);
 
       if (responseData.code === 201) {
         // Use the original 'data' parameter to retrieve sender and receiver info

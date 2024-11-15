@@ -66,3 +66,23 @@
   font-size: 16px;
   margin: 0 10px;
 }
+
+.message-button {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 1%;
+}
+
+.message-button:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+.message-button svg {
+  font-size: 16px; /* Adjust icon size */
+}

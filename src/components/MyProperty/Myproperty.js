@@ -12,6 +12,8 @@ import {
   GetPersonalProperty,
   DeleteProperty,
 } from "../../Features/zonefySlice";
+import { MessageOutlined } from "@ant-design/icons";
+import { ChatCircle } from "@phosphor-icons/react";
 
 function Myproperty() {
   const navigate = useNavigate();
@@ -100,6 +102,16 @@ function Myproperty() {
                     }
                   >
                     Click to view
+                  </button>
+                  <button
+                    className="message-button"
+                    onClick={() => {
+                      // Navigate to a messaging component or open a chat modal
+                      navigate("/messages", { state: { property } });
+                    }}
+                  >
+                    <ChatCircle />
+                    Messages
                   </button>
                   <button
                     className="delete-button"

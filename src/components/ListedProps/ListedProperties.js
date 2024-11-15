@@ -47,7 +47,7 @@ function ListedProperties() {
               <img
                 src={
                   property.propertyImageUrl && property.propertyImageUrl.length
-                    ? property.propertyImageUrl[0]
+                    ? `https://drive.google.com/thumbnail?id=${property.propertyImageUrl[0]}`
                     : Property
                 }
                 alt={property.propertyName}
