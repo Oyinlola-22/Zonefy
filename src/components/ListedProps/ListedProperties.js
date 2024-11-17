@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./listedprop.css";
-import Property from "../../assets/Property1.jpg";
+import Property from "../../assets/no-photo.jpg";
 import { useNavigate } from "react-router-dom";
 import {
   selectZonefy,

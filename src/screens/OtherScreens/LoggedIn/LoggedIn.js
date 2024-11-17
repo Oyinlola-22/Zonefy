@@ -35,6 +35,7 @@ function LoggedIn() {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [propertyType, setPropertyType] = useState("");
+  const [dimensions, setDimensions] = useState("");
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -43,7 +44,8 @@ function LoggedIn() {
 
   // Function to show the logout confirmation modal
   const handleLogoutClick = () => {
-    setShowModal(true);
+    setIsSidebarOpen(false); // Close the sidebar
+    setShowModal(true); // Show the modal
   };
 
   // Function to confirm logout and navigate to home page
@@ -149,17 +151,6 @@ function LoggedIn() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="guests">Guests:</label>
-              <input
-                type="number"
-                id="guests"
-                min="1"
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
               <label htmlFor="property-type">Property Type:</label>
               <select
                 id="property-type"
@@ -173,6 +164,38 @@ function LoggedIn() {
                 <option value="storage-space">Shop</option>
               </select>
             </div>
+
+            {["hall", "meeting-room"].includes(propertyType) && (
+              <div className="form-group">
+                <label htmlFor="guests">
+                  How many guests can be accommodated:
+                </label>
+                <input
+                  type="number"
+                  id="guests"
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  placeholder="E.g. 200"
+                  required
+                />
+              </div>
+            )}
+
+            {["storage-space", "shop"].includes(propertyType) && (
+              <div className="form-group">
+                <label htmlFor="dimensions">
+                  What Dimensions does your space have:
+                </label>
+                <input
+                  type="text"
+                  id="dimensions"
+                  value={dimensions}
+                  onChange={(e) => setDimensions(e.target.value)}
+                  placeholder="E.g. 200sqm (square meter)"
+                  required
+                />
+              </div>
+            )}
 
             <button className="search-button" type="submit">
               Search

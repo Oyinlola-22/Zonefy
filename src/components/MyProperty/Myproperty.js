@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
-import Property from "../../assets/Property2.jpg";
+import Property from "../../assets/no-photo.jpg";
 import "./Myproperties.css";
 import { useNavigate } from "react-router-dom";
 import {

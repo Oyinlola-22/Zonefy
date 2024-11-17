@@ -52,6 +52,10 @@ function PlaceProperty() {
     propertyDescription: propertysDescription,
     propertyType: propertysType,
     propertyLocation: propertysLocation,
+    guests: guests || 0,
+    dimension: dimensions || 0,
+    checkInTime: checkIn,
+    checkOutTime: checkOut,
     toiletNumber: toilets,
     parkingLot: parkingLots,
   };
@@ -233,33 +237,37 @@ function PlaceProperty() {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="guests">
-                How many guest can be accommodated:
-              </label>
-              <input
-                type="number"
-                id="guests"
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-                placeholder="E.g 200"
-                required
-              />
-            </div>
+            {["hall", "meeting-room"].includes(propertysType) && (
+              <div className="form-group">
+                <label htmlFor="guests">
+                  How many guests can be accommodated:
+                </label>
+                <input
+                  type="number"
+                  id="guests"
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  placeholder="E.g. 200"
+                  required
+                />
+              </div>
+            )}
 
-            <div className="form-group">
-              <label htmlFor="dimensions">
-                What Dimension does your space have:
-              </label>
-              <input
-                type="text"
-                id="dimensions"
-                value={dimensions}
-                onChange={(e) => setDimensions(e.target.value)}
-                placeholder="E.g 200sqm (square meter)"
-                required
-              />
-            </div>
+            {["storage-space", "shop"].includes(propertysType) && (
+              <div className="form-group">
+                <label htmlFor="dimensions">
+                  What Dimensions does your space have:
+                </label>
+                <input
+                  type="text"
+                  id="dimensions"
+                  value={dimensions}
+                  onChange={(e) => setDimensions(e.target.value)}
+                  placeholder="E.g. 200sqm (square meter)"
+                  required
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="toilets">Number of Toilets:</label>

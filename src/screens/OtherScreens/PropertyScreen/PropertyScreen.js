@@ -9,7 +9,7 @@ import {
   PencilSimple,
 } from "@phosphor-icons/react";
 import "./propertyscreen.css";
-import Property from "../../../assets/Property.jpg";
+import Property from "../../../assets/no-photo.jpg";
 import Property1 from "../../../assets/Property1.jpg";
 import Property2 from "../../../assets/Property2.jpg";
 import {
@@ -187,7 +187,7 @@ function PropertyScreen() {
                   src={
                     myPropertyData?.propertyImageUrl?.length
                       ? `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}`
-                      : propertyImages[currentImageIndex]
+                      : Property
                   }
                   alt={myPropertyData?.propertyName}
                   className="property-pic"
