@@ -28,7 +28,6 @@ function AdminDashboard() {
       title: "Luxury Apartment in Lagos",
       location: "Lekki, Lagos",
       owner: "John Doe",
-      status: "Pending",
       image: "https://via.placeholder.com/300",
     },
     {
@@ -36,7 +35,6 @@ function AdminDashboard() {
       title: "Modern Office Space",
       location: "Victoria Island, Lagos",
       owner: "Jane Smith",
-      status: "Approved",
       image: "https://via.placeholder.com/300",
     },
   ]);
@@ -51,33 +49,14 @@ function AdminDashboard() {
     },
   ]);
 
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      property: "Luxury Apartment",
-      user: "John Doe",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      property: "Modern Office Space",
-      user: "Jane Smith",
-      status: "Approved",
-    },
-  ]);
-
   const chartRef = useRef(null);
 
   const data = {
-    labels: ["Properties", "Users", "Pending Requests"],
+    labels: ["Properties", "Users"],
     datasets: [
       {
         label: "Admin Dashboard Overview",
-        data: [
-          properties.length,
-          users.length,
-          requests.filter((req) => req.status === "Pending").length,
-        ],
+        data: [properties.length, users.length],
         backgroundColor: ["#007bff", "#28a745", "#ffc107"],
       },
     ],
@@ -99,7 +78,7 @@ function AdminDashboard() {
         chartRef.current.destroy();
       }
     };
-  }, [properties, users, requests]);
+  }, [properties, users]);
 
   const handleApprove = (id) => {
     const updatedProperties = properties.map((property) =>
@@ -109,10 +88,10 @@ function AdminDashboard() {
   };
 
   const handleReject = (id) => {
-    const updatedProperties = properties.map((property) =>
-      property.id === id ? { ...property, status: "Rejected" } : property
-    );
-    setProperties(updatedProperties);
+    // const updatedProperties = properties.map((property) =>
+    //   property.id === id ? { ...property, status: "Rejected" } : property
+    // );
+    // setProperties(updatedProperties);
   };
 
   const handleDeleteUser = (id) => {
@@ -142,32 +121,21 @@ function AdminDashboard() {
                 <h3>{property.title}</h3>
                 <p>Location: {property.location}</p>
                 <p>Owner: {property.owner}</p>
-                <p>Status: {property.status}</p>
               </div>
               <div className="property-actions">
-                {property.status === "Pending" && (
-                  <>
-                    <button
-                      className="approve-button"
-                      onClick={() => handleApprove(property.id)}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="reject-button"
-                      onClick={() => handleReject(property.id)}
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
+                <button
+                  className="reject-button"
+                  onClick={() => handleReject(property.id)}
+                >
+                  Delete Property
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="section">
+      {/* <div className="section">
         <h2>Manage Users</h2>
         <div className="users-list">
           {users.map((user) => (
@@ -184,9 +152,9 @@ function AdminDashboard() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      <div className="section">
+      {/* <div className="section">
         <h2>Rental Requests</h2>
         <div className="requests-list">
           {requests.map((request) => (
@@ -197,7 +165,7 @@ function AdminDashboard() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

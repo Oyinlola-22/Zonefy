@@ -23,6 +23,7 @@ function ChatScreen() {
 
   const ownerName = location.state?.ownerName;
   const receiverEmails = location.state?.receiverEmail;
+  const propertyIds = location.state?.propertyId;
   const userEmail = userData.email;
   const userId = userData?.id;
 
@@ -32,6 +33,7 @@ function ChatScreen() {
       GetAllMessagesByIdentifier({
         sender: encodeURIComponent(userEmail),
         receiver: encodeURIComponent(receiverEmails),
+        propertyId: propertyIds,
         pageNumber,
       })
     );
@@ -51,6 +53,7 @@ function ChatScreen() {
       ]);
 
       const messageData = {
+        propertyId: propertyIds,
         senderEmail: userEmail,
         receiverEmail: receiverEmails,
         content: message,
@@ -61,7 +64,7 @@ function ChatScreen() {
     }
   };
 
-  console.log("messages: ", messages?.data);
+  // console.log("messages: ", messages?.data);
 
   return (
     <div className="chat-screen">

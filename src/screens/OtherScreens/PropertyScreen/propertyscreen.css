@@ -63,8 +63,8 @@ body {
 }
 
 .property-pic {
-  width: 100%;
-  height: 100%;
+  width: 545px; /* Fixed width */
+  height: 410px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -262,6 +262,77 @@ body {
   cursor: pointer;
 }
 
+.interested-renters {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9; /* Light gray background */
+  border: 1px solid #e0e0e0; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.renters-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333; /* Dark text color */
+  text-align: center;
+}
+
+.renters-list {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+}
+
+.renter-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #ffffff; /* White background */
+  border: 1px solid #e0e0e0; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.renter-item:hover {
+  transform: translateY(-5px); /* Slight lift effect */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+.renter-details {
+  font-size: 1rem;
+  color: #555; /* Muted text color */
+}
+
+.renter-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222; /* Slightly darker for emphasis */
+}
+
+.renter-email,
+.renter-phone {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.message-buttons {
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.message-buttons:hover {
+  background-color: #45a049; /* Slightly darker green */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .property-row {
@@ -271,5 +342,13 @@ body {
   .property-info-container {
     margin-left: 0;
     margin-top: 20px;
+  }
+
+  .property-pic {
+    width: 300px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 8px; /* Keeps rounded corners */
+    margin-top: 10px;
   }
 }

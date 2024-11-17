@@ -31,6 +31,10 @@ function PlaceProperty() {
   const [parkingLots, setParkingLots] = useState("");
   const [images, setImages] = useState([]);
   const [step, setStep] = useState(1);
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [dimensions, setDimensions] = useState("");
+  const [guests, setGuests] = useState("");
 
   console.log("Property Data:", propertyData);
 
@@ -203,6 +207,58 @@ function PlaceProperty() {
                 <option value="storage-space">Storage Space</option>
                 <option value="shop">Shop</option>
               </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="checkIn">Check In:</label>
+              <input
+                type="date"
+                id="checkIn"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                placeholder="When are placing out the property"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="checkOut">Check Out:</label>
+              <input
+                type="date"
+                id="toilets"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                placeholder="Till When"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="guests">
+                How many guest can be accommodated:
+              </label>
+              <input
+                type="number"
+                id="guests"
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                placeholder="E.g 200"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dimensions">
+                What Dimension does your space have:
+              </label>
+              <input
+                type="text"
+                id="dimensions"
+                value={dimensions}
+                onChange={(e) => setDimensions(e.target.value)}
+                placeholder="E.g 200sqm (square meter)"
+                required
+              />
             </div>
 
             <div className="form-group">

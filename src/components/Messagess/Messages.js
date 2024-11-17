@@ -1,47 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./messages.css";
+import {
+  selectZonefy,
+  useAppDispatch,
+  useAppSelector,
+} from "../../Store/store";
+import {
+  GetPropertyStatisticsByEmail,
+  SendMessage,
+  GetAllMessagesByIdentifier,
+} from "../../Features/zonefySlice";
 
 function Messages() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [selectedChat, setSelectedChat] = useState(null);
+  const { userData, interestedMessage } = useAppSelector(selectZonefy);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
 
+  const userId = userData?.id;
+  const userEmail = userData.email;
+  const receiverEmails = interestedMessage?.data.creatorEmail;
+  const propertyIds = interestedMessage?.data.propertyId;
   const goBack = () => {
     navigate(-1);
   };
 
+  useEffect(() => {
+    // Fetch all messages when component loads or when pagination changes
+    dispatch(
+      GetPropertyStatisticsByEmail({
+        email: userData.email,
+        pageNumber,
+      })
+    );
+  }, [dispatch, pageNumber]);
+
+  useEffect(() => {
+    // Fetch all messages when component loads or when pagination changes
+    dispatch(
+      GetAllMessagesByIdentifier({
+        sender: encodeURIComponent(userEmail),
+        receiver: encodeURIComponent(receiverEmails),
+        propertyId: propertyIds,
+        pageNumber,
+      })
+    );
+  }, [dispatch, userEmail, receiverEmails, pageNumber]);
+
   const handleSendMessage = () => {
     if (message.trim()) {
-      const userTimeStamp = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "user", text: message, time: userTimeStamp },
-      ]);
-
-      setMessage("");
-
-      // Simulate owner's response after a short delay
-      setTimeout(() => {
-        const ownerTimeStamp = new Date().toLocaleTimeString([], {
+      if (message.trim()) {
+        const timeStamp = new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         });
 
+        // Add user's message
         setMessages((prevMessages) => [
           ...prevMessages,
-          {
-            sender: "owner",
-            text: "Thank you for reaching out!",
-            time: ownerTimeStamp,
-          },
+          { sender: userData.email, content: message, time: timeStamp },
         ]);
-      }, 1000);
+
+        const messageData = {
+          propertyId: interestedMessage.propertyId,
+          senderEmail: userData.email,
+          receiverEmail: interestedMessage.creatorEmail,
+          content: message,
+        };
+
+        dispatch(SendMessage(messageData));
+        setMessage("");
+      }
     }
   };
 
@@ -77,19 +110,25 @@ function Messages() {
         </div>
 
         <div className="chat-conversation">
-          {selectedChat ? (
+          {Array.isArray(interestedMessage?.data) &&
+          interestedMessage.data.map ? (
             <>
-              <div className="chat-header">{selectedChat.name}</div>
+              <div className="chat-header">{interestedMessage.userEmail}</div>
               <div className="messages">
-                {messages.map((msg, index) => (
+                {interestedMessage?.data.map((msg) => (
                   <div
-                    key={index}
+                    key={msg.chatIdentifier}
                     className={`message ${
-                      msg.sender === "user" ? "sent" : "received"
+                      msg.senderId === userId ? "sent" : "received"
                     }`}
                   >
-                    <span className="message-text">{msg.text}</span>
-                    <span className="message-time">{msg.time}</span>
+                    <p>{msg.content}</p>
+                    <span className="message-time">
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
                   </div>
                 ))}
               </div>

@@ -40,10 +40,11 @@
 
 /* Image styles */
 .logo-image1 {
-  width: 100%;
-  height: auto;
+  width: 645px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+  border-radius: 8px; /* Keeps rounded corners */
   margin-top: 10px;
-  border-radius: 8px;
 }
 
 /* Header text styles */
@@ -219,5 +220,13 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .logo-image1 {
+    width: 325px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 8px; /* Keeps rounded corners */
+    margin-top: 10px;
   }
 }

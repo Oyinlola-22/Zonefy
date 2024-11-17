@@ -17,16 +17,21 @@ import {
   selectZonefy,
   useAppDispatch,
 } from "../../../Store/store";
-import { EditHouseProperty, UploadImage } from "../../../Features/zonefySlice";
+import {
+  EditHouseProperty,
+  GetPropertyStatistics,
+  UploadImage,
+} from "../../../Features/zonefySlice";
 import { message } from "antd";
 
 function PropertyScreen() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { userData } = useAppSelector(selectZonefy);
+  const { userData, interestedRenters } = useAppSelector(selectZonefy);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to Array
@@ -37,6 +42,16 @@ function PropertyScreen() {
   useEffect(() => {
     setShowLoginMessage(userData === null);
   }, [userData]);
+
+  useEffect(() => {
+    // Fetch all messages when component loads or when pagination changes
+    dispatch(
+      GetPropertyStatistics({
+        id: myPropertyData.id,
+        pageNumber,
+      })
+    );
+  }, [dispatch, pageNumber]);
 
   const myPropertyData = location.state?.property;
 
@@ -92,6 +107,7 @@ function PropertyScreen() {
       state: {
         ownerName: myPropertyData.ownerName,
         receiverEmail: myPropertyData.creatorEmail,
+        propertyId: myPropertyData.id,
       },
     });
   };
@@ -170,7 +186,7 @@ function PropertyScreen() {
                 <img
                   src={
                     myPropertyData?.propertyImageUrl?.length
-                      ? myPropertyData.propertyImageUrl[currentImageIndex]
+                      ? `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}`
                       : propertyImages[currentImageIndex]
                   }
                   alt={myPropertyData?.propertyName}
@@ -250,6 +266,42 @@ function PropertyScreen() {
           <h2>About this property</h2>
           <p>{myPropertyData?.propertyDescription}</p>
         </div>
+
+        {/* Interested Renters Section */}
+        {isOwner && interestedRenters?.data.length > 0 && (
+          <div className="interested-renters">
+            <h2 className="renters-title">Interested Renters</h2>
+            <ul className="renters-list">
+              {interestedRenters?.data.map((renter, index) => (
+                <li key={index} className="renter-item">
+                  <div className="renter-details">
+                    <p className="renter-name">
+                      <strong>Property Name:</strong> {renter.propertyName}
+                    </p>
+                    <p className="renter-email">
+                      <strong>Email:</strong> {renter.userEmail}
+                    </p>
+                    <button
+                      className="message-buttons"
+                      onClick={() =>
+                        navigate("/chat", {
+                          state: {
+                            ownerName: myPropertyData.ownerName,
+                            receiverEmail: renter.creatorEmail,
+                            propertyId: myPropertyData.id,
+                            ownerEmail: renter.userEmail,
+                          },
+                        })
+                      }
+                    >
+                      Message
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {isOwner && isEditing && (
           <div className="edit-form">

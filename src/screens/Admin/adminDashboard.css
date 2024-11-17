@@ -125,14 +125,10 @@ h2 {
   background-color: #218838;
 }
 
-.reject-button:hover {
-  background-color: #c82333;
-}
-
 .approve-button,
 .reject-button {
   margin-top: 10px;
-  width: 100px;
+  width: auto;
   text-align: center;
 }
 

@@ -13,7 +13,9 @@ const zonefySlice = createSlice({
     propertyData: null,
     myPropertyData: null,
     messages: [],
+    interestedMessage: [],
     image: null,
+    interestedRenters: null,
     notifyMessage: { isSuccess: false, message: "", description: "" },
     socketIOmessages: [],
   },
@@ -54,6 +56,12 @@ const zonefySlice = createSlice({
     setMessages: (state, actions) => {
       state.messages = actions.payload;
     },
+    setInterestedRenters: (state, actions) => {
+      state.interestedRenters = actions.payload;
+    },
+    setInterestedMessage: (state, actions) => {
+      state.interestedMessage = actions.payload;
+    },
     setLogout: (state, actions) => {
       state.auth = null;
       state.isLoading = false;
@@ -65,7 +73,9 @@ const zonefySlice = createSlice({
       state.image = null;
       state.messages = null;
       state.notifyMessage = null;
-      localStorage.removeItem("accesstoken");
+      state.interestedRenters = null;
+      state.interestedMessage = null;
+      localStorage.removeItem("accessToken");
     },
   },
 });
@@ -586,7 +596,7 @@ export const SendMessage = (data) => async (dispatch, getState) => {
 };
 
 export const GetAllMessagesByIdentifier =
-  ({ sender, receiver, pageNumber }) =>
+  ({ sender, receiver, propertyId, pageNumber }) =>
   async (dispatch) => {
     dispatch(setLoading(true));
     dispatch(clearErrors());
@@ -594,7 +604,7 @@ export const GetAllMessagesByIdentifier =
     try {
       const path =
         CHAT_PATH +
-        `/GetByChatIdentifier?sender=${sender}&receiver=${receiver}&pageNumber=${pageNumber}`;
+        `/GetByUserIdsPropId?sender=${sender}&receiver=${receiver}&propertyId=${propertyId}&pageNumber=${pageNumber}`;
       const response = await axiosWithAuth.get(path);
       if (response) {
         const data = response.data;
@@ -602,6 +612,73 @@ export const GetAllMessagesByIdentifier =
         if (data.code === 200) {
           console.log("Fetched messages: ", data.data);
           dispatch(setMessages(data.data));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
+export const GetPropertyStatistics =
+  ({ id, pageNumber }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const path =
+        HOUSE_PATH +
+        `/GetPropertyStatisticsById?id=${id}&pageNumber=${pageNumber}`;
+      const response = await axiosWithAuth.get(path);
+      if (response) {
+        const data = response.data;
+        console.log("GetAllChatByIdentifier: ", data);
+        if (data.code === 200) {
+          console.log("Fetched messages: ", data.data);
+          dispatch(setInterestedRenters(data.data));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
+export const GetPropertyStatisticsByEmail =
+  ({ email, pageNumber }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const path =
+        HOUSE_PATH +
+        `/GetAllUserPropertyStatisticsByEmail?email=${email}&pageNumber=${pageNumber}`;
+      const response = await axiosWithAuth.get(path);
+      if (response) {
+        const data = response.data;
+        console.log("GetAllChatByIdentifier: ", data);
+        if (data.code === 200) {
+          dispatch(setInterestedMessage(data.data));
         }
       }
     } catch (error) {
@@ -629,6 +706,8 @@ export const {
   setMyPropertyData,
   setImage,
   setMessages,
+  setInterestedRenters,
+  setInterestedMessage,
   setNotifyMessage,
   setRefreshToken,
   setSocketIOmessages,

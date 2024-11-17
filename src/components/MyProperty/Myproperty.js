@@ -31,6 +31,8 @@ function Myproperty() {
     pageNumber: pageNumber,
   };
 
+  console.log("Hehehe", myPropertyData);
+
   useEffect(() => {
     setPageNumber(myPropertyData?.totalPages || 1);
   }, [dispatch, myPropertyData]);
@@ -76,7 +78,7 @@ function Myproperty() {
               <img
                 src={
                   property.propertyImageUrl && property.propertyImageUrl.length
-                    ? property.propertyImageUrl[0]
+                    ? `https://drive.google.com/thumbnail?id=${property.propertyImageUrl[0]}`
                     : Property
                 }
                 alt={property.propertyName}
@@ -103,7 +105,7 @@ function Myproperty() {
                   >
                     Click to view
                   </button>
-                  <button
+                  {/* <button
                     className="message-button"
                     onClick={() => {
                       // Navigate to a messaging component or open a chat modal
@@ -112,7 +114,7 @@ function Myproperty() {
                   >
                     <ChatCircle />
                     Messages
-                  </button>
+                  </button> */}
                   <button
                     className="delete-button"
                     onClick={() => {
