@@ -15,6 +15,7 @@ function Launch() {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [propertyType, setPropertyType] = useState("");
+  const [dimensions, setDimensions] = useState("");
 
   useEffect(() => {
     if (userData) {
@@ -87,17 +88,6 @@ function Launch() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="guests">Guests:</label>
-            <input
-              type="number"
-              id="guests"
-              min="1"
-              value={guests}
-              onChange={(e) => setGuests(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
             <label htmlFor="property-type">Property Type:</label>
             <select
               id="property-type"
@@ -111,6 +101,34 @@ function Launch() {
               <option value="storage-space">Shop</option>
             </select>
           </div>
+
+          {["hall", "meeting-room"].includes(propertyType) && (
+            <div className="form-group">
+              <label htmlFor="guests">How many guests?:</label>
+              <input
+                type="number"
+                id="guests"
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                placeholder="E.g. 200"
+                required
+              />
+            </div>
+          )}
+
+          {["storage-space", "shop"].includes(propertyType) && (
+            <div className="form-group">
+              <label htmlFor="dimensions">What Dimensions do you need:</label>
+              <input
+                type="text"
+                id="dimensions"
+                value={dimensions}
+                onChange={(e) => setDimensions(e.target.value)}
+                placeholder="E.g. 200sqm (square meter)"
+                required
+              />
+            </div>
+          )}
 
           <button className="search-button" type="submit">
             Search

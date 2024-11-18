@@ -167,9 +167,7 @@ function LoggedIn() {
 
             {["hall", "meeting-room"].includes(propertyType) && (
               <div className="form-group">
-                <label htmlFor="guests">
-                  How many guests can be accommodated:
-                </label>
+                <label htmlFor="guests">How many guests?:</label>
                 <input
                   type="number"
                   id="guests"
@@ -183,9 +181,7 @@ function LoggedIn() {
 
             {["storage-space", "shop"].includes(propertyType) && (
               <div className="form-group">
-                <label htmlFor="dimensions">
-                  What Dimensions does your space have:
-                </label>
+                <label htmlFor="dimensions">What Dimensions do you need:</label>
                 <input
                   type="text"
                   id="dimensions"
