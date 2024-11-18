@@ -36,7 +36,7 @@ function PlaceProperty() {
   const [dimensions, setDimensions] = useState("");
   const [guests, setGuests] = useState("");
 
-  console.log("Property Data:", propertyData);
+  // console.log("Property Data:", propertyData);
 
   const handleImageUpload = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -59,6 +59,8 @@ function PlaceProperty() {
     toiletNumber: toilets,
     parkingLot: parkingLots,
   };
+
+  console.log("payload: ", payload);
 
   const handleNextStep = (e) => {
     e.preventDefault();
@@ -213,7 +215,7 @@ function PlaceProperty() {
             <div className="form-group">
               <label htmlFor="checkIn">Check In:</label>
               <input
-                type="date"
+                type="datetime-local"
                 id="checkIn"
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
@@ -225,7 +227,7 @@ function PlaceProperty() {
             <div className="form-group">
               <label htmlFor="checkOut">Check Out:</label>
               <input
-                type="date"
+                type="datetime-local"
                 id="toilets"
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
