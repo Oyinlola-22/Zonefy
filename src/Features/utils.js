@@ -32,9 +32,10 @@ export const setupAxiosInterceptors = (dispatch) => {
       return response;
     },
     async (error) => {
-      if (error?.response && error.response.status === 401) {
+      if (error?.response && error?.response?.status === 401) {
         const refreshToken = localStorage.getItem("refreshToken");
         dispatch(GetNewToken({ token: refreshToken }));
+        console.log("form utils: ", error);
         const newToken = localStorage.getItem("accessToken");
         const config = error.config;
         config.timeout = 10000;

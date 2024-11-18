@@ -23,17 +23,20 @@ function ChatScreen() {
 
   const ownerName = location.state?.ownerName;
   const receiverEmails = location.state?.receiverEmail;
-  const propertyIds = location.state?.propertyId;
-  const userEmail = userData.email;
+  const propertyId = location.state?.propertyId;
+  const userEmail = location.state?.senderEmail; //userData.email;
   const userId = userData?.id;
 
+  // console.log("location: ", location?.state);
+
   useEffect(() => {
+    console.log("reftetch");
     // Fetch all messages when component loads or when pagination changes
     dispatch(
       GetAllMessagesByIdentifier({
         sender: encodeURIComponent(userEmail),
         receiver: encodeURIComponent(receiverEmails),
-        propertyId: propertyIds,
+        propertyId: propertyId,
         pageNumber,
       })
     );
@@ -53,7 +56,7 @@ function ChatScreen() {
       ]);
 
       const messageData = {
-        propertyId: propertyIds,
+        propertyId: propertyId,
         senderEmail: userEmail,
         receiverEmail: receiverEmails,
         content: message,
@@ -79,9 +82,9 @@ function ChatScreen() {
 
       <div className="chat-messages">
         {Array.isArray(messages?.data) &&
-          messages?.data.map((msg) => (
+          messages?.data.map((msg, index) => (
             <div
-              key={msg.chatIdentifier}
+              key={index}
               className={`message ${
                 msg.senderId === userId ? "user-message" : "owner-message"
               }`}

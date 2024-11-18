@@ -388,13 +388,14 @@ export const GetNewToken = (data) => async (dispatch, getState) => {
   dispatch(clearErrors());
 
   try {
-    const refresh = getState().zonefy.data.refreshToken;
+    // console.log("getting new token...");
+    const refresh = getState().zonefy.refreshToken;
     // const user = getState().kitchen.userData;
     const path = BASE_PATH + "/RenewTokens";
     const response = await axiosAuth(refresh).post(path, data);
     if (response) {
       const data = response.data;
-      console.log("GetNewToken response: ", data);
+      // console.log("GetNewToken response: ", data);
       localStorage.setItem("accessToken", data?.data?.accessToken);
       dispatch(
         setAuth({ accesstoken: data?.data?.accessToken, refreshtoken: refresh })
@@ -580,6 +581,7 @@ export const SendMessage = (data) => async (dispatch, getState) => {
         // Use the original 'data' parameter to retrieve sender and receiver info
         dispatch(
           GetAllMessagesByIdentifier({
+            propertyId: data?.propertyId,
             sender: encodeURIComponent(data.senderEmail),
             receiver: encodeURIComponent(data.receiverEmail),
             pageNumber: 1,

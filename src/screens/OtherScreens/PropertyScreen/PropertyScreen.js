@@ -45,12 +45,14 @@ function PropertyScreen() {
 
   useEffect(() => {
     // Fetch all messages when component loads or when pagination changes
-    dispatch(
-      GetPropertyStatistics({
-        id: myPropertyData.id,
-        pageNumber,
-      })
-    );
+    if (myPropertyData.creatorEmail === userData?.email) {
+      dispatch(
+        GetPropertyStatistics({
+          id: myPropertyData.id,
+          pageNumber,
+        })
+      );
+    }
   }, [dispatch, pageNumber]);
 
   const myPropertyData = location.state?.property;
@@ -107,6 +109,7 @@ function PropertyScreen() {
       state: {
         ownerName: myPropertyData.ownerName,
         receiverEmail: myPropertyData.creatorEmail,
+        senderEmail: userData?.email,
         propertyId: myPropertyData.id,
       },
     });
@@ -289,7 +292,7 @@ function PropertyScreen() {
                             ownerName: myPropertyData.ownerName,
                             receiverEmail: renter.creatorEmail,
                             propertyId: myPropertyData.id,
-                            ownerEmail: renter.userEmail,
+                            senderEmail: renter.userEmail,
                           },
                         })
                       }

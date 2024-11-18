@@ -45,6 +45,7 @@ function ListedProperties() {
             <div className="rectangle" key={property.id}>
               <p className="header-text">{property.propertyName}</p>
               <img
+                style={{ width: "100%" }}
                 src={
                   property.propertyImageUrl && property.propertyImageUrl.length
                     ? `https://drive.google.com/thumbnail?id=${property.propertyImageUrl[0]}`
