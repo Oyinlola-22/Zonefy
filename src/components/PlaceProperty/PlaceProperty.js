@@ -72,15 +72,12 @@ function PlaceProperty() {
       const formData = new FormData();
 
       images.forEach((file) => {
-        formData.append("image", file);
+        formData.append("files", file);
       });
 
       const propertyId = localStorage.getItem("propertyId");
-      if (propertyId) {
-        formData.append("propertyId", propertyId);
-      }
 
-      dispatch(UploadImage(propertyId));
+      dispatch(UploadImage(formData, propertyId));
       // .then(() => {
       //   message.success("Images uploaded successfully!");
       // })
