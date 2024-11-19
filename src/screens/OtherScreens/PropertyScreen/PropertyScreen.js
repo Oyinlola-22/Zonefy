@@ -20,6 +20,7 @@ import {
 import {
   DeletePropertyImage,
   EditHouseProperty,
+  fetchFile,
   GetPropertyStatistics,
   UploadImage,
 } from "../../../Features/zonefySlice";
@@ -166,26 +167,6 @@ function PropertyScreen() {
 
   /* PLEASE DON'T ENTER HERE, THERE IS RADIOACTIVE GAS */
   const [imageUrls, setImageUrls] = useState({});
-
-  // Fetch file from the backend and get the image URL
-  async function fetchFile(fileId) {
-    try {
-      // var token = localStorage.getItem()
-      const response = await fetch(`${baseURL}HouseProperty/Files/${fileId}`, {
-        // headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        return url; // Return the URL for the image
-      } else {
-        console.error("Failed to fetch file:", await response.json());
-      }
-    } catch (error) {
-      console.error("Error fetching file:", error);
-    }
-  }
 
   // Fetch image URLs for all data when component mounts
   useEffect(() => {

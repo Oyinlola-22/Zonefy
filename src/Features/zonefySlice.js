@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { clearErrors, setError } from "./errorSlice";
-import axiosWithAuth, { axios, axiosAuth } from "./utils";
+import axiosWithAuth, { axios, axiosAuth, baseURL } from "./utils";
 
 const zonefySlice = createSlice({
   name: "zonefy",
@@ -765,6 +765,26 @@ export const GetPropertyStatisticsByEmail =
 
     dispatch(setLoading(false));
   };
+
+export const fetchFile = async (fileId) => {
+  try {
+    // var token = localStorage.getItem()
+    const response = await fetch(`${baseURL}HouseProperty/Files/${fileId}`, {
+      // headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      return url; // Return the URL for the image
+    } else {
+      // console.error("Failed to fetch file:", await response.json());
+      console.error("Failed to fetch file:");
+    }
+  } catch (error) {
+    console.error("Error fetching file:", error);
+  }
+};
 
 export const {
   setLogout,
