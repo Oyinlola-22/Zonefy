@@ -43,6 +43,8 @@ function PropertyScreen() {
     setShowLoginMessage(userData === null);
   }, [userData]);
 
+  const myPropertyData = location.state?.property;
+
   useEffect(() => {
     // Fetch all messages when component loads or when pagination changes
     if (myPropertyData.creatorEmail === userData?.email) {
@@ -53,9 +55,7 @@ function PropertyScreen() {
         })
       );
     }
-  }, [dispatch, pageNumber]);
-
-  const myPropertyData = location.state?.property;
+  }, [dispatch, pageNumber, myPropertyData, userData]);
 
   const isOwner = userData?.email === myPropertyData?.creatorEmail;
 
@@ -189,7 +189,7 @@ function PropertyScreen() {
                 <img
                   src={
                     myPropertyData?.propertyImageUrl?.length
-                      ? `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}`
+                      ? `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}&w=1200px`
                       : Property
                   }
                   alt={myPropertyData?.propertyName}

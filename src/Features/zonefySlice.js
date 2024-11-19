@@ -18,6 +18,7 @@ const zonefySlice = createSlice({
     interestedRenters: null,
     notifyMessage: { isSuccess: false, message: "", description: "" },
     socketIOmessages: [],
+    allUsers: null,
   },
   reducers: {
     setSocketIOmessages: (state, actions) => {
@@ -37,6 +38,9 @@ const zonefySlice = createSlice({
     },
     setUserData: (state, actions) => {
       state.userData = actions.payload;
+    },
+    setAllUsers: (state, actions) => {
+      state.allUsers = actions.payload;
     },
     setNotifyMessage: (state, actions) => {
       state.notifyMessage = actions.payload;
@@ -501,6 +505,35 @@ export const GetAllProperty = (pageNumber) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
+export const GetAllUsers = (pageNumber) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = BASE_PATH + `/GetAll?pageNumber=${pageNumber}`;
+    const response = await axios.get(path);
+    if (response) {
+      const data = response.data;
+      console.log("GetAllUsers responsedd: ", data.data);
+      if (data.code === 200) {
+        dispatch(setAllUsers(data.data));
+      }
+    }
+  } catch (error) {
+    console.log("GetAllUsers error response: ", error);
+    const err = error?.response?.data?.message;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.response?.data?.message,
+      })
+    );
+    dispatch(setError(err?.response?.data?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
 export const GetPersonalProperty = (data) => async (dispatch) => {
   dispatch(setLoading(true));
   dispatch(clearErrors());
@@ -714,5 +747,6 @@ export const {
   setRefreshToken,
   setSocketIOmessages,
   setClearSocketIOmessages,
+  setAllUsers,
 } = zonefySlice.actions;
 export default zonefySlice.reducer;

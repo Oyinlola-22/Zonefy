@@ -10,6 +10,12 @@ import {
   Legend,
 } from "chart.js";
 import "./adminDashboard.css";
+import {
+  useAppDispatch,
+  useAppSelector,
+  selectZonefy,
+} from "../../Store/store";
+import { DeleteProperty, GetAllUsers } from "../../Features/zonefySlice";
 
 ChartJS.register(
   CategoryScale,
@@ -22,32 +28,22 @@ ChartJS.register(
 );
 
 function AdminDashboard() {
-  const [properties, setProperties] = useState([
-    {
-      id: 1,
-      title: "Luxury Apartment in Lagos",
-      location: "Lekki, Lagos",
-      owner: "John Doe",
-      image: "https://via.placeholder.com/300",
-    },
-    {
-      id: 2,
-      title: "Modern Office Space",
-      location: "Victoria Island, Lagos",
-      owner: "Jane Smith",
-      image: "https://via.placeholder.com/300",
-    },
-  ]);
+  const dispatch = useAppDispatch();
+  const { propertyData, allUsers } = useAppSelector(selectZonefy);
+  const [properties, setProperties] = useState(propertyData?.data ?? []);
+  const [users, setUsers] = useState(allUsers?.data ?? []);
 
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", status: "Active" },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      status: "Suspended",
-    },
-  ]);
+  // useEffect(() => {
+  //   setProperties(propertyData);
+  // }, [propertyData]);
+
+  useEffect(() => {
+    dispatch(GetAllUsers(1));
+  }, []);
+
+  useEffect(() => {
+    setUsers(allUsers?.data);
+  }, [allUsers]);
 
   const chartRef = useRef(null);
 
@@ -88,10 +84,7 @@ function AdminDashboard() {
   };
 
   const handleReject = (id) => {
-    // const updatedProperties = properties.map((property) =>
-    //   property.id === id ? { ...property, status: "Rejected" } : property
-    // );
-    // setProperties(updatedProperties);
+    dispatch(DeleteProperty(id));
   };
 
   const handleDeleteUser = (id) => {
@@ -110,28 +103,29 @@ function AdminDashboard() {
       <div className="section">
         <h2>Manage Properties</h2>
         <div className="properties-list">
-          {properties.map((property) => (
-            <div className="property-card" key={property.id}>
-              <img
-                src={property.image}
-                alt={property.title}
-                className="property-image"
-              />
-              <div className="property-info">
-                <h3>{property.title}</h3>
-                <p>Location: {property.location}</p>
-                <p>Owner: {property.owner}</p>
+          {properties?.length > 0 &&
+            properties?.map((property, index) => (
+              <div className="property-card" key={index}>
+                <img
+                  src={`https://drive.google.com/thumbnail?id=${property?.propertyImageUrl[0]}&sz=1000`}
+                  alt={property?.propertyName}
+                  className="property-image"
+                />
+                <div className="property-info">
+                  <h3>{property.title}</h3>
+                  <p>Location: {property?.propertyLocation}</p>
+                  <p>Owner: {property?.ownerName}</p>
+                </div>
+                <div className="property-actions">
+                  <button
+                    className="reject-button"
+                    onClick={() => handleReject(property.id)}
+                  >
+                    Delete Property
+                  </button>
+                </div>
               </div>
-              <div className="property-actions">
-                <button
-                  className="reject-button"
-                  onClick={() => handleReject(property.id)}
-                >
-                  Delete Property
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
