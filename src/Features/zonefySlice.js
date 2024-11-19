@@ -598,6 +598,41 @@ export const DeleteProperty = (data) => async (dispatch, getState) => {
   dispatch(setLoading(false));
 };
 
+export const DeletePropertyImage = (data) => async (dispatch, getState) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const payload = {
+      email: getState().zonefy.userData.email,
+      pageNumber: 1,
+    };
+    const path =
+      HOUSE_PATH +
+      `/DeleteImage?userEmail=${data?.email}&fileId=${data?.fileId}&propertyId=${data?.propertyId}`;
+    const response = await axiosWithAuth.delete(path);
+    if (response) {
+      const data = response.data;
+      console.log("DeletePropertyImage response: ", data);
+      if (data.code === 200) {
+        dispatch(GetPersonalProperty(payload));
+        dispatch(
+          setNotifyMessage({
+            isSuccess: true,
+            message: "Delete success",
+            description: data?.body,
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.log("DeletePropertyImage error response: ", error);
+    dispatch(setError(error?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
 export const SendMessage = (data) => async (dispatch, getState) => {
   dispatch(setLoading(true));
   dispatch(clearErrors());

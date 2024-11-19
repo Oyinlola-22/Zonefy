@@ -18,6 +18,7 @@ import {
   useAppDispatch,
 } from "../../../Store/store";
 import {
+  DeletePropertyImage,
   EditHouseProperty,
   GetPropertyStatistics,
   UploadImage,
@@ -129,11 +130,17 @@ function PropertyScreen() {
 
   // Handle deleting an image
   const handleDeleteImage = (index) => {
-    const updatedImages = propertyImages.filter((_, i) => i !== index);
-    setPropertyImages(updatedImages);
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex >= updatedImages.length ? 0 : prevIndex
-    );
+    // const updatedImages = propertyImages.filter((_, i) => i !== index);
+    // setPropertyImages(updatedImages);
+    // setCurrentImageIndex((prevIndex) =>
+    //   prevIndex >= updatedImages.length ? 0 : prevIndex
+    // );
+    const deleteImagePayload = {
+      email: userData?.email,
+      fileId: index,
+      propertyId: myPropertyData?.id,
+    };
+    dispatch(DeletePropertyImage(deleteImagePayload));
   };
 
   const handleAddImage = async () => {
@@ -199,7 +206,11 @@ function PropertyScreen() {
                   <Trash
                     className="delete-icon"
                     size={30}
-                    onClick={() => handleDeleteImage(currentImageIndex)}
+                    onClick={() =>
+                      handleDeleteImage(
+                        myPropertyData.propertyImageUrl[currentImageIndex]
+                      )
+                    }
                   />
                 )}
               </div>
