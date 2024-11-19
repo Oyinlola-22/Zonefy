@@ -24,6 +24,7 @@ import {
   UploadImage,
 } from "../../../Features/zonefySlice";
 import { message } from "antd";
+import { baseURL } from "../../../Features/utils";
 
 function PropertyScreen() {
   const location = useLocation();
@@ -163,6 +164,48 @@ function PropertyScreen() {
     }
   };
 
+  /* PLEASE DON'T ENTER HERE, THERE IS RADIOACTIVE GAS */
+  const [imageUrls, setImageUrls] = useState({});
+
+  // Fetch file from the backend and get the image URL
+  async function fetchFile(fileId) {
+    try {
+      // var token = localStorage.getItem()
+      const response = await fetch(`${baseURL}HouseProperty/Files/${fileId}`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        return url; // Return the URL for the image
+      } else {
+        console.error("Failed to fetch file:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching file:", error);
+    }
+  }
+
+  // Fetch image URLs for all data when component mounts
+  useEffect(() => {
+    const fetchImages = async () => {
+      const urls = {};
+      if (myPropertyData?.propertyImageUrl?.length > 0) {
+        for (const data of myPropertyData?.propertyImageUrl) {
+          const fileId = data;
+          const imageUrl = await fetchFile(fileId);
+          if (imageUrl) {
+            urls[fileId] = imageUrl;
+          }
+        }
+        setImageUrls(urls); // Store the URLs in state
+      }
+    };
+
+    fetchImages();
+  }, [myPropertyData]); // Re-fetch if `allDatas` or `token` change
+
   return (
     <div className="property-screen">
       <div className="header">
@@ -195,8 +238,10 @@ function PropertyScreen() {
               <div className="image-wrapper">
                 <img
                   src={
-                    myPropertyData?.propertyImageUrl?.length
-                      ? `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}&w=1200px`
+                    imageUrls
+                      ? imageUrls[
+                          myPropertyData.propertyImageUrl[currentImageIndex]
+                        ] // `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}&w=1200px`
                       : Property
                   }
                   alt={myPropertyData?.propertyName}

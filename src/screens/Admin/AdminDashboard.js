@@ -16,6 +16,8 @@ import {
   selectZonefy,
 } from "../../Store/store";
 import { DeleteProperty, GetAllUsers } from "../../Features/zonefySlice";
+import { baseURL } from "../../Features/utils";
+import Propertyimg from "../../assets/no-photo.jpg";
 
 ChartJS.register(
   CategoryScale,
@@ -92,6 +94,50 @@ function AdminDashboard() {
     setUsers(updatedUsers);
   };
 
+  /* PLEASE DON'T ENTER HERE, THERE IS RADIOACTIVE GAS */
+  const [imageUrls, setImageUrls] = useState({});
+
+  // Fetch file from the backend and get the image URL
+  async function fetchFile(fileId) {
+    try {
+      // var token = localStorage.getItem()
+      const response = await fetch(`${baseURL}HouseProperty/Files/${fileId}`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        return url; // Return the URL for the image
+      } else {
+        console.error("Failed to fetch file:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error fetching file:", error);
+    }
+  }
+
+  // Fetch image URLs for all data when component mounts
+  useEffect(() => {
+    const fetchImages = async () => {
+      const urls = {};
+      if (properties?.length > 0) {
+        for (const data of properties) {
+          if (data?.propertyImageUrl.length > 0) {
+            const fileId = data?.propertyImageUrl[0];
+            const imageUrl = await fetchFile(fileId);
+            if (imageUrl) {
+              urls[fileId] = imageUrl;
+            }
+          }
+        }
+        setImageUrls(urls); // Store the URLs in state
+      }
+    };
+
+    fetchImages();
+  }, [properties]); // Re-fetch if `allDatas` or `token` change
+
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
@@ -107,7 +153,11 @@ function AdminDashboard() {
             properties?.map((property, index) => (
               <div className="property-card" key={index}>
                 <img
-                  src={`https://drive.google.com/thumbnail?id=${property?.propertyImageUrl[0]}&sz=1000`}
+                  src={
+                    imageUrls
+                      ? imageUrls[property?.propertyImageUrl[0]] // `https://drive.google.com/thumbnail?id=${property?.propertyImageUrl[0]}&sz=1000`
+                      : Propertyimg
+                  }
                   alt={property?.propertyName}
                   className="property-image"
                 />
