@@ -29,19 +29,6 @@ function LoggedIn() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // State for form inputs (search functionality)
-  const [location, setLocation] = useState("");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(1);
-  const [propertyType, setPropertyType] = useState("");
-  const [dimensions, setDimensions] = useState("");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Search triggered");
-  };
-
   // Function to show the logout confirmation modal
   const handleLogoutClick = () => {
     setIsSidebarOpen(false); // Close the sidebar
@@ -117,86 +104,6 @@ function LoggedIn() {
         <div className="image-container">
           <img src={Property} alt="Property" className="logo-image" />
           <div className="image-text">SEARCH THROUGH FOR YOUR TASTE</div>
-
-          <form className="search-container" onSubmit={handleSearch}>
-            <div className="form-group">
-              <label htmlFor="location">Where:</label>
-              <input
-                type="text"
-                id="location"
-                placeholder="Enter location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="check-in">Check In:</label>
-              <input
-                type="date"
-                id="check-in"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="check-out">Check Out:</label>
-              <input
-                type="date"
-                id="check-out"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="property-type">Property Type:</label>
-              <select
-                id="property-type"
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                <option value="">Pick Property Type</option>
-                <option value="hall">Hall</option>
-                <option value="meeting-room">Meeting Room</option>
-                <option value="storage-space">Storage Space</option>
-                <option value="storage-space">Shop</option>
-              </select>
-            </div>
-
-            {["hall", "meeting-room"].includes(propertyType) && (
-              <div className="form-group">
-                <label htmlFor="guests">How many guests?:</label>
-                <input
-                  type="number"
-                  id="guests"
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  placeholder="E.g. 200"
-                  required
-                />
-              </div>
-            )}
-
-            {["storage-space", "shop"].includes(propertyType) && (
-              <div className="form-group">
-                <label htmlFor="dimensions">What Dimensions do you need:</label>
-                <input
-                  type="text"
-                  id="dimensions"
-                  value={dimensions}
-                  onChange={(e) => setDimensions(e.target.value)}
-                  placeholder="E.g. 200sqm (square meter)"
-                  required
-                />
-              </div>
-            )}
-
-            <button className="search-button" type="submit">
-              Search
-            </button>
-          </form>
         </div>
         {/* Always display the SearchResults */}
         <SearchResults />
