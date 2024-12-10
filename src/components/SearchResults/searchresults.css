@@ -84,6 +84,22 @@
   color: #333;
 }
 
+.search-instruction {
+  font-size: 1.2rem; /* Slightly larger text for readability */
+  color: #6c757d; /* Subtle gray for instructions */
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.no-properties {
+  font-size: 1.5rem; /* Larger text to emphasize the message */
+  color: #dc3545; /* Red to grab attention */
+  font-weight: bold; /* Make it stand out */
+  text-align: center;
+  margin-top: 30px;
+}
+
 @media (max-width: 768px) {
   .property-card {
     padding: 10px;
