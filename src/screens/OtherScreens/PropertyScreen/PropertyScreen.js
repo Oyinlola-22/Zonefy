@@ -165,28 +165,6 @@ function PropertyScreen() {
     }
   };
 
-  /* PLEASE DON'T ENTER HERE, THERE IS RADIOACTIVE GAS */
-  const [imageUrls, setImageUrls] = useState({});
-
-  // Fetch image URLs for all data when component mounts
-  useEffect(() => {
-    const fetchImages = async () => {
-      const urls = {};
-      if (myPropertyData?.propertyImageUrl?.length > 0) {
-        for (const data of myPropertyData?.propertyImageUrl) {
-          const fileId = data;
-          const imageUrl = await fetchFile(fileId);
-          if (imageUrl) {
-            urls[fileId] = imageUrl;
-          }
-        }
-        setImageUrls(urls); // Store the URLs in state
-      }
-    };
-
-    fetchImages();
-  }, [myPropertyData]); // Re-fetch if `allDatas` or `token` change
-
   return (
     <div className="property-screen">
       <div className="header">
@@ -219,11 +197,10 @@ function PropertyScreen() {
               <div className="image-wrapper">
                 <img
                   src={
-                    imageUrls
-                      ? imageUrls[
-                          myPropertyData.propertyImageUrl[currentImageIndex]
-                        ] // `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}&w=1200px`
-                      : Property
+                    myPropertyData.propertyImageUrl?.length > 0
+                      ? myPropertyData.propertyImageUrl[currentImageIndex]
+                      : // `https://drive.google.com/thumbnail?id=${myPropertyData.propertyImageUrl[currentImageIndex]}&w=1200px`
+                        Property
                   }
                   alt={myPropertyData?.propertyName}
                   className="property-pic"
