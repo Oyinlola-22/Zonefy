@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { GetNewToken } from "./zonefySlice";
 
-export const baseURL = "http://64.225.60.153:5018/api/";
+export const baseURL = "https://api.zonefy.org/api/";
 
 export const axios = Axios.create({ baseURL, withCredentials: false });
 
