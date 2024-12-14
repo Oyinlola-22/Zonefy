@@ -238,7 +238,7 @@ export const VerifyEmail = (payload) => async (dispatch) => {
     const path =
       BASE_PATH +
       `/VerifyEmail?email=${payload?.email}&token=${payload?.token}`;
-    const response = await axios.put(path, payload);
+    const response = await axios.get(path);
     if (response) {
       const data = response.data;
       // console.log("VerifyEmail response: ", data);
