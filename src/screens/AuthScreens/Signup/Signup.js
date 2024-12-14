@@ -6,6 +6,8 @@ import {
   selectZonefy,
 } from "../../../Store/store";
 import { SignUp } from "../../../Features/zonefySlice";
+import { Eye } from "@phosphor-icons/react";
+import "./signup.css";
 
 function Signup() {
   const dispatch = useAppDispatch();
@@ -14,6 +16,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const payload = {
     email: email,
@@ -67,16 +70,24 @@ function Signup() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group1">
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Eye
+              className="eye-icon"
+              color="grey"
+              size={25}
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </div>
         </div>
 
         <button

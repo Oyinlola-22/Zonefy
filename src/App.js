@@ -17,6 +17,7 @@ import Myproperty from "./components/MyProperty/Myproperty";
 import Messages from "./components/Messagess/Messages";
 import ResendEmail from "./screens/AuthScreens/ResendVerifyEmail/ResendEmail";
 import { setupAxiosInterceptors } from "./Features/utils";
+import EmailVerified from "./screens/AuthScreens/Verified/EmailVerified";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ function App() {
     { path: "/admin", element: <AdminDashboard /> },
     { path: "/property", element: <Myproperty /> },
     { path: "/messages", element: <Messages /> },
+    { path: "/verified", element: <EmailVerified /> },
   ]);
   return <div>{routes}</div>;
 }

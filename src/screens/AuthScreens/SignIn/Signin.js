@@ -12,6 +12,7 @@ import {
   setNotifyMessage,
 } from "../../../Features/zonefySlice";
 import { notification } from "antd";
+import { Eye } from "@phosphor-icons/react";
 
 function Signin() {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ function Signin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // Extract the email from the query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -96,16 +98,24 @@ function Signin() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group1">
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Eye
+              className="eye-icon"
+              color="grey"
+              size={25}
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </div>
         </div>
         <p className="forgotPass">
           <Link to="/forgotpassword">Forgot Password?</Link>
