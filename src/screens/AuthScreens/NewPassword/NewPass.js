@@ -1,9 +1,34 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAppDispatch } from "../../../Store/store";
+import { ResetPasswords } from "../../../Features/zonefySlice";
 
 function NewPassword() {
+  const dispatch = useAppDispatch();
+  const location = useLocation();
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+
+  // Extract the email from the query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const qemail = queryParams.get("email");
+  const qtoken = queryParams.get("token");
+  // Decode the email if needed (remove extra quotes)
+  const cleanedEmail = qemail ? qemail.replace(/['"]+/g, "") : "";
+  console.log("query param: ", cleanedEmail);
+
+  //we want to verify email
+  useEffect(() => {
+    if (cleanedEmail !== "" && qtoken.length > 16) {
+      const payload = {
+        email: cleanedEmail,
+        token: qtoken,
+        newPassword: password,
+        confirmNewPassword: password,
+      };
+      dispatch(ResetPasswords(payload));
+    }
+  }, [qtoken, cleanedEmail, dispatch]);
 
   //   const handleSubmit = (e) => {
   //     e.preventDefault();

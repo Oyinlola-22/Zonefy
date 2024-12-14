@@ -1,20 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./signin.css";
 import {
   selectZonefy,
   useAppDispatch,
   useAppSelector,
 } from "../../../Store/store";
-import { SignIn, setNotifyMessage } from "../../../Features/zonefySlice";
+import {
+  SignIn,
+  VerifyEmail,
+  setNotifyMessage,
+} from "../../../Features/zonefySlice";
 import { notification } from "antd";
 
 function Signin() {
   const dispatch = useAppDispatch();
   const { userData, notifyMessage } = useAppSelector(selectZonefy);
+  const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Extract the email from the query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const qemail = queryParams.get("email");
+  const qtoken = queryParams.get("token");
+  // Decode the email if needed (remove extra quotes)
+  const cleanedEmail = qemail ? qemail.replace(/['"]+/g, "") : "";
+  console.log("query param: ", cleanedEmail);
+
+  //we want to verify email
+  useEffect(() => {
+    if (cleanedEmail !== "" && qtoken.length > 16) {
+      dispatch(VerifyEmail({ email: cleanedEmail, token: qtoken }));
+    }
+  }, [dispatch, qtoken, cleanedEmail]);
 
   const payload = {
     email: email,

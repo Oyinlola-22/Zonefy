@@ -235,7 +235,9 @@ export const VerifyEmail = (payload) => async (dispatch) => {
   dispatch(clearErrors());
 
   try {
-    const path = BASE_PATH + "/VerifyEmail";
+    const path =
+      BASE_PATH +
+      `/VerifyEmail?email=${payload?.email}&token=${payload?.token}`;
     const response = await axios.put(path, payload);
     if (response) {
       const data = response.data;
@@ -322,8 +324,10 @@ export const ResetPasswords = (data) => async (dispatch) => {
   dispatch(clearErrors());
 
   try {
-    const path = BASE_PATH + "/ResetPassword";
-    const response = await axios.put(path, data);
+    const path =
+      BASE_PATH + `/ResetPassword?email=${data?.email}&token=${data?.token}`;
+    delete data?.email;
+    const response = await axios.post(path, data);
     if (response) {
       const data = response.data;
       // console.log("ResetPasswords response: ", data);
