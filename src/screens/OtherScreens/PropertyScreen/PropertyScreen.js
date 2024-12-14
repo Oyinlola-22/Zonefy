@@ -209,11 +209,15 @@ function PropertyScreen() {
                   <Trash
                     className="delete-icon"
                     size={30}
-                    onClick={() =>
-                      handleDeleteImage(
-                        myPropertyData.propertyImageUrl[currentImageIndex]
-                      )
-                    }
+                    onClick={() => {
+                      var filename =
+                        myPropertyData?.propertyImageUrl[currentImageIndex];
+
+                      filename = filename.split("/").pop();
+                      // console.log("filename: ", filename);
+
+                      handleDeleteImage(filename);
+                    }}
                   />
                 )}
               </div>
