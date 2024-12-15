@@ -10,11 +10,12 @@ import {
   setNotifyMessage,
 } from "../../../Features/zonefySlice";
 import { notification } from "antd";
+import { Spinner } from "@phosphor-icons/react";
 
 function ForgotPassword() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { notifyMessage } = useAppSelector(selectZonefy);
+  const { notifyMessage, isLoading } = useAppSelector(selectZonefy);
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
@@ -69,9 +70,13 @@ function ForgotPassword() {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
-          Submit Email
-        </button>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <button type="submit" className="submit-btn">
+            Submit Email
+          </button>
+        )}
       </form>
     </div>
   );

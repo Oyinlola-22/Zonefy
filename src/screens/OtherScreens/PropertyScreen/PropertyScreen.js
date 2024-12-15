@@ -25,7 +25,6 @@ import {
   UploadImage,
 } from "../../../Features/zonefySlice";
 import { message } from "antd";
-import { baseURL } from "../../../Features/utils";
 
 function PropertyScreen() {
   const location = useLocation();
@@ -35,6 +34,8 @@ function PropertyScreen() {
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
+
+  console.log(selectedFiles);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to Array
@@ -119,15 +120,24 @@ function PropertyScreen() {
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === propertyImages.length - 1 ? 0 : prevIndex + 1
-    );
+    if (myPropertyData.propertyImageUrl?.length > 1) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === myPropertyData.propertyImageUrl?.length - 1
+          ? 0
+          : prevIndex + 1
+      );
+    }
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? propertyImages.length - 1 : prevIndex - 1
-    );
+    if (myPropertyData.propertyImageUrl?.length > 1) {
+      console.log(myPropertyData.propertyImageUrl?.length);
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0
+          ? myPropertyData.propertyImageUrl?.length - 1
+          : prevIndex - 1
+      );
+    }
   };
 
   // Handle deleting an image
@@ -230,13 +240,22 @@ function PropertyScreen() {
             </div>
 
             {/* Show Add Image button if the user is the owner and images are less than 5 */}
-            {isOwner && propertyImages.length < maxImages && (
+            {isOwner && myPropertyData.propertyImageUrl.length < maxImages && (
               <>
-                <PlusCircle
-                  className="add-image-icon"
-                  size={40}
-                  onClick={() => document.getElementById("file-input").click()} // Trigger file input click
-                />
+                {selectedFiles.length >= 1 ? (
+                  <div onClick={handleAddImage} className="add-image-icons">
+                    Upload
+                  </div>
+                ) : (
+                  <PlusCircle
+                    className="add-image-icon"
+                    size={40}
+                    onClick={() =>
+                      document.getElementById("file-input").click()
+                    } // Trigger file input click
+                  />
+                )}
+
                 <input
                   type="file"
                   id="file-input"
@@ -244,9 +263,9 @@ function PropertyScreen() {
                   onChange={handleFileChange}
                   style={{ display: "none" }} // Hide the file input
                 />
-                <button className="upload-button" onClick={handleAddImage}>
+                {/* <button className="upload-button" onClick={handleAddImage}>
                   Upload Image
-                </button>
+                </button> */}
               </>
             )}
           </div>

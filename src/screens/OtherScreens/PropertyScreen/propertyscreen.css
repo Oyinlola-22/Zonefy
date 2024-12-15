@@ -207,12 +207,23 @@ body {
 
 .add-image-icon {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 15px;
+  left: 10%;
   color: green;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
+}
+
+.add-image-icons {
+  position: absolute;
+  bottom: 15px;
+  left: 10%;
+  color: black;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: 1px solid;
 }
 
 .edit-form {

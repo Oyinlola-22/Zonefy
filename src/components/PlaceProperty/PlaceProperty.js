@@ -101,6 +101,7 @@ function PlaceProperty() {
         delete response.isSuccess;
         notification.success(response);
         dispatch(setNotifyMessage(null));
+        navigate("/home");
       } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
         const response = { ...notifyMessage };
         delete response.isSuccess;

@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAppDispatch } from "../../../Store/store";
-import { ResetPasswords } from "../../../Features/zonefySlice";
+import {
+  useAppDispatch,
+  useAppSelector,
+  selectZonefy,
+} from "../../../Store/store";
+import {
+  ResetPasswords,
+  setNotifyMessage,
+} from "../../../Features/zonefySlice";
+import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
 function NewPassword() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const { notifyMessage, isLoading } = useAppSelector(selectZonefy);
 
   // Extract the email from the query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -15,26 +26,52 @@ function NewPassword() {
   const qtoken = queryParams.get("token");
   // Decode the email if needed (remove extra quotes)
   const cleanedEmail = qemail ? qemail.replace(/['"]+/g, "") : "";
-  console.log("query param: ", cleanedEmail);
+  // console.log("query param: ", cleanedEmail);
 
   //we want to verify email
+  // useEffect(() => {
+  //   if (cleanedEmail !== "" && qtoken.length > 16) {
+  //     const payload = {
+  //       email: cleanedEmail,
+  //       token: qtoken,
+  //       newPassword: password,
+  //       confirmNewPassword: password,
+  //     };
+  //     dispatch(ResetPasswords(payload));
+  //   }
+  // }, [qtoken, cleanedEmail, dispatch]);
+
+  const payload = {
+    email: cleanedEmail,
+    token: qtoken,
+    newPassword: newPassword,
+    confirmNewPassword: password,
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(ResetPasswords(payload));
+  };
+
   useEffect(() => {
-    if (cleanedEmail !== "" && qtoken.length > 16) {
-      const payload = {
-        email: cleanedEmail,
-        token: qtoken,
-        newPassword: password,
-        confirmNewPassword: password,
-      };
-      dispatch(ResetPasswords(payload));
+    if (window.location.pathname.includes("/resetpassword")) {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+        navigate("/signin");
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+      }
     }
-  }, [qtoken, cleanedEmail, dispatch]);
-
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-
-  //     navigate("/forgotpassword");
-  //   };
+  }, [navigate, dispatch, notifyMessage]);
 
   return (
     <div className="body">
@@ -55,13 +92,13 @@ function NewPassword() {
 
       <form className="signin-form">
         <div className="form-group">
-          <label htmlFor="code">Input OTP</label>
+          <label htmlFor="code">Input new Password</label>
           <input
-            type="number"
+            type="password"
             id="code"
-            placeholder="Enter the code you received in your mail"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            placeholder="Enter your new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             required
           />
         </div>
@@ -78,7 +115,7 @@ function NewPassword() {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button type="submit" onClick={handleSubmit} className="submit-btn">
           Reset Password
         </button>
       </form>

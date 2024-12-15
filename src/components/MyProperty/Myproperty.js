@@ -78,7 +78,7 @@ function Myproperty() {
               <img
                 src={
                   property.propertyImageUrl && property.propertyImageUrl.length
-                    ? `https://drive.google.com/thumbnail?id=${property.propertyImageUrl[0]}`
+                    ? property.propertyImageUrl[0] //`https://drive.google.com/thumbnail?id=${property.propertyImageUrl[0]}`
                     : Property
                 }
                 alt={property.propertyName}

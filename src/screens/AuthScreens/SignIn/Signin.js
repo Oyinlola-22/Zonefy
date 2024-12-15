@@ -12,11 +12,11 @@ import {
   setNotifyMessage,
 } from "../../../Features/zonefySlice";
 import { notification } from "antd";
-import { Eye } from "@phosphor-icons/react";
+import { Eye, Spinner } from "@phosphor-icons/react";
 
 function Signin() {
   const dispatch = useAppDispatch();
-  const { userData, notifyMessage } = useAppSelector(selectZonefy);
+  const { userData, notifyMessage, isLoading } = useAppSelector(selectZonefy);
   const location = useLocation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ function Signin() {
   const qtoken = queryParams.get("token");
   // Decode the email if needed (remove extra quotes)
   const cleanedEmail = qemail ? qemail.replace(/['"]+/g, "") : "";
-  console.log("query param: ", cleanedEmail);
+  // console.log("query param: ", cleanedEmail);
 
   //we want to verify email
   useEffect(() => {
@@ -121,16 +121,20 @@ function Signin() {
           <Link to="/forgotpassword">Forgot Password?</Link>
         </p>
 
-        <button
-          type="submit"
-          className="submit-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            dispatch(SignIn(payload));
-          }}
-        >
-          Sign In
-        </button>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <button
+            type="submit"
+            className="submit-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(SignIn(payload));
+            }}
+          >
+            Sign In
+          </button>
+        )}
 
         <br />
 

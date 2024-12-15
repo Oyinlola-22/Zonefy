@@ -247,8 +247,7 @@ export const VerifyEmail = (payload) => async (dispatch) => {
           setNotifyMessage({
             isSuccess: true,
             message: "Email Verified Success",
-            description:
-              "Welcome to QuicKee, become more efficient, Please signin",
+            description: "Welcome to Zonefy",
           })
         );
       }

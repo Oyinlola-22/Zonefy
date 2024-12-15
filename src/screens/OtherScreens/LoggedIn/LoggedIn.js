@@ -66,9 +66,14 @@ function LoggedIn() {
           {isSidebarOpen ? (
             <X size={40} color="#f2f2f2" onClick={toggleSidebar} />
           ) : (
-            <List size={40} color="#f2f2f2" onClick={toggleSidebar} />
+            <List
+              size={40}
+              color="#f2f2f2"
+              onClick={toggleSidebar}
+              style={{ cursor: "pointer" }}
+            />
           )}
-          <h2>Zonefy</h2>
+          <h2 style={{ cursor: "pointer" }}>Zonefy</h2>
         </div>
         <div className="right-section">
           <span className="text1">
