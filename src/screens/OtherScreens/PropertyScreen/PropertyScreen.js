@@ -161,16 +161,32 @@ function PropertyScreen() {
       return;
     }
 
+    // Filter out duplicate files already in `propertyImageUrl`
+    const filteredFiles = selectedFiles.filter(
+      (file) => !myPropertyData.propertyImageUrl.includes(file.name)
+    );
+
+    if (filteredFiles.length === 0) {
+      message.error("All selected images are already uploaded.");
+      return;
+    }
+
+    // Update state with filtered files
+    setSelectedFiles(filteredFiles);
+
     const formData = new FormData();
-    selectedFiles.forEach((file) => formData.append("files", file)); // Append each file
-    // formData.append("propertyId", myPropertyData.id);
+    filteredFiles.forEach((file) => formData.append("files", file)); // Append each file
 
     try {
       console.log("MyProps", myPropertyData.id);
+
+      // Dispatch the upload action (Uncomment when ready)
       dispatch(UploadImage(formData, myPropertyData.id));
-      message.success("Uploaded");
+
+      message.success("Uploaded successfully.");
       setSelectedFiles([]); // Clear selected files after upload
     } catch (error) {
+      console.error("Upload error:", error);
       message.error("Failed to upload images. Please try again.");
     }
   };
