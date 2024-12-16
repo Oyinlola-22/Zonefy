@@ -5,13 +5,15 @@ import {
   useAppSelector,
   selectZonefy,
 } from "../../../Store/store";
-import { SignUp } from "../../../Features/zonefySlice";
+import { SignUp, setNotifyMessage } from "../../../Features/zonefySlice";
 import { Eye } from "@phosphor-icons/react";
+import { Spinner } from "@phosphor-icons/react";
+import { notification } from "antd";
 import "./signup.css";
 
 function Signup() {
   const dispatch = useAppDispatch();
-  const { userData } = useAppSelector(selectZonefy);
+  const { userData, isLoading, notifyMessage } = useAppSelector(selectZonefy);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -29,6 +31,27 @@ function Signup() {
       navigate("/home");
     }
   }, [userData, navigate]);
+
+  useEffect(() => {
+    if (window.location.pathname === "/signup") {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+        // if (response?.message === "Unverified email") {
+        //   navigate(`/verifyEmail?showResend=true&email=${formData.Email}`);
+        // }
+      }
+    }
+  }, [dispatch, notifyMessage]);
 
   return (
     <div className="body">
@@ -90,16 +113,20 @@ function Signup() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="submit-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            dispatch(SignUp(payload));
-          }}
-        >
-          Sign Up
-        </button>
+        {isLoading ? (
+          <Spinner size={50} className="submit-btn" />
+        ) : (
+          <button
+            type="submit"
+            className="submit-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(SignUp(payload));
+            }}
+          >
+            Sign Up
+          </button>
+        )}
 
         <p className="dontHave">
           Have an account already? <Link to="/signin">Sign In</Link>

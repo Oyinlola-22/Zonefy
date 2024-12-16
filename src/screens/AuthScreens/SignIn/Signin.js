@@ -122,7 +122,7 @@ function Signin() {
         </p>
 
         {isLoading ? (
-          <Spinner />
+          <Spinner size={50} className="submit-btn" />
         ) : (
           <button
             type="submit"

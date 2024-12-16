@@ -616,7 +616,7 @@ export const DeletePropertyImage = (data) => async (dispatch, getState) => {
     const response = await axiosWithAuth.delete(path);
     if (response) {
       const data = response.data;
-      console.log("DeletePropertyImage response: ", data);
+      // console.log("DeletePropertyImage response: ", data);
       if (data.code === 200) {
         dispatch(GetPersonalProperty(payload));
         dispatch(

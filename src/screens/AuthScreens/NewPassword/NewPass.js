@@ -11,6 +11,7 @@ import {
 } from "../../../Features/zonefySlice";
 import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import { Eye, Spinner } from "@phosphor-icons/react";
 
 function NewPassword() {
   const dispatch = useAppDispatch();
@@ -19,6 +20,7 @@ function NewPassword() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const { notifyMessage, isLoading } = useAppSelector(selectZonefy);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Extract the email from the query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -93,31 +95,47 @@ function NewPassword() {
       <form className="signin-form">
         <div className="form-group">
           <label htmlFor="code">Input new Password</label>
-          <input
-            type="password"
-            id="code"
-            placeholder="Enter your new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
+          <div className="input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="code"
+              placeholder="Enter your new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              style={{ width: "100%" }}
+            />
+            <Eye
+              className="eye-icon"
+              color="grey"
+              size={25}
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="password">Input new password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ width: "100%" }}
+            />
+          </div>
         </div>
 
-        <button type="submit" onClick={handleSubmit} className="submit-btn">
-          Reset Password
-        </button>
+        {isLoading ? (
+          <Spinner size={50} className="submit-btn" />
+        ) : (
+          <button type="submit" onClick={handleSubmit} className="submit-btn">
+            Reset Password
+          </button>
+        )}
       </form>
     </div>
   );

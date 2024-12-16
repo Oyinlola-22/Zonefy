@@ -41,7 +41,7 @@ function Messages() {
       dispatch(
         GetAllMessagesByIdentifier({
           sender: encodeURIComponent(userEmail),
-          receiver: encodeURIComponent(selectedChat.userEmail),
+          receiver: encodeURIComponent(selectedChat.creatorEmail),
           propertyId: selectedChat.propertyId,
           pageNumber,
         })
@@ -91,7 +91,7 @@ function Messages() {
                 className="chat-item"
                 onClick={() => setSelectedChat(chat)}
               >
-                <div className="chat-name">{chat.userEmail}</div>
+                <div className="chat-name">{chat.creatorEmail}</div>
               </div>
             ))}
           </div>
@@ -107,7 +107,7 @@ function Messages() {
               Back
             </button>
             <h2>
-              {selectedChat.userEmail} - {selectedChat.propertyName}
+              {selectedChat.creatorEmail} - {selectedChat.propertyName}
             </h2>
           </div>
           <div className="messages">

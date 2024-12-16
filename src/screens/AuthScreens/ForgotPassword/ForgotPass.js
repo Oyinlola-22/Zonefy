@@ -57,7 +57,7 @@ function ForgotPassword() {
         </div>
       </div>
 
-      <form className="signin-form" onSubmit={handleSubmit}>
+      <form className="signin-form">
         <div className="form-group">
           <label htmlFor="email">Input your email address</label>
           <input
@@ -73,7 +73,7 @@ function ForgotPassword() {
         {isLoading ? (
           <Spinner />
         ) : (
-          <button type="submit" className="submit-btn">
+          <button type="submit" onClick={handleSubmit} className="submit-btn">
             Submit Email
           </button>
         )}

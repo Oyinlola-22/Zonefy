@@ -63,12 +63,6 @@ function PropertyScreen() {
 
   const isOwner = userData?.email === myPropertyData?.creatorEmail;
 
-  // Dummy image array (In a real app, this would come from the server)
-  const [propertyImages, setPropertyImages] = useState([
-    Property,
-    Property1,
-    Property2,
-  ]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -191,6 +185,10 @@ function PropertyScreen() {
     }
   };
 
+  const handleNav = () => {
+    navigate("/signin");
+  };
+
   return (
     <div className="property-screen">
       <div className="header">
@@ -304,7 +302,7 @@ function PropertyScreen() {
               </p>
 
               {showLoginMessage ? (
-                <button className="chat-button">
+                <button className="chat-button" onClick={handleNav}>
                   Login or create account to chat with owner
                 </button>
               ) : (

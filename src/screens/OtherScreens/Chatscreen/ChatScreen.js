@@ -86,7 +86,7 @@ function ChatScreen() {
             <div
               key={index}
               className={`message ${
-                msg.senderId === userId ? "user-message" : "owner-message"
+                msg.senderId === userId ? "sent" : "received"
               }`}
             >
               <p>{msg.content}</p>
