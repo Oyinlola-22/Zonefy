@@ -24,49 +24,60 @@ function ChatScreen() {
   const ownerName = location.state?.ownerName;
   const receiverEmails = location.state?.receiverEmail;
   const propertyId = location.state?.propertyId;
-  const userEmail = location.state?.senderEmail; //userData.email;
+  const userEmail = location.state?.senderEmail; // userData.email;
   const userId = userData?.id;
 
-  // console.log("location: ", location?.state);
+  // const userEmails = userData?.email === userEmail;
 
   useEffect(() => {
-    // Fetch all messages when component loads or when pagination changes
+    // Fetch all messages when the component loads or pageNumber changes
     dispatch(
       GetAllMessagesByIdentifier({
-        sender: encodeURIComponent(userEmail),
-        receiver: encodeURIComponent(receiverEmails),
-        propertyId: propertyId,
+        sender: encodeURIComponent(receiverEmails),
+        receiver: encodeURIComponent(userEmail),
+        propertyId,
         pageNumber,
       })
     );
-  }, [dispatch, userEmail, receiverEmails, pageNumber]);
+  }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      const timeStamp = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
-      // Add user's message
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: userEmail, content: message, time: timeStamp },
-      ]);
-
-      const messageData = {
-        propertyId: propertyId,
-        senderEmail: userEmail,
-        receiverEmail: receiverEmails,
+      const newMessage = {
+        id: crypto.randomUUID(), // Temporary ID until backend confirms
+        senderId: userId,
         content: message,
+        timestamp: new Date().toISOString(),
+        isRead: false,
       };
 
-      dispatch(SendMessage(messageData));
+      // Update the Redux state with the new message
+      dispatch(
+        setMessages({
+          data: [...(messages?.data || []), newMessage], // Fallback to empty array if messages.data is null/undefined
+        })
+      );
+
+      // Send the message to the server
+      dispatch(
+        SendMessage({
+          propertyId,
+          senderEmail: receiverEmails,
+          receiverEmail: userEmail,
+          content: message,
+        })
+      );
+
+      // Clear the input field
       setMessage("");
     }
   };
 
-  // console.log("messages: ", messages?.data);
+  const sortedMessages = messages?.data
+    ? [...messages.data].sort(
+        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+      )
+    : [];
 
   return (
     <div className="chat-screen">
@@ -80,12 +91,12 @@ function ChatScreen() {
       </div>
 
       <div className="chat-messages">
-        {Array.isArray(messages?.data) &&
-          messages?.data.map((msg, index) => (
+        {sortedMessages.length > 0 ? (
+          sortedMessages.map((msg) => (
             <div
-              key={index}
+              key={msg.id}
               className={`message ${
-                msg.senderId === userId ? "sent" : "received"
+                msg.senderId === userData.id ? "sent" : "received"
               }`}
             >
               <p>{msg.content}</p>
@@ -96,7 +107,12 @@ function ChatScreen() {
                 })}
               </span>
             </div>
-          ))}
+          ))
+        ) : (
+          <p className="no-messages">
+            No messages yet. Start the conversation!
+          </p>
+        )}
       </div>
 
       <div className="chat-input-container">

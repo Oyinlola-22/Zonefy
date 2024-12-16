@@ -40,12 +40,12 @@
   overflow-y: auto;
 }
 
-.message {
+/* .message {
   margin: 5px 0;
   padding: 10px;
   border-radius: 5px;
   max-width: 80%;
-}
+} */
 
 /* .sent {
   align-self: flex-end;
@@ -57,19 +57,19 @@
   background-color: #f0f0f0;
 } */
 
-.sent {
-  background-color: #007bff; /* Blue for user messages */
-  align-self: flex-end; /* Align to the right */
-  border-top-right-radius: 0; /* Remove the top right corner */
+/* .sent {
+  background-color: #007bff;
+  align-self: flex-end;
+  border-top-right-radius: 0;
   margin-left: 27%;
-}
+} */
 
 /* Owner's message */
-.received {
-  background-color: #555; /* Dark gray for owner's messages */
-  align-self: flex-start; /* Align to the left */
-  border-top-left-radius: 0; /* Remove the top left corner */
-}
+/* .received {
+  background-color: #555;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+} */
 
 .message-input {
   display: flex;
