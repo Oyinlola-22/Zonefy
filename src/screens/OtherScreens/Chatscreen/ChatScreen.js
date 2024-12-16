@@ -29,17 +29,17 @@ function ChatScreen() {
 
   // const userEmails = userData?.email === userEmail;
 
-  // useEffect(() => {
-  //   // Fetch all messages when the component loads or pageNumber changes
-  //   dispatch(
-  //     GetAllMessagesByIdentifier({
-  //       sender: encodeURIComponent(receiverEmails),
-  //       receiver: encodeURIComponent(userEmail),
-  //       propertyId,
-  //       pageNumber,
-  //     })
-  //   );
-  // }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
+  useEffect(() => {
+    // Fetch all messages when the component loads or pageNumber changes
+    dispatch(
+      GetAllMessagesByIdentifier({
+        sender: encodeURIComponent(userEmail),
+        receiver: encodeURIComponent(receiverEmails),
+        propertyId,
+        pageNumber,
+      })
+    );
+  }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
 
   useEffect(() => {
     if (location.state?.fromPropertyScreen) {
@@ -48,16 +48,6 @@ function ChatScreen() {
         GetAllMessagesByIdentifier({
           sender: encodeURIComponent(receiverEmails),
           receiver: encodeURIComponent(userEmail),
-          propertyId,
-          pageNumber,
-        })
-      );
-    } else {
-      // Logic when NOT navigated from the property screen
-      dispatch(
-        GetAllMessagesByIdentifier({
-          sender: encodeURIComponent(userEmail),
-          receiver: encodeURIComponent(receiverEmails),
           propertyId,
           pageNumber,
         })
@@ -74,6 +64,22 @@ function ChatScreen() {
 
   const handleSendMessage = () => {
     if (message.trim()) {
+      // Define messageData based on navigation state
+      const messageData = location.state?.fromPropertyScreen
+        ? {
+            propertyId,
+            senderEmail: receiverEmails,
+            receiverEmail: userEmail,
+            content: message,
+          }
+        : {
+            propertyId,
+            senderEmail: userData.email,
+            receiverEmail: receiverEmails,
+            content: message,
+          };
+
+      // Temporary new message for optimistic update
       const newMessage = {
         id: crypto.randomUUID(), // Temporary ID until backend confirms
         senderId: userId,
@@ -89,15 +95,8 @@ function ChatScreen() {
         })
       );
 
-      // Send the message to the server
-      dispatch(
-        SendMessage({
-          propertyId,
-          senderEmail: receiverEmails,
-          receiverEmail: userEmail,
-          content: message,
-        })
-      );
+      // Send the message to the server with the constructed messageData
+      dispatch(SendMessage(messageData));
 
       // Clear the input field
       setMessage("");
