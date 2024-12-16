@@ -30,7 +30,6 @@ function ChatScreen() {
   // console.log("location: ", location?.state);
 
   useEffect(() => {
-    console.log("reftetch");
     // Fetch all messages when component loads or when pagination changes
     dispatch(
       GetAllMessagesByIdentifier({

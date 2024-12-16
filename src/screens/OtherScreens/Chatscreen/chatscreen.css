@@ -61,6 +61,20 @@ body {
 
 /* User's message */
 .user-message {
+  background-color: #007bff;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+  margin-left: 27%;
+}
+
+/* Owner's message */
+.owner-message {
+  background-color: #555;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.sent {
   background-color: #007bff; /* Blue for user messages */
   align-self: flex-end; /* Align to the right */
   border-top-right-radius: 0; /* Remove the top right corner */
@@ -68,7 +82,7 @@ body {
 }
 
 /* Owner's message */
-.owner-message {
+.received {
   background-color: #555; /* Dark gray for owner's messages */
   align-self: flex-start; /* Align to the left */
   border-top-left-radius: 0; /* Remove the top left corner */
