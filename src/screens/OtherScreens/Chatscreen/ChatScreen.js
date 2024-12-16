@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
 import "./chatscreen.css";
@@ -20,6 +20,7 @@ function ChatScreen() {
   const [message, setMessage] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const { userData, messages } = useAppSelector(selectZonefy);
+  const messageEndRef = useRef(null);
 
   const ownerName = location.state?.ownerName;
   const receiverEmails = location.state?.receiverEmail;
@@ -27,32 +28,45 @@ function ChatScreen() {
   const userEmail = location.state?.senderEmail; // userData.email;
   const userId = userData?.id;
 
-  // const userEmails = userData?.email === userEmail;
-
   useEffect(() => {
     // Fetch all messages when the component loads or pageNumber changes
-    dispatch(
-      GetAllMessagesByIdentifier({
-        sender: encodeURIComponent(userEmail),
-        receiver: encodeURIComponent(receiverEmails),
-        propertyId,
-        pageNumber,
-      })
-    );
-  }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
-
-  useEffect(() => {
-    if (location.state?.fromPropertyScreen) {
-      // Logic when navigated from the property screen
+    const fetchData = () => {
       dispatch(
         GetAllMessagesByIdentifier({
-          sender: encodeURIComponent(receiverEmails),
-          receiver: encodeURIComponent(userEmail),
+          sender: encodeURIComponent(userEmail),
+          receiver: encodeURIComponent(receiverEmails),
           propertyId,
           pageNumber,
         })
       );
-    }
+    };
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      if (location.state?.fromPropertyScreen) {
+        dispatch(
+          GetAllMessagesByIdentifier({
+            sender: encodeURIComponent(receiverEmails),
+            receiver: encodeURIComponent(userEmail),
+            propertyId,
+            pageNumber,
+          })
+        );
+      }
+    };
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 60000);
+
+    return () => clearInterval(intervalId);
   }, [
     dispatch,
     location.state,
@@ -60,6 +74,52 @@ function ChatScreen() {
     receiverEmails,
     propertyId,
     pageNumber,
+  ]);
+
+  useEffect(() => {
+    // Scroll to the latest message when the component loads
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    // Update isRead if the user is the receiverId
+    if (userData?.id === location.state?.receiverId) {
+      const unreadMessages = messages?.data?.filter(
+        (msg) => !msg.isRead && msg.receiverId === userData.id
+      );
+
+      if (unreadMessages?.length > 0) {
+        // Optimistically update Redux state with updated messages
+        dispatch(
+          setMessages({
+            data: messages.data.map((msg) =>
+              unreadMessages.find((um) => um.id === msg.id)
+                ? { ...msg, isRead: true }
+                : msg
+            ),
+          })
+        );
+
+        // Trigger the backend update by re-fetching messages to persist the changes
+        dispatch(
+          GetAllMessagesByIdentifier({
+            sender: encodeURIComponent(userEmail),
+            receiver: encodeURIComponent(receiverEmails),
+            propertyId,
+            pageNumber,
+          })
+        );
+      }
+    }
+  }, [
+    dispatch,
+    userData,
+    messages,
+    userEmail,
+    receiverEmails,
+    propertyId,
+    pageNumber,
+    location.state,
   ]);
 
   const handleSendMessage = () => {
@@ -109,8 +169,37 @@ function ChatScreen() {
       )
     : [];
 
+  // Mark messages as read when the user scrolls into view (like WhatsApp)
+  const handleMessageSeen = () => {
+    const unreadMessages = messages?.data?.filter(
+      (msg) => !msg.isRead && msg.receiverId === userData.id
+    );
+
+    if (unreadMessages?.length > 0) {
+      dispatch(
+        setMessages({
+          data: messages.data.map((msg) =>
+            unreadMessages.find((um) => um.id === msg.id)
+              ? { ...msg, isRead: true }
+              : msg
+          ),
+        })
+      );
+
+      // Trigger the backend update by re-fetching messages to persist the changes
+      dispatch(
+        GetAllMessagesByIdentifier({
+          sender: encodeURIComponent(userEmail),
+          receiver: encodeURIComponent(receiverEmails),
+          propertyId,
+          pageNumber,
+        })
+      );
+    }
+  };
+
   return (
-    <div className="chat-screen">
+    <div className="chat-screen" onScroll={handleMessageSeen}>
       <div className="chat-header">
         <ArrowLeft
           onClick={() => navigate(-1)}
@@ -130,12 +219,23 @@ function ChatScreen() {
               }`}
             >
               <p>{msg.content}</p>
-              <span className="message-time">
-                {new Date(msg.timestamp).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
+              <div className="message-footer">
+                <span className="message-time">
+                  {new Date(msg.timestamp).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                {msg.senderId === userData.id && (
+                  <span
+                    className={`message-tick ${
+                      msg.isRead ? "double-tick green" : "double-tick grey"
+                    }`}
+                  >
+                    {msg.isRead ? "✔✔" : "✔"}
+                  </span>
+                )}
+              </div>
             </div>
           ))
         ) : (
@@ -143,6 +243,7 @@ function ChatScreen() {
             No messages yet. Start the conversation!
           </p>
         )}
+        <div ref={messageEndRef} />
       </div>
 
       <div className="chat-input-container">

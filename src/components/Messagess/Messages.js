@@ -24,10 +24,8 @@ function Messages() {
 
   const userId = userData?.id;
   const userEmail = userData?.email;
-  const receiverEmails = interestedMessage?.data?.creatorEmail;
-  const propertyIds = interestedMessage?.data?.propertyId;
 
-  console.log(selectedChat);
+  const isOwner = userData?.email === interestedMessage?.creatorEmail;
 
   useEffect(() => {
     dispatch(
@@ -39,16 +37,28 @@ function Messages() {
   }, [dispatch, pageNumber]);
 
   useEffect(() => {
-    if (selectedChat) {
-      dispatch(
-        GetAllMessagesByIdentifier({
-          sender: encodeURIComponent(userEmail),
-          receiver: encodeURIComponent(selectedChat.creatorEmail),
-          propertyId: selectedChat.propertyId,
-          pageNumber,
-        })
-      );
-    }
+    const fetchData = () => {
+      if (selectedChat) {
+        dispatch(
+          GetAllMessagesByIdentifier({
+            sender: encodeURIComponent(
+              isOwner ? userEmail : selectedChat.creatorEmail
+            ),
+            receiver: encodeURIComponent(
+              isOwner ? selectedChat.creatorEmail : selectedChat.userEmail
+            ),
+            propertyId: selectedChat.propertyId,
+            pageNumber,
+          })
+        );
+      }
+    };
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 60000);
+
+    return () => clearInterval(intervalId);
   }, [dispatch, selectedChat, userEmail, pageNumber]);
 
   const handleSendMessage = () => {
@@ -70,47 +80,14 @@ function Messages() {
       const messageData = {
         propertyId: selectedChat.propertyId,
         senderEmail: userData?.email,
-        receiverEmail: selectedChat.creatorEmail,
+        receiverEmail: selectedChat.userEmail,
         content: message,
       };
-
-      console.log(messageData);
 
       dispatch(SendMessage(messageData));
       setMessage("");
     }
   };
-
-  // const handleSendMessage = () => {
-  //   if (message.trim()) {
-  //     const newMessage = {
-  //       id: crypto.randomUUID(), // Temporary ID until backend confirms
-  //       senderId: userId,
-  //       content: message,
-  //       timestamp: new Date().toISOString(),
-  //       isRead: false,
-  //     };
-
-  //     // Update the Redux state with the new message
-  //     dispatch(
-  //       setMessages({
-  //         data: [...(messages?.data || []), newMessage], // Fallback to empty array if messages.data is null/undefined
-  //       })
-  //     );
-
-  //     // Send the message to the server
-  //     dispatch(
-  //       SendMessage({
-  //         propertyId,
-  //         senderEmail: receiverEmails,
-  //         receiverEmail: userEmail,
-  //         content: message,
-  //       })
-  //     );
-
-  //     // Clear the input field
-  //     setMessage("");
-  //   }
 
   return (
     <div className="messages-container">
@@ -130,7 +107,17 @@ function Messages() {
                 className="chat-item"
                 onClick={() => setSelectedChat(chat)}
               >
-                <div className="chat-name">{chat.creatorEmail}</div>
+                <div className="chat-info">
+                  <div className="chat-name">{chat.propertyName}</div>
+                  <div className="chat-email">
+                    {userData?.email === chat.creatorEmail
+                      ? chat.userEmail
+                      : chat.creatorEmail}
+                  </div>
+                </div>
+                <div className="chat-timestamp">
+                  Last updated: {new Date(chat.updatedAt).toLocaleString()}
+                </div>
               </div>
             ))}
           </div>
@@ -146,7 +133,10 @@ function Messages() {
               Back
             </button>
             <h2>
-              {selectedChat.creatorEmail} - {selectedChat.propertyName}
+              {selectedChat.propertyName} -{" "}
+              {userData?.email === selectedChat.creatorEmail
+                ? selectedChat.userEmail
+                : selectedChat.creatorEmail}
             </h2>
           </div>
           <div className="messages">

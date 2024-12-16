@@ -80,6 +80,7 @@ body {
   position: absolute;
   bottom: 2px;
   right: 10px;
+  color: white;
 }
 
 /* Chat input */
@@ -111,6 +112,31 @@ body {
   background-color: #0056b3;
 }
 
+.message-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.message-tick {
+  font-size: 0.6rem;
+  margin-left: 87%;
+  position: absolute; /* For precise positioning */
+  bottom: 2px; /* Adjust as per the message bubble height */
+  display: flex; /* Flex for alignment if needed */
+  align-items: center;
+}
+
+.double-tick.grey {
+  color: white;
+}
+
+.double-tick.green {
+  color: green;
+}
+
 @media (max-width: 768px) {
   .message-time {
     font-size: 10px;
@@ -118,5 +144,14 @@ body {
     position: absolute;
     bottom: 1px;
     right: 10px;
+  }
+
+  .message-tick {
+    font-size: 0.6rem;
+    margin-left: 73%;
+    position: absolute; /* For precise positioning */
+    bottom: 2px; /* Adjust as per the message bubble height */
+    display: flex; /* Flex for alignment if needed */
+    align-items: center;
   }
 }
