@@ -10,8 +10,6 @@ import {
 } from "@phosphor-icons/react";
 import "./propertyscreen.css";
 import Property from "../../../assets/no-photo.jpg";
-import Property1 from "../../../assets/Property1.jpg";
-import Property2 from "../../../assets/Property2.jpg";
 import {
   useAppSelector,
   selectZonefy,
@@ -23,19 +21,19 @@ import {
   fetchFile,
   GetPropertyStatistics,
   UploadImage,
+  setNotifyMessage,
 } from "../../../Features/zonefySlice";
-import { message } from "antd";
+import { message, notification } from "antd";
 
 function PropertyScreen() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { userData, interestedRenters } = useAppSelector(selectZonefy);
+  const { userData, interestedRenters, notifyMessage } =
+    useAppSelector(selectZonefy);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-
-  console.log(selectedFiles);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to Array
@@ -60,6 +58,27 @@ function PropertyScreen() {
       );
     }
   }, [dispatch, pageNumber, myPropertyData, userData]);
+
+  useEffect(() => {
+    if (window.location.pathname === "/details") {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+        // if (response?.message === "Unverified email") {
+        //   navigate(`/verifyEmail?showResend=true&email=${formData.Email}`);
+        // }
+      }
+    }
+  }, [dispatch, notifyMessage]);
 
   const isOwner = userData?.email === myPropertyData?.creatorEmail;
 

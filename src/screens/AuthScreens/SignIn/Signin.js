@@ -108,6 +108,7 @@ function Signin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              style={{ width: "100%" }}
             />
             <Eye
               className="eye-icon"

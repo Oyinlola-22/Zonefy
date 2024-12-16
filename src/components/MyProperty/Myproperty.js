@@ -11,9 +11,11 @@ import {
 import {
   GetPersonalProperty,
   DeleteProperty,
+  setNotifyMessage,
 } from "../../Features/zonefySlice";
 import { MessageOutlined } from "@ant-design/icons";
 import { ChatCircle } from "@phosphor-icons/react";
+import { notification } from "antd";
 
 function Myproperty() {
   const navigate = useNavigate();
@@ -21,7 +23,8 @@ function Myproperty() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
-  const { myPropertyData, userData } = useAppSelector(selectZonefy);
+  const { myPropertyData, userData, notifyMessage } =
+    useAppSelector(selectZonefy);
   const [localPropertyData, setLocalPropertyData] = useState(
     myPropertyData?.data || []
   );
@@ -30,8 +33,6 @@ function Myproperty() {
     email: userData.email,
     pageNumber: pageNumber,
   };
-
-  console.log("Hehehe", myPropertyData);
 
   useEffect(() => {
     setPageNumber(myPropertyData?.totalPages || 1);
@@ -44,6 +45,27 @@ function Myproperty() {
   useEffect(() => {
     setLocalPropertyData(myPropertyData?.data || []);
   }, [myPropertyData]);
+
+  useEffect(() => {
+    if (window.location.pathname === "/property") {
+      if (notifyMessage?.isSuccess === true) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.success(response);
+        dispatch(setNotifyMessage(null));
+      } else if (notifyMessage?.isSuccess === false && notifyMessage?.message) {
+        var response = { ...notifyMessage };
+        delete response.isSuccess;
+        response = { ...response };
+        notification.error(response);
+        dispatch(setNotifyMessage(null));
+        // if (response?.message === "Unverified email") {
+        //   navigate(`/verifyEmail?showResend=true&email=${formData.Email}`);
+        // }
+      }
+    }
+  }, [dispatch, notifyMessage]);
 
   const handleNextPage = () => {
     if (pageNumber < myPropertyData?.totalPages) {
