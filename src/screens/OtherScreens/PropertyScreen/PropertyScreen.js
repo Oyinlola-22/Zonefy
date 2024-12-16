@@ -239,6 +239,7 @@ function PropertyScreen() {
 
               <div className="image-wrapper">
                 <img
+                  loading="lazy"
                   src={
                     myPropertyData.propertyImageUrl?.length > 0
                       ? myPropertyData.propertyImageUrl[currentImageIndex]
@@ -359,6 +360,7 @@ function PropertyScreen() {
                       onClick={() =>
                         navigate("/chat", {
                           state: {
+                            fromPropertyScreen: true,
                             ownerName: myPropertyData.ownerName,
                             receiverEmail: renter.creatorEmail,
                             propertyId: myPropertyData.id,

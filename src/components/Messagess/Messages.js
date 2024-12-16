@@ -27,6 +27,8 @@ function Messages() {
   const receiverEmails = interestedMessage?.data?.creatorEmail;
   const propertyIds = interestedMessage?.data?.propertyId;
 
+  console.log(selectedChat);
+
   useEffect(() => {
     dispatch(
       GetPropertyStatisticsByEmail({
@@ -51,27 +53,64 @@ function Messages() {
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      const timeStamp = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const newMessage = {
+        id: crypto.randomUUID(), // Temporary ID until backend confirms
+        senderId: userId,
+        content: message,
+        timestamp: new Date().toISOString(),
+        isRead: false,
+      };
 
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: userData?.email, content: message, time: timeStamp },
-      ]);
+      dispatch(
+        setMessages({
+          data: [...(messages?.data || []), newMessage], // Fallback to empty array if messages.data is null/undefined
+        })
+      );
 
       const messageData = {
-        propertyId: interestedMessage?.propertyId,
+        propertyId: selectedChat.propertyId,
         senderEmail: userData?.email,
-        receiverEmail: interestedMessage?.creatorEmail,
+        receiverEmail: selectedChat.creatorEmail,
         content: message,
       };
+
+      console.log(messageData);
 
       dispatch(SendMessage(messageData));
       setMessage("");
     }
   };
+
+  // const handleSendMessage = () => {
+  //   if (message.trim()) {
+  //     const newMessage = {
+  //       id: crypto.randomUUID(), // Temporary ID until backend confirms
+  //       senderId: userId,
+  //       content: message,
+  //       timestamp: new Date().toISOString(),
+  //       isRead: false,
+  //     };
+
+  //     // Update the Redux state with the new message
+  //     dispatch(
+  //       setMessages({
+  //         data: [...(messages?.data || []), newMessage], // Fallback to empty array if messages.data is null/undefined
+  //       })
+  //     );
+
+  //     // Send the message to the server
+  //     dispatch(
+  //       SendMessage({
+  //         propertyId,
+  //         senderEmail: receiverEmails,
+  //         receiverEmail: userEmail,
+  //         content: message,
+  //       })
+  //     );
+
+  //     // Clear the input field
+  //     setMessage("");
+  //   }
 
   return (
     <div className="messages-container">

@@ -29,17 +29,48 @@ function ChatScreen() {
 
   // const userEmails = userData?.email === userEmail;
 
+  // useEffect(() => {
+  //   // Fetch all messages when the component loads or pageNumber changes
+  //   dispatch(
+  //     GetAllMessagesByIdentifier({
+  //       sender: encodeURIComponent(receiverEmails),
+  //       receiver: encodeURIComponent(userEmail),
+  //       propertyId,
+  //       pageNumber,
+  //     })
+  //   );
+  // }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
+
   useEffect(() => {
-    // Fetch all messages when the component loads or pageNumber changes
-    dispatch(
-      GetAllMessagesByIdentifier({
-        sender: encodeURIComponent(receiverEmails),
-        receiver: encodeURIComponent(userEmail),
-        propertyId,
-        pageNumber,
-      })
-    );
-  }, [dispatch, userEmail, receiverEmails, propertyId, pageNumber]);
+    if (location.state?.fromPropertyScreen) {
+      // Logic when navigated from the property screen
+      dispatch(
+        GetAllMessagesByIdentifier({
+          sender: encodeURIComponent(receiverEmails),
+          receiver: encodeURIComponent(userEmail),
+          propertyId,
+          pageNumber,
+        })
+      );
+    } else {
+      // Logic when NOT navigated from the property screen
+      dispatch(
+        GetAllMessagesByIdentifier({
+          sender: encodeURIComponent(userEmail),
+          receiver: encodeURIComponent(receiverEmails),
+          propertyId,
+          pageNumber,
+        })
+      );
+    }
+  }, [
+    dispatch,
+    location.state,
+    userEmail,
+    receiverEmails,
+    propertyId,
+    pageNumber,
+  ]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
