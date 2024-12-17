@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./messages.css";
 import {
@@ -11,6 +11,7 @@ import {
   SendMessage,
   GetAllMessagesByIdentifier,
   setMessages,
+  UpdateMessages,
 } from "../../Features/zonefySlice";
 
 function Messages() {
@@ -21,11 +22,53 @@ function Messages() {
     useAppSelector(selectZonefy);
   const [message, setMessage] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
+  const messageEndRef = useRef(null);
 
   const userId = userData?.id;
   const userEmail = userData?.email;
 
   const isOwner = userData?.email === interestedMessage?.creatorEmail;
+
+  useEffect(() => {
+    // Scroll to the latest message when the component loads
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    if (userId && messages?.data?.length > 0) {
+      const unreadMessageIds = messages.data
+        .filter((msg) => !msg.isRead && msg.receiverId === userId)
+        .map((msg) => msg.id);
+
+      unreadMessageIds.forEach((msgId) => {
+        dispatch(UpdateMessages({ userId, messageId: msgId }));
+      });
+    }
+  }, [dispatch, userId, messages]);
+
+  const handleMessageSeen = () => {
+    const unreadMessages = messages?.data?.filter(
+      (msg) => !msg.isRead && msg.receiverId === userData.id
+    );
+
+    if (unreadMessages?.length > 0) {
+      // Update Redux state to mark messages as read
+      dispatch(
+        setMessages({
+          data: messages.data.map((msg) =>
+            unreadMessages.find((um) => um.id === msg.id)
+              ? { ...msg, isRead: true }
+              : msg
+          ),
+        })
+      );
+
+      // Call UpdateMessages for each unread message
+      unreadMessages.forEach((msg) => {
+        dispatch(UpdateMessages({ userId: userData.id, messageId: msg.id }));
+      });
+    }
+  };
 
   useEffect(() => {
     dispatch(
@@ -103,7 +146,7 @@ function Messages() {
           <div className="chat-list">
             {interestedMessage?.data?.map((chat) => (
               <div
-                key={chat.id}
+                key={chat.propertyId}
                 className="chat-item"
                 onClick={() => setSelectedChat(chat)}
               >
@@ -124,7 +167,7 @@ function Messages() {
         </div>
       ) : (
         // Chat Conversation View
-        <div className="chat-conversation-view">
+        <div className="chat-conversation-view" onScroll={handleMessageSeen}>
           <div className="chat-header">
             <button
               className="back-button"
@@ -148,12 +191,23 @@ function Messages() {
                 }`}
               >
                 <p>{msg.content}</p>
-                <span className="message-time">
-                  {new Date(msg.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+                <div className="message-footer">
+                  <span className="message-time">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {msg.senderId === userData.id && (
+                    <span
+                      className={`message-tick ${
+                        msg.isRead ? "double-tick green" : "double-tick grey"
+                      }`}
+                    >
+                      {msg.isRead ? "✔✔" : "✔"}
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

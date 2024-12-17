@@ -11,6 +11,7 @@ import {
   SendMessage,
   GetAllMessagesByIdentifier,
   setMessages,
+  UpdateMessages,
 } from "../../../Features/zonefySlice";
 
 function ChatScreen() {
@@ -27,6 +28,19 @@ function ChatScreen() {
   const propertyId = location.state?.propertyId;
   const userEmail = location.state?.senderEmail; // userData.email;
   const userId = userData?.id;
+  const messageId = messages?.id;
+
+  useEffect(() => {
+    if (userId && messages?.data?.length > 0) {
+      const unreadMessageIds = messages.data
+        .filter((msg) => !msg.isRead && msg.receiverId === userId)
+        .map((msg) => msg.id);
+
+      unreadMessageIds.forEach((msgId) => {
+        dispatch(UpdateMessages({ userId, messageId: msgId }));
+      });
+    }
+  }, [dispatch, userId, messages]);
 
   useEffect(() => {
     // Fetch all messages when the component loads or pageNumber changes
@@ -169,13 +183,13 @@ function ChatScreen() {
       )
     : [];
 
-  // Mark messages as read when the user scrolls into view (like WhatsApp)
   const handleMessageSeen = () => {
     const unreadMessages = messages?.data?.filter(
       (msg) => !msg.isRead && msg.receiverId === userData.id
     );
 
     if (unreadMessages?.length > 0) {
+      // Update Redux state to mark messages as read
       dispatch(
         setMessages({
           data: messages.data.map((msg) =>
@@ -186,15 +200,10 @@ function ChatScreen() {
         })
       );
 
-      // Trigger the backend update by re-fetching messages to persist the changes
-      dispatch(
-        GetAllMessagesByIdentifier({
-          sender: encodeURIComponent(userEmail),
-          receiver: encodeURIComponent(receiverEmails),
-          propertyId,
-          pageNumber,
-        })
-      );
+      // Call UpdateMessages for each unread message
+      unreadMessages.forEach((msg) => {
+        dispatch(UpdateMessages({ userId: userData.id, messageId: msg.id }));
+      });
     }
   };
 

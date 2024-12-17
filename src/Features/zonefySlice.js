@@ -789,6 +789,39 @@ export const fetchFile = async (fileId) => {
   }
 };
 
+export const UpdateMessages =
+  ({ userId, messageId }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const path =
+        CHAT_PATH +
+        `/UpdateChatMessageReadStatus?userId=${userId}&messageId=${messageId}`;
+      const response = await axiosWithAuth.get(path);
+      if (response) {
+        const data = response.data;
+        console.log("UpdateMessage ", data);
+        // if (data.code === 200) {
+        //   dispatch(setInterestedMessage(data.data));
+        // }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
 export const {
   setLogout,
   setAuth,
