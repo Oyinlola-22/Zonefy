@@ -135,11 +135,11 @@ body {
 
 /* WhatsApp "read" colors */
 .message-ticks .green {
-  color: #34b7f1; /* WhatsApp blue for "read" ticks */
+  color: green; /* WhatsApp blue for "read" ticks */
 }
 
 .message-ticks .grey {
-  color: #667781; /* Light gray for "sent" ticks */
+  color: white; /* Light gray for "sent" ticks */
 }
 
 @media (max-width: 768px) {
