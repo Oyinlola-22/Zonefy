@@ -149,6 +149,9 @@
   padding: 10px;
   background-color: #fff;
   border-top: 1px solid #ddd;
+  position: sticky; /* Keeps the input visible at the bottom */
+  bottom: 0; /* Sticks to the bottom */
+  z-index: 10; /* Ensures it stays above other content */
 }
 
 .message-input input {
@@ -194,6 +197,10 @@
 
   .message {
     max-width: 90%;
+  }
+
+  .messages {
+    max-height: calc(100vh - 120px); /* Adjust height for small screens */
   }
 
   .send-button {

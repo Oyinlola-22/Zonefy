@@ -29,10 +29,10 @@ function Messages() {
 
   const isOwner = userData?.email === interestedMessage?.creatorEmail;
 
-  useEffect(() => {
-    // Scroll to the latest message when the component loads
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   // Scroll to the latest message when the component loads
+  //   messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   useEffect(() => {
     if (userId && messages?.data?.length > 0) {
@@ -131,6 +131,17 @@ function Messages() {
       setMessage("");
     }
   };
+
+  useEffect(() => {
+    if (messages?.data) {
+      // Scroll to the bottom whenever messages are updated
+      messageEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+    }
+  }, [messages]);
 
   return (
     <div className="messages-container">
