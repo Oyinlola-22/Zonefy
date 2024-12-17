@@ -167,7 +167,7 @@ function Messages() {
         </div>
       ) : (
         // Chat Conversation View
-        <div className="chat-conversation-view" onScroll={handleMessageSeen}>
+        <div className="chat-conversation-view">
           <div className="chat-header">
             <button
               className="back-button"

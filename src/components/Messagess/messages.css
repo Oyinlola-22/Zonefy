@@ -147,7 +147,7 @@
 }
 
 .message-ticks.grey {
-  color: #667781; /* Light gray for "sent" ticks */
+  color: white; /* Light gray for "sent" ticks */
 }
 
 /* Responsive styling for smaller devices */
