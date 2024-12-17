@@ -73,16 +73,6 @@ body {
   border-top-left-radius: 0; /* Remove the top left corner */
 }
 
-/* Message time */
-.message-time {
-  font-size: 10px;
-  opacity: 0.7;
-  position: absolute;
-  bottom: 2px;
-  right: 10px;
-  color: white;
-}
-
 /* Chat input */
 .chat-input-container {
   display: flex;
@@ -112,32 +102,42 @@ body {
   background-color: #0056b3;
 }
 
+/* Container for the message footer */
 .message-footer {
   display: flex;
+  justify-content: flex-end;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #667781; /* Light gray text color */
+  user-select: none;
+}
+
+/* Inner container for time and ticks */
+.message-info {
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 2%;
+  gap: 4px; /* Space between time and ticks */
 }
 
-.message-tick {
-  font-size: 0.6rem;
-  margin-left: 84%;
-  position: absolute; /* For precise positioning */
-  bottom: 2px; /* Adjust as per the message bubble height */
-  display: flex; /* Flex for alignment if needed */
-  align-items: center;
+/* Message time */
+.message-time {
+  font-size: 11px;
+  color: #667781; /* Light gray text color */
 }
 
-.double-tick.grey {
-  color: white;
-  bottom: 1px;
+/* Message ticks (single ✔ or double ✔✔) */
+.message-ticks {
+  font-size: 13px;
+  font-weight: bold;
 }
 
-.double-tick.green {
-  color: green;
-  bottom: 1px;
+/* WhatsApp "read" colors */
+.message-ticks .green {
+  color: #34b7f1; /* WhatsApp blue for "read" ticks */
+}
+
+.message-ticks .grey {
+  color: #667781; /* Light gray for "sent" ticks */
 }
 
 @media (max-width: 768px) {

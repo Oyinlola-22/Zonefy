@@ -155,7 +155,7 @@ const SearchResults = () => {
             <div key={property.id} className="property-card">
               <div className="property-image-container">
                 <img
-                  src={property.propertyImageUrl || Property}
+                  src={property.propertyImageUrl[0]}
                   alt={property.propertyName}
                   className="property-image"
                 />

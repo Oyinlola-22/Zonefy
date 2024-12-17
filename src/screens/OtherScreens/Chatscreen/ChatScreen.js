@@ -229,21 +229,23 @@ function ChatScreen() {
             >
               <p>{msg.content}</p>
               <div className="message-footer">
-                <span className="message-time">
-                  {new Date(msg.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                {msg.senderId === userData.id && (
-                  <span
-                    className={`message-tick ${
-                      msg.isRead ? "double-tick green" : "double-tick grey"
-                    }`}
-                  >
-                    {msg.isRead ? "✔✔" : "✔"}
+                <div className="message-info">
+                  <span className="message-time">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
-                )}
+                  {msg.senderId === userData.id && (
+                    <span
+                      className={`message-ticks ${
+                        msg.isRead ? "double-tick green" : "double-tick grey"
+                      }`}
+                    >
+                      {msg.isRead ? "✔✔" : "✔"}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           ))
