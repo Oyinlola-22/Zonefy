@@ -108,9 +108,46 @@
   margin-left: 1%;
 }
 
+.message-footers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 2%;
+}
+
+.message-ticks {
+  font-size: 0.6rem;
+  margin-left: 84%;
+  position: absolute; /* For precise positioning */
+  bottom: 2px; /* Adjust as per the message bubble height */
+  display: flex; /* Flex for alignment if needed */
+  align-items: center;
+}
+
+.double-tick.grey {
+  color: white;
+  bottom: 1px;
+}
+
+.double-tick.green {
+  color: green;
+  bottom: 1px;
+}
+
 @media (max-width: 768px) {
   .chat-conversation-view {
     display: flex;
     flex-direction: column;
+  }
+
+  .message-ticks {
+    font-size: 0.6rem;
+    margin-left: 69%;
+    position: absolute; /* For precise positioning */
+    bottom: 2px; /* Adjust as per the message bubble height */
+    display: flex; /* Flex for alignment if needed */
+    align-items: center;
   }
 }

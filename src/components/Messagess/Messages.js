@@ -191,7 +191,7 @@ function Messages() {
                 }`}
               >
                 <p>{msg.content}</p>
-                <div className="message-footer">
+                <div className="message-footers">
                   <span className="message-time">
                     {new Date(msg.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -200,7 +200,7 @@ function Messages() {
                   </span>
                   {msg.senderId === userData.id && (
                     <span
-                      className={`message-tick ${
+                      className={`message-ticks ${
                         msg.isRead ? "double-tick green" : "double-tick grey"
                       }`}
                     >
