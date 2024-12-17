@@ -213,7 +213,7 @@ function Messages() {
                     {msg.senderId === userData.id && (
                       <span
                         className={`message-ticks ${
-                          msg.isRead ? "double-tick green" : "double-tick grey"
+                          msg.isRead ? "double-tick" : "double-ticks"
                         }`}
                       >
                         {msg.isRead ? "✔✔" : "✔"}

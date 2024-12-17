@@ -133,13 +133,12 @@ body {
   margin-left: 10%;
 }
 
-/* WhatsApp "read" colors */
-.message-ticks .green {
-  color: green; /* WhatsApp blue for "read" ticks */
+.double-tick {
+  color: greenyellow;
 }
 
-.message-ticks .grey {
-  color: white; /* Light gray for "sent" ticks */
+.double-ticks {
+  color: white;
 }
 
 @media (max-width: 768px) {
