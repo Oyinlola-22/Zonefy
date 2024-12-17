@@ -191,8 +191,6 @@ function PropertyScreen() {
     filteredFiles.forEach((file) => formData.append("files", file)); // Append each file
 
     try {
-      console.log("MyProps", myPropertyData.id);
-
       // Dispatch the upload action (Uncomment when ready)
       dispatch(UploadImage(formData, myPropertyData.id));
 
@@ -215,6 +213,7 @@ function PropertyScreen() {
           onClick={() => navigate(-1)}
           className="back-button"
           size={40}
+          color="black"
         />
         <p className="property-title">{myPropertyData?.propertyName}</p>
 

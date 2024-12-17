@@ -6,30 +6,30 @@
 
 .title {
   font-size: 2rem;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   color: #333;
   font-weight: 700;
   text-align: center;
 }
 
-/* Flex container for rectangles */
+/* Rectangle container */
 .rectangle-container {
   display: flex;
   gap: 20px;
   justify-content: space-between;
-  flex-wrap: wrap; /* Allows rectangles to wrap on smaller screens */
+  flex-wrap: wrap; /* Wraps to new lines for smaller screens */
 }
 
-/* Styles for each rectangle */
+/* Rectangle card styles */
 .rectangle {
-  width: 49%; /* Width of each rectangle relative to the parent container */
+  width: calc(33.33% - 20px); /* Three cards per row with spacing */
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px;
   transition: transform 0.2s ease-in-out;
   border: 1px solid #e0e0e0;
 }
@@ -40,38 +40,33 @@
 
 /* Image styles */
 .logo-image1 {
-  width: 645px; /* Fixed width */
-  height: 400px; /* Fixed height */
-  object-fit: cover; /* Ensures the image covers the area without distortion */
-  border-radius: 8px; /* Keeps rounded corners */
-  margin-top: 10px;
+  width: 100%; /* Ensures images are responsive */
+  height: 250px; /* Fixed height for consistency */
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-/* Header text styles */
+/* Header text */
 .header-text {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #555;
-  margin-bottom: 15px;
+  color: #333;
+  margin-bottom: 10px;
 }
 
-/* Details container */
+/* Property details */
 .details-container {
-  margin-top: 10px;
   text-align: left;
 }
 
 .description {
-  font-size: 1rem; /* Slightly larger for readability */
-  color: #555; /* Darker color for better contrast */
-  margin-bottom: 15px;
-  line-height: 1.6; /* Increased line height for better readability */
-  display: block;
-  text-align: justify;
-  word-wrap: break-word; /* Ensure long words or URLs break onto new lines */
-  max-height: 150px; /* Set a max height to avoid overflow */
-  overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
-  padding-right: 5px; /* Add padding to avoid content touching the scrollbar */
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  overflow-y: auto;
+  max-height: 100px;
 }
 
 .property-info {
@@ -79,153 +74,144 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  max-width: 100%;
 }
 
-.property-info .location,
-.property-info .price {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.property-info span {
+  font-size: 0.9rem;
+  color: #666;
 }
 
-.property-info .location {
-  font-weight: bold;
-}
-
-.property-info .price {
-  text-align: right;
-  font-size: 1.1em;
-}
-
-.location {
-  font-size: 1rem;
-  color: #999;
-}
-
-.location-icon {
-  display: inline-block;
-  margin-right: 5px;
-  color: #333;
-  position: relative;
-  top: 2%;
-}
-
-.price {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Property features */
 .property-features {
   display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Wrap features on smaller screens */
   font-size: 0.85rem;
-  color: #7851a9;
+  margin-bottom: 10px;
 }
 
 .rent-button {
-  padding: 10px 20px;
+  padding: 8px 12px;
+  background-color: #7851a9;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  background-color: #7851a9; /* Primary blue color */
-  color: #fff; /* White text */
-  font-size: 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  font-size: 0.9rem;
   margin-left: auto;
+  transition: all 0.3s ease;
 }
 
 .rent-button:hover {
-  background-color: #7851a9; /* Darker blue on hover */
-  transform: scale(1.05); /* Slightly increase size on hover */
+  background-color: #5e3a8d;
+  transform: scale(1.05);
 }
 
-.rent-button:active {
-  background-color: #7851a9; /* Even darker blue when clicked */
+/* Pagination controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
 }
 
-.property-features span {
-  background-color: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-right: 5px;
+.pagination-controls button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .title {
-    font-size: 1.5rem; /* Adjust title size for smaller screens */
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .rectangle {
+    width: calc(50% - 20px); /* Two cards per row */
   }
 
-  /* Stack rectangles vertically on mobile */
-  .rectangle-container {
-    flex-direction: column; /* Change to column layout */
-    gap: 10px;
+  .logo-image1 {
+    height: 200px; /* Adjust image height */
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
   }
 
   .rectangle {
-    width: 345px;
-    padding: 10px; /* Reduce padding for mobile */
+    width: calc(100% - 3px); /* Single card per row */
+    padding: 10px;
   }
 
   .header-text {
-    font-size: 1.1rem; /* Slightly smaller header text */
-    margin-bottom: 10px;
+    font-size: 1.1rem;
   }
 
   .description {
-    font-size: 1rem; /* Slightly larger for readability */
-    color: #555; /* Darker color for better contrast */
-    margin-bottom: 8px;
-    line-height: 1.6; /* Increased line height for better readability */
-    display: block;
-    text-align: justify;
-    word-wrap: break-word; /* Ensure long words or URLs break onto new lines */
-    max-height: 150px; /* Set a max height to avoid overflow */
-    overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
-    padding-right: 5px; /* Add padding to avoid content touching the scrollbar */
+    font-size: 0.85rem;
+    max-height: 80px; /* Shorter description container */
   }
 
-  .price {
-    font-size: 1rem; /* Adjust price text size */
+  .logo-image1 {
+    height: 180px; /* Adjust image height */
   }
 
-  .property-info {
-    flex-direction: column; /* Stack property info vertically on mobile */
-    align-items: flex-start; /* Align items to the start */
-  }
-
-  .property-features {
-    font-size: 0.8rem; /* Smaller font size for features */
-    flex-wrap: wrap; /* Wrap features if needed */
-  }
-
+  .property-info span,
   .property-features span {
-    margin-bottom: 5px; /* Adds space between rows of features */
+    font-size: 0.8rem;
   }
 
   .rent-button {
     padding: 6px 10px;
-    border: none;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .rectangle {
+    padding: 8px;
     border-radius: 8px;
-    background-color: #7851a9; /* Primary blue color */
-    color: #fff; /* White text */
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
   }
 
   .logo-image1 {
-    width: 325px; /* Fixed width */
-    height: 200px; /* Fixed height */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-    border-radius: 8px; /* Keeps rounded corners */
-    margin-top: 10px;
+    height: 150px;
+  }
+
+  .header-text {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+
+  .description {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .rent-button {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+
+  .pagination-controls button {
+    padding: 5px 8px;
+    font-size: 0.8rem;
   }
 }

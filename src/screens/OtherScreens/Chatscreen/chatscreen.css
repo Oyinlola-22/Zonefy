@@ -35,6 +35,7 @@ body {
 .chat-title {
   font-size: 20px;
   font-weight: bold;
+  color: #f2f2f2;
 }
 
 /* Chat messages */
@@ -122,13 +123,14 @@ body {
 /* Message time */
 .message-time {
   font-size: 11px;
-  color: #667781; /* Light gray text color */
+  color: white; /* Light gray text color */
 }
 
 /* Message ticks (single ✔ or double ✔✔) */
 .message-ticks {
   font-size: 13px;
   font-weight: bold;
+  margin-left: 10%;
 }
 
 /* WhatsApp "read" colors */
@@ -149,10 +151,9 @@ body {
     right: 10px;
   }
 
-  .message-tick {
+  .message-ticks {
     font-size: 0.6rem;
-    margin-left: 69%;
-    position: absolute; /* For precise positioning */
+    margin-left: 16%;
     bottom: 2px; /* Adjust as per the message bubble height */
     display: flex; /* Flex for alignment if needed */
     align-items: center;

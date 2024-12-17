@@ -66,8 +66,12 @@ function ListedProperties() {
                     </span>
                   </div>
                   <div className="property-features">
-                    <span>🚻 {property.toiletNumber} toilets</span>
-                    <span>🚗 {property.parkingLot} parking lots</span>
+                    <span className="toilet">
+                      🚻 {property.toiletNumber} toilets
+                    </span>
+                    <span className="parking">
+                      🚗 {property.parkingLot} parking lots
+                    </span>
                     <button
                       className="rent-button"
                       onClick={() =>

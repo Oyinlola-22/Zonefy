@@ -137,11 +137,11 @@ function Messages() {
       {!selectedChat ? (
         // Chat List View
         <div className="chat-list-view">
-          <div className="header">
+          <div className="headers">
             <button className="back-buttons" onClick={() => navigate(-1)}>
               Back
             </button>
-            <h2>Chats</h2>
+            <h3>Chats</h3>
           </div>
           <div className="chat-list">
             {interestedMessage?.data?.map((chat) => (
@@ -175,12 +175,12 @@ function Messages() {
             >
               Back
             </button>
-            <h2>
+            <h4>
               {selectedChat.propertyName} -{" "}
               {userData?.email === selectedChat.creatorEmail
                 ? selectedChat.userEmail
                 : selectedChat.creatorEmail}
-            </h2>
+            </h4>
           </div>
           <div className="messages">
             {messages?.data?.map((msg) => (
