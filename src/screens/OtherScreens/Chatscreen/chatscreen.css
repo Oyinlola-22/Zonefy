@@ -123,7 +123,7 @@ body {
 
 .message-tick {
   font-size: 0.6rem;
-  margin-left: 87%;
+  margin-left: 84%;
   position: absolute; /* For precise positioning */
   bottom: 2px; /* Adjust as per the message bubble height */
   display: flex; /* Flex for alignment if needed */
@@ -151,7 +151,7 @@ body {
 
   .message-tick {
     font-size: 0.6rem;
-    margin-left: 73%;
+    margin-left: 65%;
     position: absolute; /* For precise positioning */
     bottom: 2px; /* Adjust as per the message bubble height */
     display: flex; /* Flex for alignment if needed */
