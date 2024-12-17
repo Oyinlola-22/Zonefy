@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./listedprop.css";
-import Property from "../../assets/no-photo.jpg";
 import { useNavigate } from "react-router-dom";
 import {
   selectZonefy,
   useAppDispatch,
   useAppSelector,
 } from "../../Store/store";
-import {
-  fetchFile,
-  GetAllProperty,
-  setPropertyData,
-} from "../../Features/zonefySlice";
+import { GetAllProperty } from "../../Features/zonefySlice";
 
 function ListedProperties() {
   const navigate = useNavigate();
