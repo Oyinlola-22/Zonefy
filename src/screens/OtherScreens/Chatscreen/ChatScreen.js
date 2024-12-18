@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, Spinner } from "@phosphor-icons/react";
 import "./chatscreen.css";
 import {
   useAppDispatch,
@@ -20,7 +20,7 @@ function ChatScreen() {
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
-  const { userData, messages } = useAppSelector(selectZonefy);
+  const { userData, messages, isLoading } = useAppSelector(selectZonefy);
   const messageEndRef = useRef(null);
 
   const ownerName = location.state?.ownerName;
@@ -211,15 +211,18 @@ function ChatScreen() {
     <div className="chat-screen" onScroll={handleMessageSeen}>
       <div className="chat-header">
         <ArrowLeft
-          onClick={() => navigate(-1)}
+          onClick={() => (navigate(-1), dispatch(setMessages({ data: [] })))}
           size={30}
           className="back-button"
         />
         <p className="chat-title">{`Chat with ${ownerName}`}</p>
       </div>
-
       <div className="chat-messages">
-        {sortedMessages.length > 0 ? (
+        {isLoading ? (
+          <div className="spinner-container">
+            <Spinner size={32} />
+          </div>
+        ) : sortedMessages.length > 0 ? (
           sortedMessages.map((msg) => (
             <div
               key={msg.id}
@@ -250,9 +253,9 @@ function ChatScreen() {
             </div>
           ))
         ) : (
-          <p className="no-messages">
-            No messages yet. Start the conversation!
-          </p>
+          <div className="spinner-container">
+            Send a chat to start conversation
+          </div>
         )}
         <div ref={messageEndRef} />
       </div>

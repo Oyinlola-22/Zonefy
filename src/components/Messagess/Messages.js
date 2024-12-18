@@ -17,8 +17,8 @@ import {
 function Messages() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [selectedChat, setSelectedChat] = useState(null); // Tracks the selected chat
-  const { userData, interestedMessage, messages } =
+  const [selectedChat, setSelectedChat] = useState(null);
+  const { userData, interestedMessage, messages, isLoading } =
     useAppSelector(selectZonefy);
   const [message, setMessage] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
@@ -29,10 +29,7 @@ function Messages() {
 
   const isOwner = userData?.email === interestedMessage?.creatorEmail;
 
-  // useEffect(() => {
-  //   // Scroll to the latest message when the component loads
-  //   messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
+  const isOwners = userData?.email === selectedChat?.userEmail;
 
   useEffect(() => {
     if (userId && messages?.data?.length > 0) {
@@ -46,42 +43,22 @@ function Messages() {
     }
   }, [dispatch, userId, messages]);
 
-  const handleMessageSeen = () => {
-    const unreadMessages = messages?.data?.filter(
-      (msg) => !msg.isRead && msg.receiverId === userData.id
-    );
-
-    if (unreadMessages?.length > 0) {
-      // Update Redux state to mark messages as read
+  useEffect(() => {
+    const fetchPropertyStats = async () => {
       dispatch(
-        setMessages({
-          data: messages.data.map((msg) =>
-            unreadMessages.find((um) => um.id === msg.id)
-              ? { ...msg, isRead: true }
-              : msg
-          ),
+        GetPropertyStatisticsByEmail({
+          email: userData?.email,
+          pageNumber,
         })
       );
+    };
 
-      // Call UpdateMessages for each unread message
-      unreadMessages.forEach((msg) => {
-        dispatch(UpdateMessages({ userId: userData.id, messageId: msg.id }));
-      });
-    }
-  };
+    if (userData?.email) fetchPropertyStats();
+  }, [dispatch, userData?.email, pageNumber]);
 
   useEffect(() => {
-    dispatch(
-      GetPropertyStatisticsByEmail({
-        email: userData?.email,
-        pageNumber,
-      })
-    );
-  }, [dispatch, pageNumber]);
-
-  useEffect(() => {
-    const fetchData = () => {
-      if (selectedChat) {
+    if (selectedChat) {
+      const fetchData = async () => {
         dispatch(
           GetAllMessagesByIdentifier({
             sender: encodeURIComponent(
@@ -94,15 +71,15 @@ function Messages() {
             pageNumber,
           })
         );
-      }
-    };
+      };
 
-    fetchData();
-
-    const intervalId = setInterval(fetchData, 60000);
-
-    return () => clearInterval(intervalId);
+      fetchData();
+    }
   }, [dispatch, selectedChat, userEmail, pageNumber]);
+
+  const getReceiverEmail = (isOwners, selectedChat) => {
+    return isOwners ? selectedChat?.creatorEmail : selectedChat?.userEmail;
+  };
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -123,9 +100,11 @@ function Messages() {
       const messageData = {
         propertyId: selectedChat.propertyId,
         senderEmail: userData?.email,
-        receiverEmail: selectedChat.userEmail,
+        receiverEmail: getReceiverEmail(isOwners, selectedChat),
         content: message,
       };
+
+      console.log("Sending message:", messageData);
 
       dispatch(SendMessage(messageData));
       setMessage("");
@@ -134,7 +113,6 @@ function Messages() {
 
   useEffect(() => {
     if (messages?.data) {
-      // Scroll to the bottom whenever messages are updated
       messageEndRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
@@ -154,27 +132,34 @@ function Messages() {
             </button>
             <h3>Chats</h3>
           </div>
-          <div className="chat-list">
-            {interestedMessage?.data?.map((chat) => (
-              <div
-                key={chat.propertyId}
-                className="chat-item"
-                onClick={() => setSelectedChat(chat)}
-              >
-                <div className="chat-info">
-                  <div className="chat-name">{chat.propertyName}</div>
-                  <div className="chat-email">
-                    {userData?.email === chat.creatorEmail
-                      ? chat.userEmail
-                      : chat.creatorEmail}
+          {isLoading ? (
+            <div className="spinner">
+              <div className="loading-spinner"></div>
+              <p>Loading chats...</p>
+            </div>
+          ) : (
+            <div className="chat-list">
+              {interestedMessage?.data?.map((chat) => (
+                <div
+                  key={chat.propertyId}
+                  className="chat-item"
+                  onClick={() => setSelectedChat(chat)}
+                >
+                  <div className="chat-info">
+                    <div className="chat-name">{chat.propertyName}</div>
+                    <div className="chat-email">
+                      {userData?.email === chat.creatorEmail
+                        ? chat.userEmail
+                        : chat.creatorEmail}
+                    </div>
+                  </div>
+                  <div className="chat-timestamp">
+                    Last updated: {new Date(chat.updatedAt).toLocaleString()}
                   </div>
                 </div>
-                <div className="chat-timestamp">
-                  Last updated: {new Date(chat.updatedAt).toLocaleString()}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         // Chat Conversation View
@@ -182,7 +167,10 @@ function Messages() {
           <div className="chat-header">
             <button
               className="back-button"
-              onClick={() => setSelectedChat(null)}
+              onClick={() => {
+                setSelectedChat(null);
+                dispatch(setMessages({ data: [] }));
+              }}
             >
               Back
             </button>
@@ -193,37 +181,46 @@ function Messages() {
                 : selectedChat.creatorEmail}
             </h4>
           </div>
-          <div className="messages">
-            {messages?.data?.map((msg) => (
-              <div
-                key={msg.id}
-                className={`message ${
-                  msg.senderId === userId ? "sent" : "received"
-                }`}
-              >
-                <p>{msg.content}</p>
-                <div className="message-footer">
-                  <div className="message-info">
-                    <span className="message-time">
-                      {new Date(msg.timestamp).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                    {msg.senderId === userData.id && (
-                      <span
-                        className={`message-ticks ${
-                          msg.isRead ? "double-tick" : "double-ticks"
-                        }`}
-                      >
-                        {msg.isRead ? "✔✔" : "✔"}
+
+          {isLoading ? (
+            <div className="spinner">
+              <div className="loading-spinner"></div>
+              <p>Loading messages...</p>
+            </div>
+          ) : (
+            <div className="messages">
+              {messages?.data?.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`message ${
+                    msg.senderId === userId ? "sent" : "received"
+                  }`}
+                >
+                  <p>{msg.content}</p>
+                  <div className="message-footer">
+                    <div className="message-info">
+                      <span className="message-time">
+                        {new Date(msg.timestamp).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
-                    )}
+                      {msg.senderId === userData.id && (
+                        <span
+                          className={`message-ticks ${
+                            msg.isRead ? "double-tick" : "double-ticks"
+                          }`}
+                        >
+                          {msg.isRead ? "✔✔" : "✔"}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+              <div ref={messageEndRef} />
+            </div>
+          )}
           <div className="message-input">
             <input
               type="text"

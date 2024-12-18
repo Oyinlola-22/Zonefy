@@ -141,6 +141,13 @@ body {
   color: white;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 @media (max-width: 768px) {
   .message-time {
     font-size: 10px;
