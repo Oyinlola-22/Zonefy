@@ -14,7 +14,7 @@ import {
   setNotifyMessage,
 } from "../../Features/zonefySlice";
 import { MessageOutlined } from "@ant-design/icons";
-import { ChatCircle } from "@phosphor-icons/react";
+import { CurrencyEur } from "@phosphor-icons/react";
 import { notification } from "antd";
 
 function Myproperty() {
@@ -114,7 +114,7 @@ function Myproperty() {
                 <div className="property-info">
                   <span className="location">{property.propertyLocation}</span>
                   <span className="price">
-                    ₦{property.propertyPrice.toLocaleString()}
+                    £{property.propertyPrice.toLocaleString()}
                   </span>
                 </div>
                 <div className="property-features">

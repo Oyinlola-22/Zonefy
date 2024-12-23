@@ -187,7 +187,7 @@ function PlaceProperty() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="property-price">Price (₦):</label>
+              <label htmlFor="property-price">Price (£):</label>
               <input
                 type="number"
                 id="property-price"

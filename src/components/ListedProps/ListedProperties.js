@@ -64,7 +64,7 @@ function ListedProperties() {
                         {property.propertyLocation}
                       </span>
                       <span className="price">
-                        ₦{property.propertyPrice.toLocaleString()}
+                        £{property.propertyPrice.toLocaleString()}
                       </span>
                       <span
                         style={{
