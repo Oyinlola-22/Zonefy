@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { ChatCircleDots, House, List, SignOut, X } from "@phosphor-icons/react";
+import {
+  ChatCircleDots,
+  House,
+  List,
+  SignOut,
+  X,
+  UserCircle,
+} from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import "./loggedin.css";
 import Property from "../../../assets/zonefy.jpg";
@@ -95,6 +102,10 @@ function LoggedIn() {
               <li>
                 <House weight="bold" size={30} />
                 <Link to="/property">Properties</Link>
+              </li>
+              <li>
+                <UserCircle weight="bold" size={30} />
+                <Link to="/message-admin">Message Admin</Link>
               </li>
               <li>
                 <SignOut weight="bold" size={30} />

@@ -18,6 +18,8 @@ import Messages from "./components/Messagess/Messages";
 import ResendEmail from "./screens/AuthScreens/ResendVerifyEmail/ResendEmail";
 import { setupAxiosInterceptors } from "./Features/utils";
 import EmailVerified from "./screens/AuthScreens/Verified/EmailVerified";
+import AdminChat from "./screens/Admin/AdminChat";
+import AdminMessage from "./screens/Admin/AdminMessage";
 
 function App() {
   const dispatch = useDispatch();
@@ -46,6 +48,8 @@ function App() {
     { path: "/property", element: <Myproperty /> },
     { path: "/messages", element: <Messages /> },
     { path: "/verified", element: <EmailVerified /> },
+    { path: "/admin-chat", element: <AdminChat /> },
+    { path: "/message-admin", element: <AdminMessage /> },
   ]);
   return <div>{routes}</div>;
 }

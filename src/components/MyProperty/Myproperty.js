@@ -30,7 +30,8 @@ function Myproperty() {
   );
 
   const payload = {
-    email: userData.email,
+    // email: userData.email,
+    phoneNumber: userData.phoneNumber,
     pageNumber: pageNumber,
   };
 

@@ -35,6 +35,7 @@ function PlaceProperty() {
   const [checkOut, setCheckOut] = useState("");
   const [dimensions, setDimensions] = useState("");
   const [guests, setGuests] = useState("");
+  const [postCodes, setPostCode] = useState("");
 
   // console.log("Property Data:", propertyData);
 
@@ -58,9 +59,8 @@ function PlaceProperty() {
     checkOutTime: checkOut,
     toiletNumber: toilets,
     parkingLot: parkingLots,
+    postCode: postCodes,
   };
-
-  console.log("payload: ", payload);
 
   const handleNextStep = (e) => {
     e.preventDefault();
@@ -170,6 +170,18 @@ function PlaceProperty() {
                 value={propertysLocation}
                 onChange={(e) => setPropertysLocation(e.target.value)}
                 placeholder="Enter location"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="property-location">Post Code:</label>
+              <input
+                type="text"
+                id="property-location"
+                value={postCodes}
+                onChange={(e) => setPostCode(e.target.value)}
+                placeholder="Enter your postcode"
                 required
               />
             </div>

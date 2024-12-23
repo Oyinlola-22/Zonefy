@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./searchresults.css";
-import Property from "../../assets/Property.jpg";
 import {
   useAppDispatch,
   useAppSelector,
   selectZonefy,
 } from "../../Store/store";
-import { GetAllProperty } from "../../Features/zonefySlice";
+import { SearchHouseProperty } from "../../Features/zonefySlice";
+import { useNavigate } from "react-router-dom";
 
 const SearchResults = () => {
   const dispatch = useAppDispatch();
-  const { propertyData } = useAppSelector(selectZonefy);
-
-  useEffect(() => {
-    // Fetch properties based on page number
-    dispatch(GetAllProperty(1));
-  }, [dispatch]);
+  const { searchData } = useAppSelector(selectZonefy);
+  const navigate = useNavigate();
 
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState("");
@@ -23,44 +19,66 @@ const SearchResults = () => {
   const [guests, setGuests] = useState(1);
   const [propertyType, setPropertyType] = useState("");
   const [dimensions, setDimensions] = useState("");
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [hasSearched, setHasSearched] = useState(false); // Track if search has been performed
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const [hasSearched, setHasSearched] = useState(false); // To track if search was performed
 
   const handleSearch = (e) => {
     e.preventDefault();
 
-    // Check if all required fields are filled
     if (!location || !checkIn || !checkOut || !propertyType) {
-      alert("Please fill in all required fields");
+      alert("Please fill in all required fields.");
       return;
     }
 
-    // Filter `propertyData` based on form inputs
-    const filtered = propertyData?.data.filter((property) => {
-      const matchesLocation = location
-        ? property.propertyLocation
-            ?.toLowerCase()
-            .includes(location.toLowerCase())
-        : true;
-      const matchesGuests = guests ? property.guests >= guests : true;
-      const matchesPropertyType = propertyType
-        ? property.propertyType?.toLowerCase() === propertyType.toLowerCase()
-        : true;
+    // Dispatch search action with form inputs
+    dispatch(
+      SearchHouseProperty({
+        locationOrPostCode: location,
+        checkIn,
+        checkOut,
+        propertyType,
+        pageNumber,
+        dimensions, // Pass dimensions for shop or storage
+        guests, // Pass guests for hall or meeting-room
+      })
+    );
 
-      const matchesDimensions = dimensions
-        ? String(property.dimension).includes(dimensions)
-        : true;
-
-      return (
-        matchesLocation &&
-        matchesGuests &&
-        matchesPropertyType &&
-        matchesDimensions
-      );
-    });
-
-    setFilteredResults(filtered || []); // Update the state to render filtered results
     setHasSearched(true); // Mark that a search has been performed
+  };
+
+  const handleNextPage = () => {
+    if (pageNumber < searchData?.totalPages) {
+      setPageNumber((prevPage) => prevPage + 1);
+      dispatch(
+        SearchHouseProperty({
+          locationOrPostCode: location,
+          checkIn,
+          checkOut,
+          propertyType,
+          pageNumber: pageNumber + 1,
+          dimensions,
+          guests,
+        })
+      );
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pageNumber > 1) {
+      setPageNumber((prevPage) => prevPage - 1);
+      dispatch(
+        SearchHouseProperty({
+          locationOrPostCode: location,
+          checkIn,
+          checkOut,
+          propertyType,
+          pageNumber: pageNumber - 1,
+          dimensions,
+          guests,
+        })
+      );
+    }
   };
 
   return (
@@ -71,7 +89,7 @@ const SearchResults = () => {
           <input
             type="text"
             id="location"
-            placeholder="Enter location"
+            placeholder="Enter location or postcode"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           />
@@ -108,7 +126,7 @@ const SearchResults = () => {
             <option value="hall">Hall</option>
             <option value="meeting-room">Meeting Room</option>
             <option value="storage-space">Storage Space</option>
-            <option value="storage-space">Shop</option>
+            <option value="shop">Shop</option>
           </select>
         </div>
 
@@ -121,7 +139,6 @@ const SearchResults = () => {
               value={guests}
               onChange={(e) => setGuests(e.target.value)}
               placeholder="E.g. 200"
-              required
             />
           </div>
         )}
@@ -134,8 +151,7 @@ const SearchResults = () => {
               id="dimensions"
               value={dimensions}
               onChange={(e) => setDimensions(e.target.value)}
-              placeholder="E.g. 200sqm (square meter)"
-              required
+              placeholder="E.g. 200sqm"
             />
           </div>
         )}
@@ -150,8 +166,8 @@ const SearchResults = () => {
           <p className="search-instruction">
             Use the search form above to find properties.
           </p>
-        ) : filteredResults.length > 0 ? (
-          filteredResults.map((property) => (
+        ) : searchData?.data?.length > 0 ? (
+          searchData.data.map((property) => (
             <div key={property.id} className="property-card">
               <div className="property-image-container">
                 <img
@@ -170,38 +186,44 @@ const SearchResults = () => {
                 </p>
                 <p>
                   Available from:{" "}
-                  <span>
-                    {new Date(property.checkInTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
+                  <span>{new Date(property.checkInTime).toLocaleString()}</span>
                 </p>
                 <p>
                   Till:{" "}
                   <span>
-                    {new Date(property.checkOutTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {new Date(property.checkOutTime).toLocaleString()}
                   </span>
                 </p>
+
+                <button
+                  className="rent-button"
+                  onClick={() => navigate("/details", { state: { property } })}
+                >
+                  View Property
+                </button>
               </div>
             </div>
           ))
         ) : (
           <p className="no-properties">
-            No properties available for your search criteria.
+            No properties match your search criteria.
           </p>
         )}
+      </div>
+
+      <div className="pagination-controls">
+        <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
+          Previous
+        </button>
+        <span>
+          Page {pageNumber} of {searchData?.totalPages || 1}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={pageNumber >= (searchData?.totalPages || 1)}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

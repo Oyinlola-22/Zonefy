@@ -98,6 +98,8 @@ function PropertyScreen() {
     propertyLocation: myPropertyData?.propertyLocation || "",
     toiletNumber: myPropertyData?.toiletNumber || "",
     parkingLot: myPropertyData?.parkingLot || "",
+    checkInTime: myPropertyData?.checkInTime || "",
+    checkOutTime: myPropertyData?.checkOutTime || "",
   });
 
   const handleEditToggle = () => {
@@ -113,7 +115,6 @@ function PropertyScreen() {
   };
 
   const handleSaveChanges = () => {
-    console.log("Updated Property Data:", editData);
     dispatch(EditHouseProperty(editData));
     setIsEditing(false);
   };
@@ -193,9 +194,16 @@ function PropertyScreen() {
     try {
       // Dispatch the upload action (Uncomment when ready)
       dispatch(UploadImage(formData, myPropertyData.id));
-
-      message.success("Uploaded successfully.");
       setSelectedFiles([]); // Clear selected files after upload
+
+      if (myPropertyData.creatorEmail === userData?.email) {
+        dispatch(
+          GetPropertyStatistics({
+            id: myPropertyData.id,
+            pageNumber,
+          })
+        );
+      }
     } catch (error) {
       console.error("Upload error:", error);
       message.error("Failed to upload images. Please try again.");
@@ -312,6 +320,15 @@ function PropertyScreen() {
               <p>
                 <strong>Location:</strong> {myPropertyData?.propertyLocation}
               </p>
+              <br />
+
+              <p>Other Features</p>
+              <span className="toilet">
+                🚻 {myPropertyData.toiletNumber} toilets
+              </span>
+              <span style={{ marginLeft: "5%" }}>
+                🚗 {myPropertyData.parkingLot} parking lots
+              </span>
             </div>
 
             <div className="contact-section">
@@ -412,6 +429,24 @@ function PropertyScreen() {
                 type="text"
                 name="propertyPrice"
                 value={editData.propertyPrice}
+                onChange={handleInputChange}
+              />
+            </label>
+            <label>
+              Available From:
+              <input
+                type="datetime-local"
+                name="checkInTime"
+                value={editData.checkInTime}
+                onChange={handleInputChange}
+              />
+            </label>
+            <label>
+              Till:
+              <input
+                type="datetime-local"
+                name="checkOuTime"
+                value={editData.checkOutTime}
                 onChange={handleInputChange}
               />
             </label>

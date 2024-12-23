@@ -16,9 +16,12 @@ const zonefySlice = createSlice({
     interestedMessage: [],
     image: null,
     interestedRenters: null,
+    searchResults: null,
+    userResults: null,
     notifyMessage: { isSuccess: false, message: "", description: "" },
     socketIOmessages: [],
     allUsers: null,
+    searchData: null,
   },
   reducers: {
     setSocketIOmessages: (state, actions) => {
@@ -65,6 +68,15 @@ const zonefySlice = createSlice({
     },
     setInterestedMessage: (state, actions) => {
       state.interestedMessage = actions.payload;
+    },
+    setSearchResults: (state, actions) => {
+      state.searchResults = actions.payload;
+    },
+    setUserResults: (state, actions) => {
+      state.userResults = actions.payload;
+    },
+    setSearchData: (state, actions) => {
+      state.searchData = actions.payload;
     },
     setLogout: (state, actions) => {
       state.auth = null;
@@ -508,34 +520,37 @@ export const GetAllProperty = (pageNumber) => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const GetAllUsers = (pageNumber) => async (dispatch) => {
-  dispatch(setLoading(true));
-  dispatch(clearErrors());
+export const GetAllUsers =
+  (pageNumber = 1, pageSize = 30) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
 
-  try {
-    const path = BASE_PATH + `/GetAll?pageNumber=${pageNumber}`;
-    const response = await axios.get(path);
-    if (response) {
-      const data = response.data;
-      console.log("GetAllUsers responsedd: ", data.data);
-      if (data.code === 200) {
-        dispatch(setAllUsers(data.data));
+    try {
+      const path =
+        BASE_PATH + `/GetAll?pageNumber=${pageNumber}&size=${pageSize}`;
+      const response = await axios.get(path);
+      if (response) {
+        const data = response.data;
+        console.log("GetAllUsers responsedd: ", data.data);
+        if (data.code === 200) {
+          dispatch(setAllUsers(data.data));
+        }
       }
+    } catch (error) {
+      console.log("GetAllUsers error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
     }
-  } catch (error) {
-    console.log("GetAllUsers error response: ", error);
-    const err = error?.response?.data?.message;
-    dispatch(
-      setNotifyMessage({
-        isSuccess: false,
-        message: err?.response?.data?.message,
-      })
-    );
-    dispatch(setError(err?.response?.data?.message));
-  }
 
-  dispatch(setLoading(false));
-};
+    dispatch(setLoading(false));
+  };
 
 export const GetPersonalProperty = (data) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -544,7 +559,7 @@ export const GetPersonalProperty = (data) => async (dispatch) => {
   try {
     const path =
       HOUSE_PATH +
-      `/GetAllByEmail?email=${data.email}&&pageNumber=${data.pageNumber}`;
+      `/GetAllByEmail?emailOrPhone=${data.phoneNumber}&&pageNumber=${data.pageNumber}`;
     const response = await axiosWithAuth.get(path);
     if (response) {
       const data = response.data;
@@ -822,6 +837,174 @@ export const UpdateMessages =
     dispatch(setLoading(false));
   };
 
+export const AdminGetUserByNumberOrEmail =
+  (phoneOrEmail) => async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const path =
+        BASE_PATH + `/GetUserByPhoneorEmail?phoneOrEmail=${phoneOrEmail}`;
+      const response = await axios.get(path);
+      if (response) {
+        const data = response.data;
+        if (data.code === 200) {
+          dispatch(setUserResults(data.data));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
+export const AdminGetPropByName = (propName) => async (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(clearErrors());
+
+  try {
+    const path = HOUSE_PATH + `/GetHousePropertyByName?propName=${propName}`;
+    const response = await axiosWithAuth.get(path);
+    if (response) {
+      const data = response.data;
+      console.log(data);
+      if (data.code === 201) {
+        // console.log(data);
+        dispatch(setSearchResults(data.data));
+      }
+    }
+  } catch (error) {
+    console.log("GetAll error response: ", error);
+    const err = error?.response?.data?.message;
+    dispatch(
+      setNotifyMessage({
+        isSuccess: false,
+        message: err?.response?.data?.message,
+      })
+    );
+    dispatch(setError(err?.response?.data?.message));
+  }
+
+  dispatch(setLoading(false));
+};
+
+export const AdminBlockUser =
+  ({ email, blockState }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      // const payload = {
+      //   email: getState().zonefy.userData.email,
+      //   pageNumber: 1,
+      // };
+      const path =
+        BASE_PATH + `/BlockingUser?email=${email}&&blockState=${blockState}`;
+      const response = await axios.get(path);
+      if (response) {
+        const data = response.data;
+        if (data.code === 201) {
+          dispatch(GetAllUsers(1));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
+export const AdminBlockProperty =
+  ({ email, propId, blockState }) =>
+  async (dispatch, getState) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      const payload = {
+        email: getState().zonefy.userData.email,
+        pageNumber: 1,
+      };
+      const path =
+        HOUSE_PATH +
+        `/BlockingProperty?email=${email}&&propId=${propId}&&blockState=${blockState}`;
+      const response = await axiosWithAuth.get(path);
+      if (response) {
+        const data = response.data;
+        if (data.code === 201) {
+          dispatch(GetAllProperty(1));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
+export const SearchHouseProperty =
+  ({ locationOrPostCode, checkIn, checkOut, propertyType, pageNumber }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    dispatch(clearErrors());
+
+    try {
+      // const payload = {
+      //   email: getState().zonefy.userData.email,
+      //   pageNumber: 1,
+      // };
+      const path =
+        HOUSE_PATH +
+        `/SearchAllHouseProperties?locationOrPostCode=${locationOrPostCode}&&checkIn=${checkIn}&&checkOut=${checkOut}&&propertyType=${propertyType}&&pageNumber=${pageNumber}`;
+      const response = await axios.get(path);
+      if (response) {
+        const data = response.data;
+        console.log(data);
+        if (data.code === 200) {
+          dispatch(setSearchData(data.data));
+        }
+      }
+    } catch (error) {
+      console.log("GetAll error response: ", error);
+      const err = error?.response?.data?.message;
+      dispatch(
+        setNotifyMessage({
+          isSuccess: false,
+          message: err?.response?.data?.message,
+        })
+      );
+      dispatch(setError(err?.response?.data?.message));
+    }
+
+    dispatch(setLoading(false));
+  };
+
 export const {
   setLogout,
   setAuth,
@@ -839,5 +1022,8 @@ export const {
   setSocketIOmessages,
   setClearSocketIOmessages,
   setAllUsers,
+  setSearchResults,
+  setUserResults,
+  setSearchData,
 } = zonefySlice.actions;
 export default zonefySlice.reducer;
