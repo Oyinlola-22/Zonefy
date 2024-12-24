@@ -262,3 +262,22 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .search-bar {
+    max-width: 100%;
+  }
+
+  .property-card,
+  .user-card {
+    max-width: 100%;
+  }
+
+  .admin-statistics canvas {
+    max-width: 100%;
+  }
+}

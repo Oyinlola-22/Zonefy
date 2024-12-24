@@ -212,18 +212,22 @@ const SearchResults = () => {
       </div>
 
       <div className="pagination-controls">
-        <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
-          Previous
-        </button>
-        <span>
-          Page {pageNumber} of {searchData?.totalPages || 1}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={pageNumber >= (searchData?.totalPages || 1)}
-        >
-          Next
-        </button>
+        {hasSearched && searchData?.totalPages > 1 && (
+          <>
+            <button onClick={handlePreviousPage} disabled={pageNumber === 1}>
+              Previous
+            </button>
+            <span>
+              Page {pageNumber} of {searchData.totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={pageNumber >= searchData.totalPages}
+            >
+              Next
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

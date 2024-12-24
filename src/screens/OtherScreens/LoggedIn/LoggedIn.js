@@ -23,7 +23,7 @@ import { notification } from "antd";
 function LoggedIn() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { notifyMessage } = useAppSelector(selectZonefy);
+  const { notifyMessage, userData } = useAppSelector(selectZonefy);
 
   // State to track sidebar visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -103,10 +103,16 @@ function LoggedIn() {
                 <House weight="bold" size={30} />
                 <Link to="/property">Properties</Link>
               </li>
-              <li>
-                <UserCircle weight="bold" size={30} />
-                <Link to="/message-admin">Message Admin</Link>
-              </li>
+              {![
+                "adeyemi.adenipekun@outlook.com",
+                "nifemiojinni22@gmail.com",
+                "archraphr@gmail.com",
+              ].includes(userData.email) && (
+                <li>
+                  <UserCircle weight="bold" size={30} />
+                  <Link to="/message-admin">Message Admin</Link>
+                </li>
+              )}
               <li>
                 <SignOut weight="bold" size={30} />
                 <span onClick={handleLogoutClick}>Logout</span>

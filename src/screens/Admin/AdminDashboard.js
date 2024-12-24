@@ -42,7 +42,7 @@ ChartJS.register(
 function AdminDashboard() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { propertyData, allUsers, searchResults, userResults } =
+  const { propertyData, allUsers, searchResults, userData } =
     useAppSelector(selectZonefy);
   const [properties, setProperties] = useState(propertyData?.data ?? []);
   const [users, setUsers] = useState(allUsers?.data ?? []);
@@ -61,10 +61,27 @@ function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const pageSize = 30;
+  // ![
+  //   "adeyemi.adenipekun@outlook.com",
+  //   "nifemiojinni22@gmail.com",
+  //   "archraphr@gmail.com",
+  // ].includes(userData.email)
 
   // useEffect(() => {
   //   dispatch(AdminGetUserByNumberOrEmail(userSearch));
   // }, []);
+
+  useEffect(() => {
+    if (
+      ![
+        "adeyemi.adenipekun@outlook.com",
+        "nifemiojinni22@gmail.com",
+        "archraphr@gmail.com",
+      ].includes(userData.email)
+    ) {
+      navigate("/home"); // Redirect unauthorized users
+    }
+  }, [userData.email, navigate]);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -199,9 +216,9 @@ function AdminDashboard() {
     } else if (type === "property") {
       dispatch(
         AdminBlockProperty({
-          email: entity.creatorEmail,
-          propId: entity.id,
-          blockState: !entity.isBlocked,
+          email: selectedProperty.creatorEmail,
+          propId: selectedProperty.id,
+          blockState: !selectedProperty.isBlocked,
         })
       );
       // Optimistically update the properties list in UI
@@ -313,7 +330,7 @@ function AdminDashboard() {
                         setSelectedPropertyId(property.id);
                       }}
                     >
-                      Delete Property
+                      Delete
                     </button>
 
                     <button
@@ -323,7 +340,7 @@ function AdminDashboard() {
                         setSelectedProperty(property);
                       }}
                     >
-                      Block Property
+                      {property?.isBlocked ? "Unblock" : "Block"}
                     </button>
                   </div>
                 </div>

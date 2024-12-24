@@ -332,21 +332,22 @@ function PropertyScreen() {
             </div>
 
             <div className="contact-section">
-              <h3>Are You Interested?</h3>
-              <p>
-                <strong>Contact:</strong> {myPropertyData?.ownerPhoneNumber}
-              </p>
-
               {showLoginMessage ? (
                 <button className="chat-button" onClick={handleNav}>
-                  Login or create account to chat with owner
+                  Login or create an account to know more about this property
                 </button>
               ) : (
-                !isOwner && ( // Render this button only if the user is not the owner
-                  <button className="chat-button" onClick={handleChatClick}>
-                    Chat with Owner Now
-                  </button>
-                )
+                <>
+                  <h3>Are You Interested?</h3>
+                  <p>
+                    <strong>Contact:</strong> {myPropertyData?.ownerPhoneNumber}
+                  </p>
+                  {!isOwner && (
+                    <button className="chat-button" onClick={handleChatClick}>
+                      Chat with Owner Now
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>

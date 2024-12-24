@@ -915,6 +915,7 @@ export const AdminBlockUser =
         const data = response.data;
         if (data.code === 201) {
           dispatch(GetAllUsers(1));
+          dispatch(GetAllProperty(1));
         }
       }
     } catch (error) {
@@ -939,10 +940,10 @@ export const AdminBlockProperty =
     dispatch(clearErrors());
 
     try {
-      const payload = {
-        email: getState().zonefy.userData.email,
-        pageNumber: 1,
-      };
+      // const payload = {
+      //   email: getState().zonefy.userData.email,
+      //   pageNumber: 1,
+      // };
       const path =
         HOUSE_PATH +
         `/BlockingProperty?email=${email}&&propId=${propId}&&blockState=${blockState}`;
