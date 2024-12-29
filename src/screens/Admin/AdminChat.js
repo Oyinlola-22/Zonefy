@@ -121,6 +121,30 @@ function AdminChat() {
     }
   }, [messages]);
 
+  const groupedChats = interestedMessage?.data
+    ? interestedMessage.data.reduce((acc, chat) => {
+        const key = `${chat.propertyId}-${chat.userEmail}`; // Unique combination
+        if (!acc.has(key)) {
+          acc.set(key, chat); // Add to Map if not already present
+        }
+        return acc;
+      }, new Map())
+    : [];
+
+  // Convert Map values to an array for rendering
+  const uniqueChats = Array.from(groupedChats.values());
+
+  const adminEmail = "adeyemi.adenipekun@outlook.com";
+
+  // Filter Admin Chats
+  const adminChats = uniqueChats.filter(
+    (chat) => chat.userEmail === adminEmail
+  );
+
+  const uniqueMessages = messages?.data
+    ? Array.from(new Map(messages?.data?.map((msg) => [msg.id, msg])).values())
+    : [];
+
   return (
     <div className="messages-container">
       {!selectedChat ? (
@@ -139,16 +163,16 @@ function AdminChat() {
             </div>
           ) : (
             <div className="chat-list">
-              {interestedMessage?.data?.map((chat) => (
+              {adminChats.map((chat, index) => (
                 <div
-                  key={chat.propertyId}
+                  key={`${chat.propertyId}-${chat.userEmail}-${index}`}
                   className="chat-item"
                   onClick={() => setSelectedChat(chat)}
                 >
                   <div className="chat-info">
                     <div className="chat-name">{chat.propertyName}</div>
                     <div className="chat-email">
-                      {userData?.email === chat.creatorEmail
+                      {adminEmail === chat.creatorEmail
                         ? chat.userEmail
                         : chat.creatorEmail}
                     </div>
@@ -176,7 +200,7 @@ function AdminChat() {
             </button>
             <h4>
               {selectedChat.propertyName} -{" "}
-              {userData?.email === selectedChat.creatorEmail
+              {adminEmail === selectedChat.creatorEmail
                 ? selectedChat.userEmail
                 : selectedChat.creatorEmail}
             </h4>
@@ -189,7 +213,7 @@ function AdminChat() {
             </div>
           ) : (
             <div className="messages">
-              {messages?.data?.map((msg) => (
+              {uniqueMessages.map((msg) => (
                 <div
                   key={msg.id}
                   className={`message ${
