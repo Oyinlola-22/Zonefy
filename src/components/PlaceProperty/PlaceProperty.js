@@ -39,6 +39,10 @@ function PlaceProperty() {
 
   // console.log("Property Data:", propertyData);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleImageUpload = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setImages((prevImages) => [...prevImages, ...selectedFiles]);
@@ -114,7 +118,12 @@ function PlaceProperty() {
   return (
     <div className="place-property-container">
       <div className="header">
-        <ArrowLeft onClick={() => navigate(-1)} size={40} color="black" />
+        <ArrowLeft
+          onClick={() => navigate(-1)}
+          size={40}
+          color="black"
+          cursor={"pointer"}
+        />
         <h2>Place Your Property For Rent</h2>
       </div>
 
@@ -124,78 +133,188 @@ function PlaceProperty() {
       >
         {step === 1 && (
           <>
-            <div className="form-group">
-              <label htmlFor="property-owner-name">Property Owner Name:</label>
-              <input
-                type="text"
-                id="property-owner-name"
-                value={ownersName}
-                onChange={(e) => setOwnersName(e.target.value)}
-                placeholder="Enter your name"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="property-owner-name">
+                  Property Owner Name:
+                </label>
+                <input
+                  type="text"
+                  id="property-owner-name"
+                  value={ownersName}
+                  onChange={(e) => setOwnersName(e.target.value)}
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="property-owner-phone">
+                  Property Owner Number:
+                </label>
+                <input
+                  type="number"
+                  id="property-owner-phone"
+                  value={ownerPhone}
+                  onChange={(e) => setOwnerPhone(e.target.value)}
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-owner-phone">
-                Property Owner Number:
-              </label>
-              <input
-                type="number"
-                id="property-owner-phone"
-                value={ownerPhone}
-                onChange={(e) => setOwnerPhone(e.target.value)}
-                placeholder="Enter your phone number"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="property-name">Property Name:</label>
+                <input
+                  type="text"
+                  id="property-name"
+                  value={propertysName}
+                  onChange={(e) => setPropertysName(e.target.value)}
+                  placeholder="Enter property name"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="property-location">Location:</label>
+                <input
+                  type="text"
+                  id="property-location"
+                  value={propertysLocation}
+                  onChange={(e) => setPropertysLocation(e.target.value)}
+                  placeholder="Enter location"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-name">Property Name:</label>
-              <input
-                type="text"
-                id="property-name"
-                value={propertysName}
-                onChange={(e) => setPropertysName(e.target.value)}
-                placeholder="Enter property name"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="property-location">Post Code:</label>
+                <input
+                  type="text"
+                  id="property-location"
+                  value={postCodes}
+                  onChange={(e) => setPostCode(e.target.value)}
+                  placeholder="Enter your postcode"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="property-price">Price (£):</label>
+                <input
+                  type="number"
+                  id="property-price"
+                  value={propertysPrice}
+                  onChange={(e) => setPropertysPrice(e.target.value)}
+                  placeholder="Enter price"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-location">Location:</label>
-              <input
-                type="text"
-                id="property-location"
-                value={propertysLocation}
-                onChange={(e) => setPropertysLocation(e.target.value)}
-                placeholder="Enter location"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="checkIn">Check In:</label>
+                <input
+                  type="datetime-local"
+                  id="checkIn"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  placeholder="When are placing out the property"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="checkOut">Check Out:</label>
+                <input
+                  type="datetime-local"
+                  id="checkOut"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  placeholder="Till When"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-location">Post Code:</label>
-              <input
-                type="text"
-                id="property-location"
-                value={postCodes}
-                onChange={(e) => setPostCode(e.target.value)}
-                placeholder="Enter your postcode"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="toilets">Number of Toilets:</label>
+                <input
+                  type="number"
+                  id="toilets"
+                  value={toilets}
+                  onChange={(e) => setToilets(e.target.value)}
+                  placeholder="Enter number of toilets"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="parking-lots">Number of Parking Lots:</label>
+                <input
+                  type="number"
+                  id="parking-lots"
+                  value={parkingLots}
+                  onChange={(e) => setParkingLots(e.target.value)}
+                  placeholder="Enter number of parking lots"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-price">Price (£):</label>
-              <input
-                type="number"
-                id="property-price"
-                value={propertysPrice}
-                onChange={(e) => setPropertysPrice(e.target.value)}
-                placeholder="Enter price"
-                required
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="property-type">Property Type:</label>
+                <select
+                  id="property-type"
+                  value={propertysType}
+                  onChange={(e) => setPropertysType(e.target.value)}
+                  required
+                >
+                  <option value="">Select property type</option>
+                  <option value="hall">Hall</option>
+                  <option value="meeting-room">Meeting Room</option>
+                  <option value="storage-space">Storage Space</option>
+                  <option value="shop">Shop</option>
+                </select>
+              </div>
+
+              {["hall", "meeting-room"].includes(propertysType) && (
+                <div className="form-group">
+                  <label htmlFor="guests">
+                    How many guests can be accommodated:
+                  </label>
+                  <input
+                    type="number"
+                    id="guests"
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
+                    placeholder="E.g. 200"
+                    required
+                  />
+                </div>
+              )}
+
+              {["storage-space", "shop"].includes(propertysType) && (
+                <div className="form-group">
+                  <label htmlFor="dimensions">
+                    What Dimensions does your space have:
+                  </label>
+                  <input
+                    type="text"
+                    id="dimensions"
+                    value={dimensions}
+                    onChange={(e) => setDimensions(e.target.value)}
+                    placeholder="E.g. 200sqm (square meter)"
+                    required
+                  />
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -209,102 +328,6 @@ function PlaceProperty() {
               ></textarea>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="property-type">Property Type:</label>
-              <select
-                id="property-type"
-                value={propertysType}
-                onChange={(e) => setPropertysType(e.target.value)}
-                required
-              >
-                <option value="">Select property type</option>
-                <option value="hall">Hall</option>
-                <option value="meeting-room">Meeting Room</option>
-                <option value="storage-space">Storage Space</option>
-                <option value="shop">Shop</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="checkIn">Check In:</label>
-              <input
-                type="datetime-local"
-                id="checkIn"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                placeholder="When are placing out the property"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="checkOut">Check Out:</label>
-              <input
-                type="datetime-local"
-                id="toilets"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                placeholder="Till When"
-                required
-              />
-            </div>
-
-            {["hall", "meeting-room"].includes(propertysType) && (
-              <div className="form-group">
-                <label htmlFor="guests">
-                  How many guests can be accommodated:
-                </label>
-                <input
-                  type="number"
-                  id="guests"
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  placeholder="E.g. 200"
-                  required
-                />
-              </div>
-            )}
-
-            {["storage-space", "shop"].includes(propertysType) && (
-              <div className="form-group">
-                <label htmlFor="dimensions">
-                  What Dimensions does your space have:
-                </label>
-                <input
-                  type="text"
-                  id="dimensions"
-                  value={dimensions}
-                  onChange={(e) => setDimensions(e.target.value)}
-                  placeholder="E.g. 200sqm (square meter)"
-                  required
-                />
-              </div>
-            )}
-
-            <div className="form-group">
-              <label htmlFor="toilets">Number of Toilets:</label>
-              <input
-                type="number"
-                id="toilets"
-                value={toilets}
-                onChange={(e) => setToilets(e.target.value)}
-                placeholder="Enter number of toilets"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="parking-lots">Number of Parking Lots:</label>
-              <input
-                type="number"
-                id="parking-lots"
-                value={parkingLots}
-                onChange={(e) => setParkingLots(e.target.value)}
-                placeholder="Enter number of parking lots"
-                required
-              />
-            </div>
-
             <button type="submit" className="submit-button">
               Next
             </button>
@@ -315,20 +338,19 @@ function PlaceProperty() {
           <>
             <div className="form-group image-upload-section">
               <label htmlFor="property-images">
-                Upload Images (at least 3):
+                Upload property images (optional):
               </label>
               <input
                 type="file"
                 id="property-images"
-                multiple
                 accept="image/*"
+                multiple
                 onChange={handleImageUpload}
-                required
               />
             </div>
 
             <button type="submit" className="submit-button">
-              Place Property & Image
+              Submit
             </button>
           </>
         )}

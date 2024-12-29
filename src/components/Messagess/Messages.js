@@ -121,6 +121,35 @@ function Messages() {
     }
   }, [messages]);
 
+  const uniqueMessages = messages?.data
+    ? Array.from(new Map(messages?.data?.map((msg) => [msg.id, msg])).values())
+    : [];
+
+  const groupedChats = interestedMessage?.data
+    ? interestedMessage.data.reduce((acc, chat) => {
+        const key = `${chat.propertyId}-${chat.userEmail}`; // Unique combination
+        if (!acc.has(key)) {
+          acc.set(key, chat); // Add to Map if not already present
+        }
+        return acc;
+      }, new Map())
+    : [];
+
+  // Convert Map values to an array for rendering
+  const uniqueChats = Array.from(groupedChats.values());
+
+  const adminEmail = "adeyemi.adenipekun@outlook.com";
+
+  // Filter Admin Chats
+  const adminChats = uniqueChats.filter(
+    (chat) => chat.userEmail === adminEmail
+  );
+
+  // Filter Regular Chats (Exclude Admin Chats)
+  const regularChats = uniqueChats.filter(
+    (chat) => chat.userEmail !== adminEmail
+  );
+
   return (
     <div className="messages-container">
       {!selectedChat ? (
@@ -138,27 +167,53 @@ function Messages() {
               <p>Loading chats...</p>
             </div>
           ) : (
-            <div className="chat-list">
-              {interestedMessage?.data?.map((chat) => (
-                <div
-                  key={chat.propertyId}
-                  className="chat-item"
-                  onClick={() => setSelectedChat(chat)}
-                >
-                  <div className="chat-info">
-                    <div className="chat-name">{chat.propertyName}</div>
-                    <div className="chat-email">
-                      {userData?.email === chat.creatorEmail
-                        ? chat.userEmail
-                        : chat.creatorEmail}
+            <>
+              <div className="chat-list">
+                {regularChats?.map((chat, index) => (
+                  <div
+                    key={`${chat.propertyId}-${chat.userEmail}-${index}`}
+                    className="chat-item"
+                    onClick={() => setSelectedChat(chat)}
+                  >
+                    <div className="chat-info">
+                      <div className="chat-name">{chat.propertyName}</div>
+                      <div className="chat-email">
+                        {userData?.email === chat.creatorEmail
+                          ? chat.userEmail
+                          : chat.creatorEmail}
+                      </div>
+                    </div>
+                    <div className="chat-timestamp">
+                      Last updated: {new Date(chat.updatedAt).toLocaleString()}
                     </div>
                   </div>
-                  <div className="chat-timestamp">
-                    Last updated: {new Date(chat.updatedAt).toLocaleString()}
+                ))}
+              </div>
+
+              {adminChats.length > 0 && (
+                <div className="admin-section">
+                  <h4>Admin Chats</h4>
+                  <div className="chat-list">
+                    {adminChats.map((chat, index) => (
+                      <div
+                        key={`${chat.propertyId}-${chat.userEmail}-${index}`}
+                        className="chat-item admin"
+                        onClick={() => setSelectedChat(chat)}
+                      >
+                        <div className="chat-info">
+                          <div className="chat-name">{chat.propertyName}</div>
+                          <div className="chat-email">{chat.userEmail}</div>
+                        </div>
+                        <div className="chat-timestamp">
+                          Last updated:{" "}
+                          {new Date(chat.updatedAt).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       ) : (
@@ -189,7 +244,7 @@ function Messages() {
             </div>
           ) : (
             <div className="messages">
-              {messages?.data?.map((msg) => (
+              {uniqueMessages.map((msg) => (
                 <div
                   key={msg.id}
                   className={`message ${

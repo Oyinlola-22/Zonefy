@@ -214,6 +214,17 @@
   }
 }
 
+.chat-item.admin {
+  background-color: #f8f9fa; /* Light background for admin chats */
+  border-left: 4px solid #007bff; /* Highlight with a border */
+}
+.admin-section h4 {
+  color: #007bff; /* Admin section header color */
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  margin-left: 2%;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .chat-header h2,

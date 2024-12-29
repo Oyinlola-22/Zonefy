@@ -23,7 +23,7 @@ import {
   UploadImage,
   setNotifyMessage,
 } from "../../../Features/zonefySlice";
-import { message, notification } from "antd";
+import { message, Modal, notification } from "antd";
 
 function PropertyScreen() {
   const location = useLocation();
@@ -34,6 +34,10 @@ function PropertyScreen() {
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to Array
@@ -396,88 +400,103 @@ function PropertyScreen() {
         )}
 
         {isOwner && isEditing && (
-          <div className="edit-form">
-            <h3>Edit Property</h3>
-            <label>
-              Property Name:
-              <input
-                type="text"
-                name="propertyName"
-                value={editData.propertyName}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Property Description:
-              <textarea
-                name="propertyDescription"
-                value={editData.propertyDescription}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Property Location:
-              <input
-                type="text"
-                name="propertyLocation"
-                value={editData.propertyLocation}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Property Price:
-              <input
-                type="text"
-                name="propertyPrice"
-                value={editData.propertyPrice}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Available From:
-              <input
-                type="datetime-local"
-                name="checkInTime"
-                value={editData.checkInTime}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Till:
-              <input
-                type="datetime-local"
-                name="checkOuTime"
-                value={editData.checkOutTime}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Number of Toilets:
-              <input
-                type="number"
-                name="toiletNumber"
-                value={editData.toiletNumber}
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              Number of Parking Lot:
-              <input
-                type="number"
-                name="parkingLot"
-                value={editData.parkingLot}
-                onChange={handleInputChange}
-              />
-            </label>
-            <div className="edit-buttons">
-              <button className="save-button" onClick={handleSaveChanges}>
-                Save Changes
-              </button>
-              <button className="cancel-button" onClick={handleEditToggle}>
-                Cancel
-              </button>
+          <Modal
+            title="Edit Property"
+            open={isEditing}
+            onCancel={handleEditToggle}
+            footer={[
+              <div className="edit-buttons">
+                <button onClick={handleEditToggle} className="save-button">
+                  Cancel
+                </button>
+                <button onClick={handleSaveChanges} className="cancel-button">
+                  Save Changes
+                </button>
+              </div>,
+            ]}
+          >
+            <div className="edit-form">
+              <label>
+                Property Name:
+                <input
+                  type="text"
+                  name="propertyName"
+                  value={editData.propertyName}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Property Description:
+                <textarea
+                  name="propertyDescription"
+                  value={editData.propertyDescription}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Property Location:
+                <input
+                  type="text"
+                  name="propertyLocation"
+                  value={editData.propertyLocation}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Property Price:
+                <input
+                  type="text"
+                  name="propertyPrice"
+                  value={editData.propertyPrice}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Available From:
+                <input
+                  type="datetime-local"
+                  name="checkInTime"
+                  value={editData.checkInTime}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Till:
+                <input
+                  type="datetime-local"
+                  name="checkOuTime"
+                  value={editData.checkOutTime}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Number of Toilets:
+                <input
+                  type="number"
+                  name="toiletNumber"
+                  value={editData.toiletNumber}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Number of Parking Lot:
+                <input
+                  type="number"
+                  name="parkingLot"
+                  value={editData.parkingLot}
+                  onChange={handleInputChange}
+                />
+              </label>
+              {/* <div className="edit-buttons">
+                <button className="save-button" onClick={handleSaveChanges}>
+                  Save Changes
+                </button>
+                <button className="cancel-button" onClick={handleEditToggle}>
+                  Cancel
+                </button>
+              </div> */}
             </div>
-          </div>
+          </Modal>
         )}
       </div>
     </div>

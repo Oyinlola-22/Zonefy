@@ -24,11 +24,12 @@ function AdminChat() {
   const messageEndRef = useRef(null);
 
   const userId = userData?.id;
-  const userEmail = userData?.email;
+  const userEmail = "adeyemi.adenipekun@outlook.com";
 
-  const isOwner = userData?.email === interestedMessage?.creatorEmail;
+  const isOwner =
+    "adeyemi.adenipekun@outlook.com" === interestedMessage?.creatorEmail;
 
-  const isOwners = userData?.email === selectedChat?.userEmail;
+  const isOwners = "adeyemi.adenipekun@outlook.com" === selectedChat?.userEmail;
 
   useEffect(() => {
     if (userId && messages?.data?.length > 0) {
@@ -46,13 +47,13 @@ function AdminChat() {
     const fetchPropertyStats = async () => {
       dispatch(
         GetPropertyStatisticsByEmail({
-          email: userData?.email,
+          email: "adeyemi.adenipekun@outlook.com",
           pageNumber,
         })
       );
     };
 
-    if (userData?.email) fetchPropertyStats();
+    if ("adeyemi.adenipekun@outlook.com") fetchPropertyStats();
   }, [dispatch, userData?.email, pageNumber]);
 
   useEffect(() => {
@@ -97,8 +98,8 @@ function AdminChat() {
       );
 
       const messageData = {
-        propertyId: selectedChat.propertyId,
-        senderEmail: userData?.email,
+        propertyId: "00000000-0000-0000-0000-000000000000",
+        senderEmail: "adeyemi.adenipekun@outlook.com",
         receiverEmail: getReceiverEmail(isOwners, selectedChat),
         content: message,
       };
