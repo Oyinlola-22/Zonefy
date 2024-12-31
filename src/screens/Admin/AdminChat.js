@@ -134,12 +134,14 @@ function AdminChat() {
   // Convert Map values to an array for rendering
   const uniqueChats = Array.from(groupedChats.values());
 
+  console.log("Unique Chats:", uniqueChats);
+
   const adminEmail = "adeyemi.adenipekun@outlook.com";
 
   // Filter Admin Chats
-  const adminChats = uniqueChats.filter(
-    (chat) => chat.userEmail === adminEmail
-  );
+  // const adminChats = uniqueChats.filter(
+  //   (chat) => chat.creatorEmail === adminEmail
+  // );
 
   const uniqueMessages = messages?.data
     ? Array.from(new Map(messages?.data?.map((msg) => [msg.id, msg])).values())
@@ -163,9 +165,9 @@ function AdminChat() {
             </div>
           ) : (
             <div className="chat-list">
-              {adminChats.map((chat, index) => (
+              {uniqueChats.map((chat, index) => (
                 <div
-                  key={`${chat.propertyId}-${chat.userEmail}-${index}`}
+                  key={`${chat.propertyId}-${chat.creatorEmail}-${index}`}
                   className="chat-item"
                   onClick={() => setSelectedChat(chat)}
                 >

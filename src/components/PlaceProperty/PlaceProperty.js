@@ -13,6 +13,7 @@ import {
   setNotifyMessage,
   UploadImage,
 } from "../../Features/zonefySlice";
+import DateTimePicker from "../ui/DateTimePicker";
 
 function PlaceProperty() {
   const navigate = useNavigate();
@@ -218,25 +219,35 @@ function PlaceProperty() {
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="checkIn">Check In:</label>
-                <input
+                {/* <input
                   type="datetime-local"
                   id="checkIn"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   placeholder="When are placing out the property"
                   required
+                /> */}
+                <DateTimePicker
+                  id="check-in"
+                  value={checkIn} // Pass the value prop
+                  onChange={setCheckIn} // Handle the change in the parent component
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="checkOut">Check Out:</label>
-                <input
+                {/* <input
                   type="datetime-local"
                   id="checkOut"
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   placeholder="Till When"
                   required
+                /> */}
+                <DateTimePicker
+                  id="check-out"
+                  value={checkOut} // Pass the value prop
+                  onChange={setCheckOut} // Handle the change in the parent component
                 />
               </div>
             </div>

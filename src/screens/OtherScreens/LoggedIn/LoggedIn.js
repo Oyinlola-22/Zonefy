@@ -25,31 +25,24 @@ function LoggedIn() {
   const dispatch = useAppDispatch();
   const { notifyMessage, userData } = useAppSelector(selectZonefy);
 
-  // State to track sidebar visibility
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // Modal state
   const [showModal, setShowModal] = useState(false);
 
-  // Sidebar toggle function
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Function to show the logout confirmation modal
   const handleLogoutClick = () => {
-    setIsSidebarOpen(false); // Close the sidebar
-    setShowModal(true); // Show the modal
+    setIsSidebarOpen(false);
+    setShowModal(true);
   };
 
-  // Function to confirm logout and navigate to home page
   const confirmLogout = () => {
     setShowModal(false);
     dispatch(setLogout());
     navigate("/");
   };
 
-  // Function to cancel the logout process
   const cancelLogout = () => {
     setShowModal(false);
   };
@@ -57,9 +50,8 @@ function LoggedIn() {
   useEffect(() => {
     if (window.location.pathname === "/home") {
       if (notifyMessage?.isSuccess === true) {
-        var response = { ...notifyMessage };
+        let response = { ...notifyMessage };
         delete response.isSuccess;
-        response = { ...response };
         notification.success(response);
         dispatch(setNotifyMessage(null));
       }
@@ -127,21 +119,18 @@ function LoggedIn() {
           <img src={Property} alt="Property" className="logo-image" />
           <div className="image-text">SEARCH THROUGH FOR YOUR TASTE</div>
         </div>
-        {/* Always display the SearchResults */}
-        <SearchResults />
 
+        <SearchResults />
         <ListedProperties />
       </div>
 
-      {/* Modal for Logout Confirmation */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Confirm Logout</h3>
-            <p>Are you sure you want to log out?</p>
-            <div className="modal-actions">
+            <h3>Are you sure you want to log out?</h3>
+            <div className="modal-buttons">
               <button className="confirm-button" onClick={confirmLogout}>
-                Yes, Log Out
+                Confirm
               </button>
               <button className="cancel-button" onClick={cancelLogout}>
                 Cancel

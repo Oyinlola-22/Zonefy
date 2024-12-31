@@ -142,12 +142,12 @@ function Messages() {
 
   // Filter Admin Chats
   const adminChats = uniqueChats.filter(
-    (chat) => chat.userEmail === adminEmail
+    (chat) => chat.creatorEmail === adminEmail
   );
 
   // Filter Regular Chats (Exclude Admin Chats)
   const regularChats = uniqueChats.filter(
-    (chat) => chat.userEmail !== adminEmail
+    (chat) => chat.creatorEmail !== adminEmail
   );
 
   return (
@@ -202,7 +202,7 @@ function Messages() {
                       >
                         <div className="chat-info">
                           <div className="chat-name">{chat.propertyName}</div>
-                          <div className="chat-email">{chat.userEmail}</div>
+                          <div className="chat-email">{chat.creatorEmail}</div>
                         </div>
                         <div className="chat-timestamp">
                           Last updated:{" "}

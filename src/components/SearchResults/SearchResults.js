@@ -7,6 +7,7 @@ import {
 } from "../../Store/store";
 import { SearchHouseProperty } from "../../Features/zonefySlice";
 import { useNavigate } from "react-router-dom";
+import DateTimePicker from "../ui/DateTimePicker";
 
 const SearchResults = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,10 @@ const SearchResults = () => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const [hasSearched, setHasSearched] = useState(false); // To track if search was performed
+
+  useEffect(() => {
+    console.log("checkIn:", checkIn, "checkOut:", checkOut);
+  }, [checkIn, checkOut]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -97,21 +102,32 @@ const SearchResults = () => {
 
         <div className="form-group">
           <label htmlFor="check-in">Check In:</label>
+          {/* 
           <input
             type="datetime-local"
             id="check-in"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
+          /> */}
+          <DateTimePicker
+            id="check-in"
+            value={checkIn} // Pass the value prop
+            onChange={setCheckIn} // Handle the change in the parent component
           />
         </div>
 
         <div className="form-group">
           <label htmlFor="check-out">Check Out:</label>
-          <input
+          {/* <input
             type="datetime-local"
             id="check-out"
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
+          /> */}
+          <DateTimePicker
+            id="check-out"
+            value={checkOut} // Pass the value prop
+            onChange={setCheckOut} // Handle the change in the parent component
           />
         </div>
 
