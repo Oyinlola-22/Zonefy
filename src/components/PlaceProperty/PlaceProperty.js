@@ -216,10 +216,9 @@ function PlaceProperty() {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="checkIn">Check In:</label>
-                {/* <input
+            <div className="form-group">
+              <label htmlFor="checkIn">Check In:</label>
+              {/* <input
                   type="datetime-local"
                   id="checkIn"
                   value={checkIn}
@@ -227,16 +226,16 @@ function PlaceProperty() {
                   placeholder="When are placing out the property"
                   required
                 /> */}
-                <DateTimePicker
-                  id="check-in"
-                  value={checkIn} // Pass the value prop
-                  onChange={setCheckIn} // Handle the change in the parent component
-                />
-              </div>
+              <DateTimePicker
+                id="check-in"
+                value={checkIn} // Pass the value prop
+                onChange={setCheckIn} // Handle the change in the parent component
+              />
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="checkOut">Check Out:</label>
-                {/* <input
+            <div className="form-group">
+              <label htmlFor="checkOut">Check Out:</label>
+              {/* <input
                   type="datetime-local"
                   id="checkOut"
                   value={checkOut}
@@ -244,12 +243,11 @@ function PlaceProperty() {
                   placeholder="Till When"
                   required
                 /> */}
-                <DateTimePicker
-                  id="check-out"
-                  value={checkOut} // Pass the value prop
-                  onChange={setCheckOut} // Handle the change in the parent component
-                />
-              </div>
+              <DateTimePicker
+                id="check-out"
+                value={checkOut} // Pass the value prop
+                onChange={setCheckOut} // Handle the change in the parent component
+              />
             </div>
 
             <div className="form-row">

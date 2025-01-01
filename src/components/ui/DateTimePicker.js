@@ -9,7 +9,7 @@ import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ScrollArea, ScrollBar } from "./scrollarea";
 
-function DateTimePicker({ value, onChange }) {
+function DateTimePicker({ value, onChange, name }) {
   const [date, setDate] = React.useState(value); // Initialize with value prop
 
   React.useEffect(() => {
@@ -57,6 +57,7 @@ function DateTimePicker({ value, onChange }) {
             "w-full justify-start text-left font-medium text-gray-700 bg-white shadow-md hover:bg-gray-100 rounded-lg transition-colors duration-300",
             !date && "text-muted-foreground"
           )}
+          data-name={name} // Attach the name as a data attribute
         >
           <CalendarIcon className="mr-2 h-5 w-5 text-primary-500" />
           {date ? (
@@ -140,6 +141,11 @@ function DateTimePicker({ value, onChange }) {
             </ScrollArea>
           </div>
         </div>
+        <input
+          type="hidden"
+          name={name}
+          value={date ? date.toISOString() : ""}
+        />
       </PopoverContent>
     </Popover>
   );

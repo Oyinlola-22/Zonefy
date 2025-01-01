@@ -102,8 +102,8 @@ function PropertyScreen() {
     propertyLocation: myPropertyData?.propertyLocation || "",
     toiletNumber: myPropertyData?.toiletNumber || "",
     parkingLot: myPropertyData?.parkingLot || "",
-    checkInTime: myPropertyData?.checkInTime || "",
-    checkOutTime: myPropertyData?.checkOutTime || "",
+    checkInTime: "",
+    checkOutTime: "",
   });
 
   const handleEditToggle = () => {
